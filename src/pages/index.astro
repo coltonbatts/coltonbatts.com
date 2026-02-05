@@ -2,9 +2,14 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
 import Lottie from '../components/interactive/Lottie.astro';
+import Rive from '../components/interactive/Rive.astro';
+import fs from 'node:fs';
 
 const tools = await getCollection('tools');
 	const featuredTools = tools.slice(0, 2);
+
+const riveDemoSrc = '/rive/example.riv';
+const riveDemoExists = fs.existsSync(new URL(`../../public${riveDemoSrc}`, import.meta.url));
 ---
 
 <BaseLayout title="Home" description="Toolmaker. Building offline-first tools.">
@@ -100,12 +105,36 @@ const tools = await getCollection('tools');
 						</div>
 					</div>
 				</div>
-				<div class="border border-black bg-gray-50 p-6 flex items-center justify-center" data-reveal>
-					<Lottie
-						src="/lottie/example.json"
-						class="w-32 h-32 md:w-40 md:h-40"
-						ariaLabel="Pulsing circle animation"
-					/>
+				<div class="grid gap-4">
+					<div
+						class="border border-black bg-gray-50 p-6 flex items-center justify-center"
+						data-reveal
+					>
+						<Lottie
+							src="/lottie/example.json"
+							class="w-32 h-32 md:w-40 md:h-40"
+							ariaLabel="Pulsing circle animation"
+						/>
+					</div>
+					{riveDemoExists ? (
+						<div
+							class="border border-black bg-gray-50 p-6 flex items-center justify-center"
+							data-reveal
+						>
+							<Rive
+								src={riveDemoSrc}
+								class="w-32 h-32 md:w-40 md:h-40"
+								ariaLabel="Rive sample animation"
+							/>
+						</div>
+					) : (
+						<div
+							class="border border-black bg-gray-50 p-6 text-sm text-gray-600"
+							data-reveal
+						>
+							Drop .riv into /public/rive/… to preview a Rive demo here.
+						</div>
+					)}
 				</div>
 			</div>
 		</section>
