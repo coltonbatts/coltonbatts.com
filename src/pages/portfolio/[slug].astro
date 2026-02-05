@@ -1,0 +1,153 @@
+---
+/**
+ * [slug].astro — Individual Painting Detail
+ * ==========================================
+ * Full-page presentation of a single painting.
+ *
+ * Layout:
+ * - Large, matted image dominates the viewport.
+ * - Gallery label metadata to the right (desktop) or below (mobile).
+ * - Artist statement / description from the markdown body.
+ * - Navigation to adjacent paintings.
+ */
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+	const paintings = await getCollection('paintings');
+	paintings.sort((a, b) => a.data.order - b.data.order);
+
+	return paintings.map((painting, index) => ({
+		params: { slug: painting.slug },
+		props: {
+			painting,
+			prev: index > 0 ? paintings[index - 1] : null,
+			next: index < paintings.length - 1 ? paintings[index + 1] : null,
+		},
+	}));
+}
+
+const { painting, prev, next } = Astro.props;
+const { Content } = await painting.render();
+const { title, medium, dimensions, year, image, series, available } = painting.data;
+---
+
+<BaseLayout title={title} description={`${title} — ${medium}, ${year}. By Colton Batts.`}>
+
+	<!-- ============================================================
+		 HEADER: Back navigation + painting title
+		 ============================================================ -->
+	<section class="border-b-2 border-charcoal">
+		<div class="max-w-5xl mx-auto px-6 pt-8 pb-6">
+			<a
+				href="/portfolio"
+				class="font-mono text-label uppercase tracking-instrument text-charcoal/40 hover:text-charcoal transition-colors"
+			>
+				&larr; All Paintings
+			</a>
+		</div>
+	</section>
+
+	<!-- ============================================================
+		 PAINTING: The main event
+		 ============================================================ -->
+	<div class="max-w-5xl mx-auto px-6 py-12 md:py-22">
+		<div class="grid md:grid-cols-12 gap-8 md:gap-12">
+
+			<!-- Left: The painting (matted frame) -->
+			<div class="md:col-span-8">
+				<div class="painting-card__frame">
+					<div class="painting-card__mat" style="padding: 1.5rem;">
+						<img
+							src={image}
+							alt={title}
+							loading="eager"
+							decoding="async"
+							class="painting-card__image"
+						/>
+					</div>
+				</div>
+			</div>
+
+			<!-- Right: Gallery wall label -->
+			<div class="md:col-span-4 md:pt-4">
+				<div class="sticky top-8">
+					{series && (
+						<p class="font-mono text-meta uppercase tracking-instrument text-charcoal/25 mb-4">
+							{series}
+						</p>
+					)}
+					<h1 class="text-display-sm mb-4">{title}</h1>
+
+					<div class="divider-muted mb-6 pb-6">
+						<dl class="space-y-3">
+							<div>
+								<dt class="font-mono text-meta uppercase tracking-instrument text-charcoal/35">Medium</dt>
+								<dd class="font-mono text-sm text-charcoal/70 mt-0.5">{medium}</dd>
+							</div>
+							<div>
+								<dt class="font-mono text-meta uppercase tracking-instrument text-charcoal/35">Dimensions</dt>
+								<dd class="font-mono text-sm text-charcoal/70 mt-0.5">{dimensions}</dd>
+							</div>
+							<div>
+								<dt class="font-mono text-meta uppercase tracking-instrument text-charcoal/35">Year</dt>
+								<dd class="font-mono text-sm text-charcoal/70 mt-0.5">{year}</dd>
+							</div>
+						</dl>
+					</div>
+
+					{available && (
+						<div class="mb-6 pb-6 border-b border-1 border-bone">
+							<p class="font-mono text-label uppercase tracking-instrument text-raw mb-3">
+								● Available
+							</p>
+							<a
+								href="mailto:colton.batts@gmail.com?subject=Inquiry: {title}"
+								class="btn-instrument--raw btn-instrument text-sm"
+							>
+								Inquire
+							</a>
+						</div>
+					)}
+
+					<!-- Artist statement from markdown body -->
+					<div class="prose prose-sm max-w-none text-charcoal/70 leading-relaxed">
+						<Content />
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- ============================================================
+		 NAVIGATION: Previous / Next paintings
+		 ============================================================ -->
+	<section class="border-t-2 border-charcoal">
+		<div class="max-w-5xl mx-auto px-6 py-10">
+			<div class="flex items-center justify-between">
+				{prev ? (
+					<a
+						href={`/portfolio/${prev.slug}`}
+						class="font-mono text-label uppercase tracking-instrument text-charcoal/40 hover:text-charcoal transition-colors"
+					>
+						&larr; {prev.data.title}
+					</a>
+				) : (
+					<span></span>
+				)}
+				{next ? (
+					<a
+						href={`/portfolio/${next.slug}`}
+						class="font-mono text-label uppercase tracking-instrument text-charcoal/40 hover:text-charcoal transition-colors text-right"
+					>
+						{next.data.title} &rarr;
+					</a>
+				) : (
+					<span></span>
+				)}
+			</div>
+		</div>
+	</section>
+
+</BaseLayout>

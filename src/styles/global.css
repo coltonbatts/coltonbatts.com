@@ -533,6 +533,153 @@
 	}
 
 	/* -----------------------------------------------------------
+	 * PAINTING CARD: Gallery-grade frame + museum wall label
+	 * The image is treated as a physical object — matted,
+	 * bordered, with stamped depth. The label beneath it uses
+	 * the monospaced instrument layer.
+	 * ----------------------------------------------------------- */
+
+	.painting-card {
+		display: block;
+		text-decoration: none;
+		color: inherit;
+	}
+
+	.painting-card__frame {
+		border: var(--border-weight) solid var(--border-color);
+		box-shadow: var(--shadow-stamp);
+		background: #fafaf8;
+		transition: transform 0.2s cubic-bezier(0.2, 0, 0, 1),
+					box-shadow 0.2s cubic-bezier(0.2, 0, 0, 1);
+	}
+
+	/* The mat: generous white space around the image */
+	.painting-card__mat {
+		padding: 1rem;
+		background-image: var(--bg-paper);
+		background-size: 300%;
+	}
+
+	.painting-card--featured .painting-card__mat {
+		padding: 1.5rem;
+	}
+
+	.painting-card--featured .painting-card__frame {
+		box-shadow: var(--shadow-stamp-lg);
+	}
+
+	.painting-card__image {
+		width: 100%;
+		height: auto;
+		display: block;
+		object-fit: cover;
+	}
+
+	/* Hover: lift the frame */
+	.painting-card:hover .painting-card__frame {
+		transform: translate(-2px, -2px);
+		box-shadow: var(--shadow-stamp-hover);
+	}
+
+	/* Gallery label — the museum wall text */
+	.painting-card__label {
+		padding-top: 0.75rem;
+		padding-left: 2px; /* Optical alignment with frame edge */
+	}
+
+	.painting-card__title {
+		font-family: 'Inter', system-ui, sans-serif;
+		font-weight: 700;
+		font-size: 1rem;
+		letter-spacing: -0.01em;
+		line-height: 1.3;
+		color: var(--ink);
+		margin: 0 0 0.25rem 0;
+		transition: color 0.15s ease;
+	}
+
+	.painting-card:hover .painting-card__title {
+		color: var(--raw);
+	}
+
+	.painting-card__available {
+		color: var(--raw);
+		font-size: 0.5rem;
+		vertical-align: super;
+		margin-left: 0.25rem;
+	}
+
+	.painting-card__meta {
+		font-family: 'IBM Plex Mono', ui-monospace, monospace;
+		font-size: 0.6875rem;
+		font-weight: 400;
+		letter-spacing: 0.02em;
+		color: rgba(0, 0, 0, 0.5);
+		margin: 0 0 0.125rem 0;
+	}
+
+	.painting-card__dimensions {
+		font-family: 'IBM Plex Mono', ui-monospace, monospace;
+		font-size: 0.625rem;
+		font-weight: 400;
+		letter-spacing: 0.04em;
+		color: rgba(0, 0, 0, 0.35);
+		margin: 0;
+	}
+
+	.painting-card__series {
+		font-family: 'IBM Plex Mono', ui-monospace, monospace;
+		font-size: 0.5625rem;
+		font-weight: 700;
+		text-transform: uppercase;
+		letter-spacing: 0.1em;
+		color: rgba(0, 0, 0, 0.25);
+		margin: 0.5rem 0 0 0;
+	}
+
+	/* -----------------------------------------------------------
+	 * GALLERY GRID: Asymmetric masonry-like layout
+	 * Featured paintings span 2 columns. Regular paintings
+	 * sit in a standard column. On mobile, everything stacks.
+	 * ----------------------------------------------------------- */
+
+	.gallery-grid {
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: 2.5rem;
+	}
+
+	@media (min-width: 768px) {
+		.gallery-grid {
+			grid-template-columns: repeat(12, 1fr);
+			gap: 2rem;
+			row-gap: 3rem;
+		}
+
+		/* Featured: spans 7 columns */
+		.gallery-grid__item--featured {
+			grid-column: span 7;
+		}
+
+		/* Regular: spans 5 columns */
+		.gallery-grid__item--regular {
+			grid-column: span 5;
+		}
+
+		/* Full-width break for dramatic pacing */
+		.gallery-grid__item--full {
+			grid-column: 1 / -1;
+		}
+	}
+
+	@media (min-width: 1024px) {
+		.gallery-grid {
+			gap: 2.5rem;
+			row-gap: 3.5rem;
+		}
+	}
+
+	/* -----------------------------------------------------------
 	 * WORDMARK: Gothic blackletter with glitch on hover
 	 * The text is the brand. No images. CSS-only animation.
 	 * ----------------------------------------------------------- */

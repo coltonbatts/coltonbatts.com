@@ -1,0 +1,85 @@
+---
+/**
+ * PaintingCard.astro
+ * ==================
+ * Renders a painting as a physical object in a gallery context.
+ *
+ * The image sits inside a heavy-bordered "matted" frame with generous
+ * internal padding (simulating a real gallery mat). Below the frame,
+ * a monospaced gallery label displays the metadata: title, medium,
+ * dimensions, year — exactly like a museum wall label.
+ *
+ * Variants:
+ *   - Default: standard card for grid placement
+ *   - featured: larger frame, heavier shadow, more mat padding
+ *
+ * The card links to the individual painting detail page.
+ */
+
+interface Props {
+	title: string;
+	medium: string;
+	dimensions: string;
+	year: number;
+	image: string;
+	slug: string;
+	featured?: boolean;
+	available?: boolean;
+	series?: string;
+	class?: string;
+}
+
+const {
+	title,
+	medium,
+	dimensions,
+	year,
+	image,
+	slug,
+	featured = false,
+	available = false,
+	series,
+	class: className = '',
+} = Astro.props;
+---
+
+<a
+	href={`/portfolio/${slug}`}
+	class:list={[
+		'painting-card group block',
+		{ 'painting-card--featured': featured },
+		className,
+	]}
+>
+	<!-- The Frame: matted border with stamped shadow -->
+	<div class="painting-card__frame">
+		<div class="painting-card__mat">
+			<img
+				src={image}
+				alt={title}
+				loading="lazy"
+				decoding="async"
+				class="painting-card__image"
+			/>
+		</div>
+	</div>
+
+	<!-- Gallery Label: monospaced metadata block -->
+	<div class="painting-card__label">
+		<h3 class="painting-card__title">
+			{title}
+			{available && <span class="painting-card__available" title="Available">●</span>}
+		</h3>
+		<p class="painting-card__meta">
+			{medium}, {year}
+		</p>
+		<p class="painting-card__dimensions">
+			{dimensions}
+		</p>
+		{series && (
+			<p class="painting-card__series">
+				{series}
+			</p>
+		)}
+	</div>
+</a>
