@@ -43,7 +43,7 @@ export const artManifest: ArtManifest = {
 		type: 'image',
 		src: '/art/hero/hero-01.png',
 		alt: 'Surreal night street scene artwork',
-		caption: 'Artwork slot',
+		caption: 'procession · Colton Batts 2026',
 		showCaption: true,
 		aspect: '16:9',
 		fit: 'cover',
