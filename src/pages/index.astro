@@ -148,33 +148,9 @@ const clients = ['Google', 'Under Armour', 'Kate Spade', 'Nuuly'];
 					href={`/tools/${tool.slug}`}
 					class="block tool-card group"
 				>
-					<!-- Tool art slot -->
-					<div class="border-b-2 border-charcoal">
-						<ArtSlot
-							slot={resolveToolSlot(artManifest.tools[tool.slug])}
-						/>
-					</div>
-
-					<!-- Tool info -->
-					<div class="p-6 md:p-8">
-						<div class="flex items-center gap-3 mb-4">
-							<span class:list={[
-								'status-badge',
-								{
-									'status-badge--active': tool.data.status === 'active',
-									'status-badge--beta': tool.data.status === 'beta',
-									'status-badge--archived': tool.data.status === 'archived',
-								},
-							]}>
-								{tool.data.status}
-							</span>
-							<span class="font-mono text-meta uppercase text-charcoal/40">
-								{tool.data.platform}
-							</span>
-						</div>
-						<h3 class="mb-3 group-hover:text-raw transition-colors">{tool.data.name}</h3>
-						<p class="text-charcoal/65 leading-relaxed">{tool.data.oneLiner}</p>
-					</div>
+					<ArtSlot
+						slot={resolveToolSlot(artManifest.tools[tool.slug])}
+					/>
 				</a>
 			))}
 		</div>
