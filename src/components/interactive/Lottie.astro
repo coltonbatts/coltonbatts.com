@@ -1,0 +1,27 @@
+---
+interface Props {
+	src: string;
+	loop?: boolean;
+	speed?: number;
+	class?: string;
+	ariaLabel?: string;
+}
+
+const {
+	src,
+	loop = true,
+	speed,
+	class: className,
+	ariaLabel = 'Animation',
+} = Astro.props;
+---
+
+<div
+	class={className}
+	data-lottie
+	data-lottie-src={src}
+	data-lottie-loop={loop}
+	data-lottie-speed={speed}
+	role="img"
+	aria-label={ariaLabel}
+></div>

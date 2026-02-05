@@ -31,3 +31,18 @@
 		}
 	}
 }
+
+@layer utilities {
+	.reveal {
+		@apply opacity-0 translate-y-4 transition duration-700 ease-out;
+		will-change: transform, opacity;
+	}
+
+	.reveal--visible {
+		@apply opacity-100 translate-y-0;
+	}
+
+	.reveal--instant {
+		transition-duration: 0ms;
+	}
+}
