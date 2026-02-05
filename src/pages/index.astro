@@ -1,9 +1,27 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import ArtSlot from '../components/ArtSlot.astro';
+import { artManifest } from '../content/art-manifest';
 import { getCollection } from 'astro:content';
+import { existsSync } from 'node:fs';
+import { resolve } from 'node:path';
 
 const tools = await getCollection('tools');
 const featuredTools = tools.slice(0, 2);
+
+function slotHasAsset(src: string) {
+	if (!src) return false;
+	if (/^https?:\/\//.test(src)) return true;
+	return existsSync(resolve(process.cwd(), 'public', src.replace(/^\//, '')));
+}
+
+const heroArt = artManifest.hero.enabled && slotHasAsset(artManifest.hero.src) ? artManifest.hero : undefined;
+const motionArt =
+	artManifest.motion.rive.enabled && slotHasAsset(artManifest.motion.rive.src)
+		? artManifest.motion.rive
+		: artManifest.motion.poster.enabled && slotHasAsset(artManifest.motion.poster.src)
+			? artManifest.motion.poster
+			: undefined;
 ---
 
 <BaseLayout title="Home" description="Toolmaker. Building offline-first tools.">
@@ -17,6 +35,9 @@ const featuredTools = tools.slice(0, 2);
 					Think workshop manual, not SaaS landing page.
 				</p>
 			</div>
+			<div class="mt-8">
+				<ArtSlot slot={heroArt} fallbackLabel="Artwork slot" />
+			</div>
 		</section>
 
 		<section class="mb-16">
@@ -25,8 +46,13 @@ const featuredTools = tools.slice(0, 2);
 				{featuredTools.map((tool) => (
 					<a
 						href={`/tools/${tool.slug}`}
-						class="border border-black p-6 hover:bg-gray-50 transition-colors block"
+						class="border border-black p-6 hover:bg-gray-50 transition-colors block tool-card"
 					>
+						<ArtSlot
+							slot={artManifest.tools[tool.slug]}
+							fallbackLabel="Artwork slot"
+							class="mb-4"
+						/>
 						<h3 class="text-xl font-semibold mb-2">{tool.data.name}</h3>
 						<p class="text-gray-700 mb-4">{tool.data.oneLiner}</p>
 						<div class="flex items-center gap-2">
@@ -45,6 +71,11 @@ const featuredTools = tools.slice(0, 2);
 					</a>
 				))}
 			</div>
+		</section>
+
+		<section class="mb-16">
+			<h2 class="text-2xl font-semibold mb-6">Motion</h2>
+			<ArtSlot slot={motionArt} fallbackLabel="Artwork slot" />
 		</section>
 
 		<section>
