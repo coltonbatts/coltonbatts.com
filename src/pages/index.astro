@@ -16,33 +16,37 @@ function resolveToolSlot(slot: (typeof artManifest.tools)[string] | undefined) {
 ---
 
 <BaseLayout title="Home" description="Toolmaker. Building offline-first tools.">
-	<div class="max-w-4xl mx-auto px-6 py-12">
-		<section class="mb-12 border border-black p-6">
-			<h2 class="text-2xl font-semibold mb-4">Production-first editor and designer</h2>
-			<div class="prose prose-lg max-w-none">
-				<p class="text-lg leading-relaxed">
-					Production-focused multimedia designer with 10+ years delivering high-volume, broadcast-quality content for global brands including Google, Under Armour, and Kate Spade.
-					Expert in Adobe Premiere Pro and After Effects with strong Photoshop-driven design support and file hygiene.
-				</p>
-			</div>
-			<p class="text-sm text-gray-600 mt-4">
-				Selected clients: Google, Under Armour, Kate Spade, Nuuly, Capture This
+	<div class="max-w-4xl mx-auto px-6 py-20">
+		<section class="mb-12 bg-white p-8 border border-gray-200/60 shadow-[2px_2px_0_rgba(0,0,0,0.02)]">
+		<h2 class="text-xs font-bold uppercase tracking-[0.3em] text-charcoal/40 mb-8 pb-4 border-b border-gray-200/60">Software & Tools</h2>
+		<h1 class="text-3xl font-bold mb-4 tracking-tighter">Production-first multimedia designer</h1>
+		
+		<div class="prose max-w-2xl text-charcoal/90">
+			<p class="text-lg leading-snug font-medium mb-6">
+				10+ years delivering high-volume content for Google, Under Armour, Kate Spade. 
+				Focus on Premiere Pro, After Effects, and technical design hygiene.
 			</p>
-			<div class="flex flex-wrap gap-3 mt-6">
-				<a
-					href="/resume/Colton_Batts_Resume.pdf"
-					class="border border-black px-4 py-2 text-sm font-semibold hover:bg-gray-50 transition-colors"
+			
+			<div class="flex flex-wrap gap-4 items-center">
+				<a 
+					href="/resume/Colton_Batts_Resume.pdf" 
+					class="border border-charcoal px-4 py-2 text-sm font-bold hover:bg-charcoal hover:text-white transition-colors"
 				>
-					Download Resume
+					Resume
 				</a>
-				<a
-					href="mailto:colton.batts@gmail.com"
-					class="border border-black px-4 py-2 text-sm font-semibold hover:bg-gray-50 transition-colors"
+				<a 
+					href="mailto:colton.batts@gmail.com" 
+					class="border border-charcoal px-4 py-2 text-sm font-bold hover:bg-charcoal hover:text-white transition-colors"
 				>
 					Email
 				</a>
+				
+				<span class="text-[11px] font-bold uppercase tracking-[0.2em] text-charcoal/40 ml-2">
+					Google · Under Armour · Kate Spade · Nuuly
+				</span>
 			</div>
-		</section>
+		</div>
+	</section>
 
 		<section class="mb-16">
 			<h1 class="text-3xl font-bold mb-6">Toolmaker</h1>
@@ -64,26 +68,26 @@ function resolveToolSlot(slot: (typeof artManifest.tools)[string] | undefined) {
 				{featuredTools.map((tool) => (
 					<a
 						href={`/tools/${tool.slug}`}
-						class="border border-black p-6 hover:bg-gray-50 transition-colors block tool-card"
+						class="p-8 hover:bg-white transition-all block tool-card group"
 					>
 						<ArtSlot
 							slot={resolveToolSlot(artManifest.tools[tool.slug])}
-							class="mb-4"
+							class="mb-6"
 						/>
-						<h3 class="text-xl font-semibold mb-2">{tool.data.name}</h3>
-						<p class="text-gray-700 mb-4">{tool.data.oneLiner}</p>
-						<div class="flex items-center gap-2">
+						<h3 class="text-2xl font-semibold mb-3 group-hover:text-black transition-colors">{tool.data.name}</h3>
+						<p class="text-charcoal/70 mb-6 leading-relaxed">{tool.data.oneLiner}</p>
+						<div class="flex items-center gap-3">
 							<span
-								class="text-xs px-2 py-1 border border-black"
+								class="text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full"
 								class:list={{
-									'bg-black text-white': tool.data.status === 'active',
-									'bg-gray-100': tool.data.status === 'beta',
-									'bg-gray-200': tool.data.status === 'archived',
+									'bg-charcoal text-white': tool.data.status === 'active',
+									'bg-gray-100 text-charcoal/60': tool.data.status === 'beta',
+									'bg-gray-200 text-charcoal/40': tool.data.status === 'archived',
 								}}
 							>
 								{tool.data.status}
 							</span>
-							<span class="text-xs text-gray-600">{tool.data.platform}</span>
+							<span class="text-xs font-medium text-charcoal/40">{tool.data.platform}</span>
 						</div>
 					</a>
 				))}

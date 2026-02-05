@@ -3,16 +3,23 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
 <BaseLayout title="Portfolio" description="Selected work and projects.">
-	<div class="max-w-4xl mx-auto px-6 py-12">
-		<h1 class="text-3xl font-bold mb-8">Portfolio</h1>
+	<div class="max-w-4xl mx-auto px-6 py-20">
+		<h1 class="text-3xl font-bold mb-10 tracking-tighter">Portfolio</h1>
 		
-		<div class="prose prose-lg max-w-none">
-			<p class="text-lg leading-relaxed mb-6">
-				Selected projects and work. More coming soon.
+		<div class="prose max-w-none text-charcoal/90">
+			<p class="text-xl leading-snug font-medium mb-12">
+				Selected projects and work. 
 			</p>
 			
-			<p class="text-gray-600">
-				For tools and software, see <a href="/tools" class="underline hover:no-underline">Tools</a>.
+			<div class="grid gap-8">
+				<section class="bg-white p-8 border border-gray-200/60 shadow-[2px_2px_0_rgba(0,0,0,0.02)]">
+					<h2 class="text-xs font-bold uppercase tracking-[0.3em] text-charcoal/40 mb-6 pb-2 border-b border-gray-100">Editorial & Motion</h2>
+					<p class="text-gray-600 italic mb-4">Case studies coming soon.</p>
+				</section>
+			</div>
+
+			<p class="text-[11px] font-bold uppercase mt-16 tracking-widest text-charcoal/40">
+				For software, see <a href="/tools" class="text-charcoal underline underline-offset-4 decoration-gray-300">Tools</a>.
 			</p>
 		</div>
 	</div>

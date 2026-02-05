@@ -6,34 +6,40 @@ const { summary, experience, skills } = resume;
 ---
 
 <BaseLayout title="Resume" description="Professional resume and experience.">
-	<div class="max-w-4xl mx-auto px-6 py-12">
-		<h1 class="text-3xl font-bold mb-6">Resume</h1>
+	<div class="max-w-4xl mx-auto px-6 py-20">
+		<h1 class="text-3xl font-bold mb-10 tracking-tighter">Resume</h1>
 
-		<div class="prose prose-lg max-w-none">
-			<p class="text-lg leading-relaxed">
-				Download the PDF or browse a clean text version of my resume below.
+		<div class="prose max-w-none text-charcoal/90">
+			<p class="text-lg leading-snug font-medium mb-8">
+				Professional experience and core competencies.
 			</p>
-			<p>
-				<a href="/resume/Colton_Batts_Resume.pdf" class="underline hover:no-underline">Download Resume (PDF)</a>
-			</p>
+			<a 
+				href="/resume/Colton_Batts_Resume.pdf" 
+				class="border border-charcoal px-6 py-2 text-sm font-bold hover:bg-charcoal hover:text-white transition-colors inline-block mb-16"
+			>
+				Download PDF
+			</a>
 		</div>
 
-		<section class="mt-10 border-t border-black pt-8">
-			<h2 class="text-2xl font-semibold mb-4">Professional Summary</h2>
-			<p class="text-gray-700 leading-relaxed">{summary}</p>
+		<section class="mt-12 bg-white p-8 border border-gray-200/60 shadow-[2px_2px_0_rgba(0,0,0,0.02)]">
+			<h2 class="text-xs font-bold uppercase tracking-[0.3em] text-charcoal/40 mb-6 pb-2 border-b border-gray-100">Professional Summary</h2>
+			<p class="font-medium leading-snug text-charcoal/80">{summary}</p>
 		</section>
 
-		<section class="mt-10 border-t border-black pt-8">
-			<h2 class="text-2xl font-semibold mb-6">Experience</h2>
-			<div class="grid gap-8">
+		<section class="mt-8 bg-white p-8 border border-gray-200/60 shadow-[2px_2px_0_rgba(0,0,0,0.02)] text-charcoal/90">
+			<h2 class="text-xs font-bold uppercase tracking-[0.3em] text-charcoal/40 mb-10 pb-2 border-b border-gray-100">Experience</h2>
+			<div class="grid gap-12">
 				{experience.map((role) => (
-					<div>
-						<h3 class="text-xl font-semibold">{role.title}</h3>
-						<p class="text-gray-700">{role.company}</p>
-						<p class="text-sm text-gray-600">{role.location} · {role.dates}</p>
-						<ul class="mt-4 list-disc pl-5 text-gray-700">
+					<div class="relative pl-6 border-l-2 border-gray-100">
+						<h3 class="text-xl font-bold">{role.title}</h3>
+						<p class="text-sm font-bold text-charcoal/60 uppercase tracking-tight">{role.company}</p>
+						<p class="text-[10px] font-bold text-charcoal/30 uppercase tracking-widest mt-1 mb-6">{role.location} · {role.dates}</p>
+						<ul class="space-y-2 text-sm font-medium">
 							{role.bullets.map((bullet) => (
-								<li>{bullet}</li>
+								<li class="flex items-start gap-3">
+									<span class="text-charcoal/20 mt-1">/</span>
+									<span class="leading-relaxed">{bullet}</span>
+								</li>
 							))}
 						</ul>
 					</div>
@@ -41,13 +47,19 @@ const { summary, experience, skills } = resume;
 			</div>
 		</section>
 
-		<section class="mt-10 border-t border-black pt-8">
-			<h2 class="text-2xl font-semibold mb-6">Skills</h2>
-			<div class="grid gap-6">
+		<section class="mt-8 bg-white p-8 border border-gray-200/60 shadow-[2px_2px_0_rgba(0,0,0,0.02)]">
+			<h2 class="text-xs font-bold uppercase tracking-[0.3em] text-charcoal/40 mb-8 pb-2 border-b border-gray-100">Skills</h2>
+			<div class="grid gap-10 md:grid-cols-2">
 				{skills.map((group) => (
 					<div>
-						<h3 class="text-lg font-semibold mb-2">{group.category}</h3>
-						<p class="text-gray-700">{group.items.join(' · ')}</p>
+						<h3 class="text-xs font-bold mb-4 uppercase text-charcoal/60">{group.category}</h3>
+						<div class="flex flex-wrap gap-2">
+							{group.items.map((item) => (
+								<span class="text-[11px] font-bold bg-gray-50 px-2 py-1 border border-gray-100 text-charcoal/70">
+									{item}
+								</span>
+							))}
+						</div>
 					</div>
 				))}
 			</div>

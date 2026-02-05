@@ -3,34 +3,30 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
 <BaseLayout title="Now" description="What I'm working on now.">
-	<div class="max-w-4xl mx-auto px-6 py-12">
-		<h1 class="text-3xl font-bold mb-8">Now</h1>
+	<div class="max-w-4xl mx-auto px-6 py-20">
+		<h1 class="text-3xl font-bold mb-10 tracking-tighter">Status</h1>
 		
-		<div class="prose prose-lg max-w-none">
-			<p class="text-lg leading-relaxed mb-6">
-				This is a <a href="https://nownownow.com/about" target="_blank" rel="noopener noreferrer" class="underline hover:no-underline">now page</a>—a snapshot of what I'm focused on right now.
-			</p>
-			
-			<div class="space-y-4">
-				<section>
-					<h2 class="text-xl font-semibold mb-2">Building</h2>
-					<ul class="list-disc list-inside space-y-1 text-gray-700">
-						<li>Offline-first tools</li>
-						<li>This site</li>
+		<div class="prose max-w-none text-charcoal/90">
+			<div class="grid gap-8 md:grid-cols-2">
+				<section class="bg-white p-8 border border-gray-200/60 shadow-[2px_2px_0_rgba(0,0,0,0.02)]">
+					<h2 class="text-xs font-bold uppercase tracking-[0.3em] text-charcoal/40 mb-6 pb-2 border-b border-gray-100">Building</h2>
+					<ul class="space-y-3 font-medium">
+						<li class="flex items-center gap-3"><span class="text-charcoal/20">/</span> Offline-first tools</li>
+						<li class="flex items-center gap-3"><span class="text-charcoal/20">/</span> This site</li>
 					</ul>
 				</section>
 				
-				<section>
-					<h2 class="text-xl font-semibold mb-2">Learning</h2>
-					<ul class="list-disc list-inside space-y-1 text-gray-700">
-						<li>Astro and static site generation</li>
-						<li>Editorial design principles</li>
+				<section class="bg-white p-8 border border-gray-200/60 shadow-[2px_2px_0_rgba(0,0,0,0.02)]">
+					<h2 class="text-xs font-bold uppercase tracking-[0.3em] text-charcoal/40 mb-6 pb-2 border-b border-gray-100">Learning</h2>
+					<ul class="space-y-3 font-medium">
+						<li class="flex items-center gap-3"><span class="text-charcoal/20">/</span> Astro & SSG</li>
+						<li class="flex items-center gap-3"><span class="text-charcoal/20">/</span> Editorial design</li>
 					</ul>
 				</section>
 			</div>
 			
-			<p class="text-sm text-gray-600 mt-8">
-				Last updated: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+			<p class="text-[10px] font-bold uppercase mt-16 tracking-widest text-charcoal/30">
+				REF: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '.')}
 			</p>
 		</div>
 	</div>
