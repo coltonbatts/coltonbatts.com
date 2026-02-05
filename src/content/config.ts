@@ -18,6 +18,18 @@ const toolsCollection = defineCollection({
 		})),
 		heroImage: z.string().optional(),
 		bullets: z.array(z.string()),
+
+		/* Deep-dive fields — optional for backward compat */
+		version: z.string().optional(),
+		lastUpdated: z.string().optional(),
+		techStack: z.array(z.string()).optional(),
+		repoUrl: z.string().url().optional(),
+		ownershipType: z.string().optional(),
+		hardware: z.object({
+			minimum: z.string(),
+			recommended: z.string(),
+			notes: z.string().optional(),
+		}).optional(),
 	}),
 });
 
