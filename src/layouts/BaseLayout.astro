@@ -57,5 +57,29 @@ const fullTitle = title === site.title ? title : `${title} | ${site.title}`;
 				<p>© {new Date().getFullYear()} Colton Batts. Built with Astro.</p>
 			</div>
 		</footer>
+
+		<script type="module">
+			import { initLotties, cleanupLotties } from '../animations/lottie';
+			import { initReveal, cleanupReveal } from '../animations/reveal';
+
+			const initMotion = () => {
+				initLotties();
+				initReveal();
+			};
+
+			const cleanupMotion = () => {
+				cleanupLotties();
+				cleanupReveal();
+			};
+
+			if (document.readyState === 'loading') {
+				document.addEventListener('DOMContentLoaded', initMotion, { once: true });
+			} else {
+				initMotion();
+			}
+
+			document.addEventListener('astro:page-load', initMotion);
+			document.addEventListener('astro:before-swap', cleanupMotion);
+		</script>
 	</body>
 </html>
