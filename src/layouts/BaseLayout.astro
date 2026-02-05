@@ -38,11 +38,15 @@ const fullTitle = title === site.title ? title : `${title} | ${site.title}`;
 		<title>{fullTitle}</title>
 	</head>
 	<body class="antialiased">
-		<header class="py-4 border-b border-gray-100">
+		<header class="py-4">
 			<nav class="max-w-4xl mx-auto px-6 py-4">
 				<div class="flex items-center justify-between">
-					<a href="/" class="text-xl font-bold tracking-tighter hover:underline">
-						{site.title}
+					<a href="/" class="block transition-opacity hover:opacity-70">
+						<img 
+							src="/wordmark.png" 
+							alt={site.title} 
+							class="h-12 w-auto"
+						/>
 					</a>
 					
 					<!-- Mobile Menu Toggle -->
