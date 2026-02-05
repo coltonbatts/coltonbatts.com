@@ -1,0 +1,26 @@
+---
+/**
+ * Wordmark.astro
+ * ==============
+ * Text-based wordmark for ColtonBatts.com.
+ * No PNG. No external dependency. Lives in the code.
+ *
+ * The wordmark renders "ColtonBatts" in UnifrakturMaguntia (Gothic
+ * blackletter) with a subtle CSS glitch effect on hover — the text
+ * briefly fractures, revealing a crimson ghost layer underneath.
+ *
+ * The glitch is CSS-only. Zero JavaScript. Respects reduced motion.
+ */
+
+interface Props {
+	class?: string;
+}
+
+const { class: className = '' } = Astro.props;
+---
+
+<span class={`wordmark ${className}`.trim()} aria-label="Colton Batts">
+	<span class="wordmark__text" data-text="ColtonBatts" aria-hidden="true">
+		ColtonBatts
+	</span>
+</span>

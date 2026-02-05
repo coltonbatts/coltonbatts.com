@@ -1,4 +1,17 @@
 ---
+/**
+ * index.astro — Homepage
+ * ======================
+ * The flagship page. Opens like a field manual.
+ *
+ * Layout strategy:
+ * - The hero section breaks out of max-w for full-bleed tension.
+ * - Headlines use display-scale type (Inter Black, -0.04em).
+ * - Sections alternate between contained and edge-to-edge.
+ * - Monospaced labels classify everything like equipment tags.
+ * - The "Own-Forever" manifesto block anchors the page's philosophy.
+ */
+
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ArtSlot from '../components/ArtSlot.astro';
 import { artManifest } from '../content/art-manifest';
@@ -13,98 +26,254 @@ function resolveToolSlot(slot: (typeof artManifest.tools)[string] | undefined) {
 	if (isGalleryMode) return slot;
 	return { ...slot, enabled: slot.enabled === true };
 }
+
+/** Client list — rendered as a monospaced ticker strip */
+const clients = ['Google', 'Under Armour', 'Kate Spade', 'Nuuly'];
 ---
 
 <BaseLayout title="Home" description="Toolmaker. Building offline-first tools.">
-	<div class="max-w-4xl mx-auto px-6 py-20">
-		<section class="mb-12 bg-paper p-8 border border-gray-200/60 shadow-[2px_2px_0_rgba(0,0,0,0.02)]">
-			<h2 class="text-3xl font-bold mb-4 tracking-tighter">Production-first multimedia designer</h2>
-			
-			<div class="prose max-w-2xl text-charcoal/90">
-				<p class="text-lg leading-snug font-medium mb-6">
-					10+ years delivering high-volume content for Google, Under Armour, Kate Spade. 
-					Focus on Premiere Pro, After Effects, and technical design hygiene.
-				</p>
-				
-				<div class="flex flex-wrap gap-4 items-center">
-					<a 
-						href="/resume/Colton_Batts_Resume.pdf" 
-						class="border border-charcoal px-4 py-2 text-sm font-bold hover:bg-charcoal hover:text-white transition-colors"
-					>
-						Resume
-					</a>
-					<a 
-						href="mailto:colton.batts@gmail.com" 
-						class="border border-charcoal px-4 py-2 text-sm font-bold hover:bg-charcoal hover:text-white transition-colors"
-					>
-						Email
-					</a>
-					
-					<span class="text-[11px] font-bold uppercase tracking-[0.2em] text-charcoal/40 ml-2">
-						Google · Under Armour · Kate Spade · Nuuly
+
+	<!-- ============================================================
+		 SECTION 01: HERO — Full-bleed identity block
+		 Breaks the container. Display type. Raw accent rule.
+		 ============================================================ -->
+	<section class="hero-section border-b-2 border-charcoal">
+		<div class="max-w-5xl mx-auto px-6 pt-16 pb-12 md:pt-22 md:pb-16">
+
+			<!-- Identifier stamp -->
+			<p class="section-label mb-6">Colton Batts &mdash; Fort Worth, TX</p>
+
+			<!-- Display headline — the steel beam -->
+			<h1 class="text-display md:text-display-lg max-w-4xl mb-8">
+				Production-first designer.<br class="hidden md:block" />
+				<span class="text-raw">Toolmaker.</span>
+			</h1>
+
+			<!-- Sub-statement -->
+			<p class="text-lg md:text-xl leading-relaxed max-w-2xl text-charcoal/80 mb-10">
+				10+ years delivering high-volume content for global brands.
+				Now building offline-first software that you actually own.
+			</p>
+
+			<!-- CTA row -->
+			<div class="flex flex-wrap gap-4 items-center mb-12">
+				<a href="/resume/Colton_Batts_Resume.pdf" class="btn-instrument">
+					Resume
+				</a>
+				<a href="mailto:colton.batts@gmail.com" class="btn-instrument--raw btn-instrument">
+					Email
+				</a>
+			</div>
+
+			<!-- Client ticker — monospaced, muted -->
+			<div class="flex flex-wrap gap-x-6 gap-y-2 font-mono text-meta uppercase text-charcoal/30">
+				{clients.map((client, i) => (
+					<span class="flex items-center gap-3">
+						{i > 0 && <span class="text-charcoal/15" aria-hidden="true">/</span>}
+						{client}
 					</span>
-				</div>
-			</div>
-		</section>
-
-		<section class="mb-16">
-			<h1 class="text-3xl font-bold mb-6">Toolmaker</h1>
-			<div class="prose prose-lg max-w-none">
-				<p class="text-lg leading-relaxed">
-					I build tools that work offline, respect your privacy, and don't require subscriptions.
-					No logins, no ads, no tracking. Just software that solves problems.
-					Think workshop manual, not SaaS landing page.
-				</p>
-			</div>
-			<div class="mt-8">
-				<ArtSlot slot={artManifest.hero} />
-			</div>
-		</section>
-
-		<section class="mb-16">
-			<h2 class="text-2xl font-semibold mb-6">Featured Tools</h2>
-			<div class="grid gap-6 md:grid-cols-2">
-				{featuredTools.map((tool) => (
-					<a
-						href={`/tools/${tool.slug}`}
-						class="p-8 hover:bg-paper transition-all block tool-card group"
-					>
-						<ArtSlot
-							slot={resolveToolSlot(artManifest.tools[tool.slug])}
-							class="mb-6"
-						/>
-						<h3 class="text-2xl font-semibold mb-3 group-hover:text-black transition-colors">{tool.data.name}</h3>
-						<p class="text-charcoal/70 mb-6 leading-relaxed">{tool.data.oneLiner}</p>
-						<div class="flex items-center gap-3">
-							<span
-								class="text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full"
-								class:list={{
-									'bg-charcoal text-white': tool.data.status === 'active',
-									'bg-gray-100 text-charcoal/60': tool.data.status === 'beta',
-									'bg-gray-200 text-charcoal/40': tool.data.status === 'archived',
-								}}
-							>
-								{tool.data.status}
-							</span>
-							<span class="text-xs font-medium text-charcoal/40">{tool.data.platform}</span>
-						</div>
-					</a>
 				))}
 			</div>
-		</section>
+		</div>
+	</section>
 
-		<section class="mb-16">
-			<h2 class="text-2xl font-semibold mb-6">Motion</h2>
-			<ArtSlot slot={artManifest.motion} />
-		</section>
+	<!-- ============================================================
+		 SECTION 02: HERO ART — Full-bleed artwork
+		 The image breaks out of padding — edge to edge.
+		 ============================================================ -->
+	<section class="border-b-2 border-charcoal">
+		<div class="max-w-5xl mx-auto">
+			<ArtSlot slot={artManifest.hero} />
+		</div>
+	</section>
 
-		<section>
-			<a
-				href="/portfolio"
-				class="text-lg underline hover:no-underline"
-			>
-				View portfolio →
+	<!-- ============================================================
+		 SECTION 03: PHILOSOPHY — The manifesto strip
+		 Full-width dark band. White text. Asymmetric.
+		 This is the thesis statement of the site.
+		 ============================================================ -->
+	<section class="bg-charcoal text-manual border-b-2 border-charcoal">
+		<div class="max-w-5xl mx-auto px-6 py-16 md:py-22">
+			<div class="grid md:grid-cols-12 gap-8 md:gap-12">
+
+				<!-- Left: label -->
+				<div class="md:col-span-4">
+					<p class="font-mono text-label uppercase tracking-instrument text-manual/40 mb-4">
+						Philosophy
+					</p>
+					<h2 class="text-display-sm text-manual">Own-Forever<br />Software.</h2>
+				</div>
+
+				<!-- Right: manifesto text -->
+				<div class="md:col-span-8 md:pt-2">
+					<p class="text-lg md:text-xl leading-relaxed text-manual/80 mb-6">
+						I build tools that work offline, respect your privacy, and don't require subscriptions.
+						No logins, no ads, no tracking. Just software that solves problems.
+					</p>
+					<p class="text-base leading-relaxed text-manual/60 mb-8">
+						Think workshop manual, not SaaS landing page. Everything is designed to be owned,
+						not rented. Your data stays on your machine. The code is readable. The interface
+						is quiet. If the internet goes down, the tool still works.
+					</p>
+					<div class="border-t border-manual/15 pt-6">
+						<a href="/tools" class="btn-instrument border-manual/40 text-manual/70 hover:bg-manual hover:text-charcoal">
+							View Tools
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- ============================================================
+		 SECTION 04: FEATURED TOOLS — Contained grid
+		 Two-column tool cards with the new stamped treatment.
+		 ============================================================ -->
+	<section class="max-w-5xl mx-auto px-6 py-16 md:py-22">
+
+		<!-- Section header — asymmetric: label left, link right -->
+		<div class="flex items-end justify-between mb-10">
+			<div>
+				<p class="section-label mb-0 border-0 pb-0">Featured Instruments</p>
+				<h2 class="mt-3">Tools I've Built</h2>
+			</div>
+			<a href="/tools" class="hidden md:block font-mono text-label uppercase tracking-instrument text-raw hover:text-raw-dark transition-colors">
+				All Tools &rarr;
 			</a>
-		</section>
-	</div>
+		</div>
+
+		<div class="grid gap-6 md:grid-cols-2">
+			{featuredTools.map((tool) => (
+				<a
+					href={`/tools/${tool.slug}`}
+					class="block tool-card group"
+				>
+					<!-- Tool art slot -->
+					<div class="border-b-2 border-charcoal">
+						<ArtSlot
+							slot={resolveToolSlot(artManifest.tools[tool.slug])}
+						/>
+					</div>
+
+					<!-- Tool info -->
+					<div class="p-6 md:p-8">
+						<div class="flex items-center gap-3 mb-4">
+							<span class:list={[
+								'status-badge',
+								{
+									'status-badge--active': tool.data.status === 'active',
+									'status-badge--beta': tool.data.status === 'beta',
+									'status-badge--archived': tool.data.status === 'archived',
+								},
+							]}>
+								{tool.data.status}
+							</span>
+							<span class="font-mono text-meta uppercase text-charcoal/40">
+								{tool.data.platform}
+							</span>
+						</div>
+						<h3 class="mb-3 group-hover:text-raw transition-colors">{tool.data.name}</h3>
+						<p class="text-charcoal/65 leading-relaxed">{tool.data.oneLiner}</p>
+					</div>
+				</a>
+			))}
+		</div>
+
+		<!-- Mobile "All Tools" link -->
+		<div class="mt-8 md:hidden">
+			<a href="/tools" class="btn-instrument w-full text-center">
+				All Tools &rarr;
+			</a>
+		</div>
+	</section>
+
+	<!-- ============================================================
+		 SECTION 05: MOTION — Full-bleed Rive/motion slot
+		 Bordered top and bottom. Feels like a specimen panel.
+		 ============================================================ -->
+	<section class="border-y-2 border-charcoal">
+		<div class="max-w-5xl mx-auto px-6 py-10">
+			<div class="flex items-end justify-between mb-6">
+				<div>
+					<p class="section-label mb-0 border-0 pb-0">Experiment</p>
+					<h2 class="mt-3">Motion</h2>
+				</div>
+				<a href="/lab" class="font-mono text-label uppercase tracking-instrument text-raw hover:text-raw-dark transition-colors">
+					Lab &rarr;
+				</a>
+			</div>
+			<ArtSlot slot={artManifest.motion} />
+		</div>
+	</section>
+
+	<!-- ============================================================
+		 SECTION 06: PRODUCTION — Professional background
+		 The multimedia designer identity. Structured like a dossier.
+		 ============================================================ -->
+	<section class="max-w-5xl mx-auto px-6 py-16 md:py-22">
+		<div class="grid md:grid-cols-12 gap-8 md:gap-12">
+
+			<!-- Left column: header -->
+			<div class="md:col-span-5">
+				<p class="section-label">Production</p>
+				<h2 class="mb-6">Editorial &<br />Motion Design</h2>
+				<p class="text-charcoal/70 leading-relaxed mb-8">
+					Before building software, I spent a decade in high-volume video production
+					and editorial design for national brands. That production discipline
+					informs everything I build.
+				</p>
+				<div class="flex flex-wrap gap-4">
+					<a href="/resume" class="btn-instrument">
+						Full Resume
+					</a>
+					<a href="/portfolio" class="btn-instrument--raw btn-instrument">
+						Portfolio
+					</a>
+				</div>
+			</div>
+
+			<!-- Right column: credential blocks -->
+			<div class="md:col-span-7 grid gap-4">
+				<div class="section-block section-block--static">
+					<p class="section-label">Capture This &middot; 2021&ndash;Present</p>
+					<h4 class="font-sans font-bold mb-2">Lead Video Editor</h4>
+					<p class="text-sm text-charcoal/60 leading-relaxed">
+						30+ assets for Google &ldquo;Shop With Google&rdquo; campaigns. Under Armour
+						training series. Kate Spade social. 24-hour rough-cut turnarounds.
+					</p>
+				</div>
+				<div class="section-block section-block--static">
+					<p class="section-label">Freedom Powersports &middot; 2015&ndash;2021</p>
+					<h4 class="font-sans font-bold mb-2">Multimedia Designer & Video Lead</h4>
+					<p class="text-sm text-charcoal/60 leading-relaxed">
+						Large-format signage, building wraps, event systems.
+						6 years as primary editor for corporate and promotional media.
+					</p>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- ============================================================
+		 SECTION 07: BOTTOM CTA — Final call, full-width strip
+		 ============================================================ -->
+	<section class="border-t-2 border-charcoal bg-charcoal text-manual">
+		<div class="max-w-5xl mx-auto px-6 py-16 md:py-22 flex flex-col md:flex-row md:items-center md:justify-between gap-8">
+			<div>
+				<p class="font-mono text-label uppercase tracking-instrument text-manual/40 mb-3">
+					Get in touch
+				</p>
+				<h2 class="text-display-sm text-manual">Let's build something.</h2>
+			</div>
+			<div class="flex flex-wrap gap-4">
+				<a href="mailto:colton.batts@gmail.com" class="btn-instrument border-manual/40 text-manual/70 hover:bg-manual hover:text-charcoal">
+					Email
+				</a>
+				<a href="/contact" class="btn-instrument border-raw text-raw hover:bg-raw hover:text-manual">
+					Contact
+				</a>
+			</div>
+		</div>
+	</section>
+
 </BaseLayout>

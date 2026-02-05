@@ -1,5 +1,18 @@
 ---
+/**
+ * BaseLayout.astro
+ * ================
+ * The structural skeleton of coltonbatts.com.
+ *
+ * Design language: Editorial Modernism for Tools.
+ * - Self-hosted fonts (IBM Plex Mono + Inter), preloaded.
+ * - No external CDN calls. Zero tracking.
+ * - Thick borders, monospaced nav, stamped shadows.
+ * - Paper texture background persists behind a heavy structural grid.
+ */
+
 import { navItems, site } from '../config';
+import Wordmark from '../components/Wordmark.astro';
 import '../styles/global.css';
 
 interface Props {
@@ -9,6 +22,7 @@ interface Props {
 
 const { title = site.title, description = site.description } = Astro.props;
 const fullTitle = title === site.title ? title : `${title} | ${site.title}`;
+const currentPath = Astro.url.pathname;
 ---
 
 <!doctype html>
@@ -20,8 +34,17 @@ const fullTitle = title === site.title ? title : `${title} | ${site.title}`;
 		<link rel="icon" type="image/png" href="/favicon-custom.png" />
 		<link rel="apple-touch-icon" href="/favicon-custom.png" />
 		<meta name="generator" content={Astro.generator} />
-		
-		<!-- Open Graph / Facebook -->
+
+		<!-- ============================================
+			 FONT PRELOADS
+			 Critical fonts loaded first to prevent FOUT.
+			 Only preload the weights we use above the fold.
+			 ============================================ -->
+		<link rel="preload" href="/fonts/Inter-Black.woff2" as="font" type="font/woff2" crossorigin />
+		<link rel="preload" href="/fonts/Inter-Bold.woff2" as="font" type="font/woff2" crossorigin />
+		<link rel="preload" href="/fonts/IBMPlexMono-Bold.woff2" as="font" type="font/woff2" crossorigin />
+
+		<!-- Open Graph -->
 		<meta property="og:type" content="website" />
 		<meta property="og:url" content={Astro.url} />
 		<meta property="og:title" content={fullTitle} />
@@ -34,66 +57,81 @@ const fullTitle = title === site.title ? title : `${title} | ${site.title}`;
 		<meta property="twitter:title" content={fullTitle} />
 		<meta property="twitter:description" content={description} />
 		<meta property="twitter:image" content={new URL('/og-image.png', Astro.url)} />
-		
+
 		<title>{fullTitle}</title>
 	</head>
-	<body class="antialiased">
-		<header class="py-4">
-			<nav class="max-w-4xl mx-auto px-6 py-4">
+
+	<body class="antialiased min-h-screen flex flex-col">
+
+		<!-- ============================================
+			 HEADER / NAVIGATION
+			 Monospaced, uppercase, heavy bottom border.
+			 The nav feels like a label maker, not a menu.
+			 ============================================ -->
+		<header class="border-b-2 border-charcoal">
+			<nav class="max-w-5xl mx-auto px-6 py-5">
 				<div class="flex items-center justify-between">
-					<a href="/" class="block transition-opacity hover:opacity-70">
-						<img 
-							src="/wordmark.png" 
-							alt={site.title} 
-							class="h-14 md:h-28 w-auto"
-						/>
+
+					<!-- Wordmark -->
+					<a href="/" class="block" aria-label="Home">
+						<Wordmark />
 					</a>
-					
+
 					<!-- Mobile Menu Toggle -->
-					<button 
+					<button
 						id="mobile-menu-toggle"
-						class="md:hidden flex flex-col gap-1 p-2 border border-charcoal/10 hover:border-charcoal transition-colors group"
+						class="md:hidden flex flex-col gap-1.5 p-2 border-2 border-charcoal hover:bg-charcoal hover:text-manual transition-colors group"
 						aria-label="Toggle Menu"
+						aria-expanded="false"
 					>
-						<span class="w-5 h-0.5 bg-charcoal"></span>
-						<span class="w-5 h-0.5 bg-charcoal"></span>
-						<span class="w-5 h-0.5 bg-charcoal"></span>
+						<span class="w-5 h-0.5 bg-charcoal group-hover:bg-manual transition-colors"></span>
+						<span class="w-5 h-0.5 bg-charcoal group-hover:bg-manual transition-colors"></span>
+						<span class="w-5 h-0.5 bg-charcoal group-hover:bg-manual transition-colors"></span>
 					</button>
 
-					<ul 
+					<!-- Desktop Navigation -->
+					<ul
 						id="nav-menu"
-						class="hidden md:flex gap-6 text-[11px] font-bold uppercase tracking-widest text-charcoal/60"
+						class="hidden md:flex gap-8 font-mono text-label uppercase tracking-instrument text-charcoal/50"
 					>
 						{navItems.map((item) => (
 							<li>
 								<a
 									href={item.href}
-									class="hover:text-charcoal transition-colors"
-									class:list={{
-										'text-charcoal': Astro.url.pathname === item.href,
-									}}
+									class:list={[
+										'hover:text-charcoal transition-colors relative py-1',
+										{
+											'text-charcoal': currentPath === item.href || (item.href !== '/' && currentPath.startsWith(item.href)),
+										},
+									]}
 								>
 									{item.label}
+									{/* Active indicator: a raw accent underline */}
+									{(currentPath === item.href || (item.href !== '/' && currentPath.startsWith(item.href))) && (
+										<span class="absolute -bottom-[1.4rem] left-0 w-full h-[2px] bg-raw"></span>
+									)}
 								</a>
 							</li>
 						))}
 					</ul>
 				</div>
 
-				<!-- Mobile Menu Container -->
-				<div 
-					id="mobile-menu" 
-					class="hidden md:hidden pt-8 pb-4 border-t border-gray-100 mt-4"
+				<!-- Mobile Menu -->
+				<div
+					id="mobile-menu"
+					class="hidden md:hidden pt-6 pb-2 mt-5 border-t-2 border-charcoal"
 				>
-					<ul class="flex flex-col gap-4 text-xs font-bold uppercase tracking-widest text-charcoal/60">
+					<ul class="flex flex-col gap-4 font-mono text-label uppercase tracking-instrument text-charcoal/50">
 						{navItems.map((item) => (
 							<li>
 								<a
 									href={item.href}
-									class="hover:text-charcoal transition-colors"
-									class:list={{
-										'text-charcoal': Astro.url.pathname === item.href,
-									}}
+									class:list={[
+										'hover:text-charcoal transition-colors block py-1',
+										{
+											'text-charcoal border-l-2 border-raw pl-3': currentPath === item.href || (item.href !== '/' && currentPath.startsWith(item.href)),
+										},
+									]}
 								>
 									{item.label}
 								</a>
@@ -104,16 +142,33 @@ const fullTitle = title === site.title ? title : `${title} | ${site.title}`;
 			</nav>
 		</header>
 
-		<main>
+		<!-- ============================================
+			 MAIN CONTENT
+			 ============================================ -->
+		<main class="flex-1">
 			<slot />
 		</main>
 
-		<footer class="mt-20 border-t border-gray-100">
-			<div class="max-w-4xl mx-auto px-6 py-12 text-[10px] font-bold uppercase tracking-[0.2em] text-charcoal/30">
-				<p>© {new Date().getFullYear()} Colton Batts · REF: {new Date().toISOString().split('T')[0].replace(/-/g, '.')}</p>
+		<!-- ============================================
+			 FOOTER
+			 Heavy top border. Monospaced metadata stamp.
+			 Feels like the colophon of a printed manual.
+			 ============================================ -->
+		<footer class="mt-20 border-t-2 border-charcoal">
+			<div class="max-w-5xl mx-auto px-6 py-10 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+				<p class="font-mono text-meta uppercase text-charcoal/30">
+					&copy; {new Date().getFullYear()} Colton Batts
+				</p>
+				<p class="font-mono text-meta uppercase text-charcoal/20">
+					REF: {new Date().toISOString().split('T')[0].replace(/-/g, '.')} &middot; Built with Astro
+				</p>
 			</div>
 		</footer>
 
+		<!-- ============================================
+			 CLIENT-SIDE SCRIPTS
+			 Minimal. Only what's necessary.
+			 ============================================ -->
 		<script type="module">
 			import { initLotties, cleanupLotties } from '../animations/lottie';
 			import { initReveal, cleanupReveal } from '../animations/reveal';
@@ -121,9 +176,13 @@ const fullTitle = title === site.title ? title : `${title} | ${site.title}`;
 			const initMobileMenu = () => {
 				const toggle = document.getElementById('mobile-menu-toggle');
 				const menu = document.getElementById('mobile-menu');
-				if (toggle && menu) {
-					toggle.onclick = () => menu.classList.toggle('hidden');
-				}
+				if (!toggle || !menu) return;
+
+				toggle.addEventListener('click', () => {
+					const isOpen = !menu.classList.contains('hidden');
+					menu.classList.toggle('hidden');
+					toggle.setAttribute('aria-expanded', String(!isOpen));
+				});
 			};
 
 			const initMotion = () => {

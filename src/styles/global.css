@@ -2,20 +2,116 @@
 @tailwind components;
 @tailwind utilities;
 
+/* =============================================================
+ * SELF-HOSTED FONTS
+ * No external CDNs. These files live in /public/fonts/.
+ * IBM Plex Mono: the instrument layer (nav, labels, metadata).
+ * Inter: the structural layer (headlines, body, authority).
+ * ============================================================= */
+
+@font-face {
+	font-family: 'IBM Plex Mono';
+	src: url('/fonts/IBMPlexMono-Regular.woff2') format('woff2');
+	font-weight: 400;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'IBM Plex Mono';
+	src: url('/fonts/IBMPlexMono-Medium.woff2') format('woff2');
+	font-weight: 500;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'IBM Plex Mono';
+	src: url('/fonts/IBMPlexMono-Bold.woff2') format('woff2');
+	font-weight: 700;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Inter';
+	src: url('/fonts/Inter-Regular.woff2') format('woff2');
+	font-weight: 400;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Inter';
+	src: url('/fonts/Inter-Medium.woff2') format('woff2');
+	font-weight: 500;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Inter';
+	src: url('/fonts/Inter-Bold.woff2') format('woff2');
+	font-weight: 700;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Inter';
+	src: url('/fonts/Inter-Black.woff2') format('woff2');
+	font-weight: 900;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'UnifrakturMaguntia';
+	src: url('/fonts/UnifrakturMaguntia-Regular.woff2') format('woff2');
+	font-weight: 400;
+	font-style: normal;
+	font-display: swap;
+}
+
+/* =============================================================
+ * CSS CUSTOM PROPERTIES
+ * The design language distilled into tokens.
+ * ============================================================= */
+
 :root {
 	--charcoal: #1a1a1a;
+	--ink: #0d0d0d;
 	--bg-manual: #f4f4f2;
-	--border-thin: #d1d1d1;
+	--bone: #e8e6e1;
+	--raw: #9b1b1b;
+	--raw-dark: #7a1515;
+
+	/* Borders — the structural grid */
+	--border-weight: 2px;
+	--border-color: var(--charcoal);
+	--border-muted: var(--bone);
+
+	/* Paper — tactile background */
 	--bg-paper: url('/paper-texture.jpg');
+
+	/* Shadows — stamped, not floating */
+	--shadow-stamp: 3px 3px 0px rgba(0, 0, 0, 0.15);
+	--shadow-stamp-lg: 6px 6px 0px rgba(0, 0, 0, 0.12);
+	--shadow-stamp-hover: 6px 6px 0px rgba(0, 0, 0, 0.18);
 }
+
+/* =============================================================
+ * BASE LAYER
+ * ============================================================= */
 
 @layer base {
 	html {
-		font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+		font-family: 'Inter', system-ui, -apple-system, sans-serif;
 		-webkit-font-smoothing: antialiased;
 		-moz-osx-font-smoothing: grayscale;
 		letter-spacing: -0.01em;
 		background-color: var(--bg-manual);
+		font-variant-numeric: tabular-nums;
 	}
 
 	body {
@@ -26,18 +122,64 @@
 		color: var(--charcoal);
 	}
 
+	/* -----------------------------------------------------------
+	 * GLOBAL TYPOGRAPHY RESETS
+	 * Headlines are black, heavy, and tight. Body is readable.
+	 * Monospace is used for anything that labels or classifies.
+	 * ----------------------------------------------------------- */
+
+	h1, h2, h3, h4, h5, h6 {
+		font-family: 'Inter', system-ui, sans-serif;
+		font-weight: 900;
+		letter-spacing: -0.03em;
+		line-height: 1.1;
+		color: var(--ink);
+	}
+
+	h1 { font-size: 2.75rem; letter-spacing: -0.04em; }
+	h2 { font-size: 2rem; letter-spacing: -0.03em; }
+	h3 { font-size: 1.5rem; }
+	h4 { font-size: 1.125rem; }
+
+	@media (min-width: 768px) {
+		h1 { font-size: 3.5rem; }
+		h2 { font-size: 2.5rem; }
+		h3 { font-size: 1.75rem; }
+	}
+
+	/* Kill all border-radius globally as reinforcement */
+	*, *::before, *::after {
+		border-radius: 0 !important;
+	}
+
+	/* Selection highlight uses the raw accent */
+	::selection {
+		background-color: var(--raw);
+		color: white;
+	}
+
+	/* Links: raw accent on hover, no ambiguity */
+	a {
+		transition: color 0.15s ease;
+	}
+
+	/* Focus states: stark, visible, accessible */
+	:focus-visible {
+		outline: 2px solid var(--raw);
+		outline-offset: 2px;
+	}
+
+	/* Horizontal rules: structural dividers */
+	hr {
+		border: none;
+		border-top: var(--border-weight) solid var(--border-color);
+		margin: 2rem 0;
+	}
+
 	/* Print styles */
 	@media print {
-
-		header,
-		footer {
-			display: none;
-		}
-
-		a {
-			text-decoration: underline;
-		}
-
+		header, footer { display: none; }
+		a { text-decoration: underline; }
 		a[href^="http"]:after {
 			content: " (" attr(href) ")";
 			font-size: 0.8em;
@@ -46,7 +188,141 @@
 	}
 }
 
+/* =============================================================
+ * COMPONENT LAYER
+ * Reusable structural patterns.
+ * ============================================================= */
+
 @layer components {
+
+	/* -----------------------------------------------------------
+	 * SECTION CONTAINER: The structural card
+	 * Used for any boxed content section.
+	 * ----------------------------------------------------------- */
+
+	.section-block {
+		background-image: var(--bg-paper);
+		background-size: 200%;
+		border: var(--border-weight) solid var(--border-color);
+		box-shadow: var(--shadow-stamp);
+		padding: 2rem;
+		transition: transform 0.2s cubic-bezier(0.2, 0, 0, 1),
+					box-shadow 0.2s cubic-bezier(0.2, 0, 0, 1);
+	}
+
+	.section-block:hover {
+		transform: translate(-2px, -2px);
+		box-shadow: var(--shadow-stamp-hover);
+	}
+
+	/* Non-interactive blocks shouldn't shift on hover */
+	.section-block--static {
+		pointer-events: auto;
+	}
+
+	.section-block--static:hover {
+		transform: none;
+		box-shadow: var(--shadow-stamp);
+	}
+
+	/* -----------------------------------------------------------
+	 * SECTION LABEL: Monospaced category headers
+	 * The "machine-engraved plate" above content sections.
+	 * ----------------------------------------------------------- */
+
+	.section-label {
+		font-family: 'IBM Plex Mono', ui-monospace, monospace;
+		font-size: 0.6875rem;
+		font-weight: 700;
+		text-transform: uppercase;
+		letter-spacing: 0.12em;
+		color: rgba(0, 0, 0, 0.4);
+		padding-bottom: 0.5rem;
+		border-bottom: 1px solid var(--bone);
+		margin-bottom: 1.5rem;
+	}
+
+	/* -----------------------------------------------------------
+	 * INSTRUMENT BUTTON: The primary CTA
+	 * Heavy border, monospaced text, physical feedback.
+	 * ----------------------------------------------------------- */
+
+	.btn-instrument {
+		display: inline-block;
+		font-family: 'IBM Plex Mono', ui-monospace, monospace;
+		font-size: 0.75rem;
+		font-weight: 700;
+		text-transform: uppercase;
+		letter-spacing: 0.1em;
+		padding: 0.75rem 1.5rem;
+		border: var(--border-weight) solid var(--charcoal);
+		background: transparent;
+		color: var(--charcoal);
+		box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.15);
+		transition: all 0.15s cubic-bezier(0.2, 0, 0, 1);
+		cursor: pointer;
+		text-decoration: none;
+	}
+
+	.btn-instrument:hover {
+		background: var(--charcoal);
+		color: var(--bg-manual);
+		transform: translate(-1px, -1px);
+		box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.2);
+	}
+
+	.btn-instrument:active {
+		transform: translate(1px, 1px);
+		box-shadow: 1px 1px 0px rgba(0, 0, 0, 0.15);
+	}
+
+	/* Raw accent variant */
+	.btn-instrument--raw {
+		border-color: var(--raw);
+		color: var(--raw);
+	}
+
+	.btn-instrument--raw:hover {
+		background: var(--raw);
+		color: white;
+		box-shadow: 4px 4px 0px rgba(155, 27, 27, 0.25);
+	}
+
+	/* -----------------------------------------------------------
+	 * STATUS BADGE: Monospaced pill
+	 * ----------------------------------------------------------- */
+
+	.status-badge {
+		font-family: 'IBM Plex Mono', ui-monospace, monospace;
+		font-size: 0.625rem;
+		font-weight: 700;
+		text-transform: uppercase;
+		letter-spacing: 0.1em;
+		padding: 0.25rem 0.75rem;
+		border: var(--border-weight) solid var(--charcoal);
+		display: inline-block;
+	}
+
+	.status-badge--active {
+		background: var(--charcoal);
+		color: var(--bg-manual);
+	}
+
+	.status-badge--beta {
+		background: transparent;
+		color: var(--charcoal);
+	}
+
+	.status-badge--archived {
+		border-color: var(--bone);
+		color: rgba(0, 0, 0, 0.35);
+	}
+
+	/* -----------------------------------------------------------
+	 * ART PLATE: Gallery frame system
+	 * Upgraded to the new border/shadow language.
+	 * ----------------------------------------------------------- */
+
 	.art-plate {
 		display: flex;
 		flex-direction: column;
@@ -54,14 +330,13 @@
 	}
 
 	.art-plate__inner {
-		border-radius: 1px;
 		padding: 0.5rem;
 		background-image: var(--bg-paper);
 		background-size: 200%;
-		/* Zoomed for subtle contrast */
-		border: 1px solid var(--border-thin);
-		box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.05);
-		transition: transform 0.2s ease, box-shadow 0.2s ease;
+		border: var(--border-weight) solid var(--border-color);
+		box-shadow: var(--shadow-stamp);
+		transition: transform 0.2s cubic-bezier(0.2, 0, 0, 1),
+					box-shadow 0.2s cubic-bezier(0.2, 0, 0, 1);
 	}
 
 	.art-plate--surface-paper .art-plate__inner {
@@ -74,44 +349,53 @@
 
 	.art-plate--matted .art-plate__inner {
 		padding: 2rem;
-		border-width: 0.5px;
 	}
 
 	.art-plate--float .art-plate__inner {
 		padding: 0.75rem;
-		box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.08);
+		box-shadow: var(--shadow-stamp-lg);
 		transform: translate(-1px, -1px);
 	}
 
 	.art-plate:hover .art-plate__inner {
 		transform: translate(-2px, -2px);
-		box-shadow: 6px 6px 0px rgba(0, 0, 0, 0.1);
+		box-shadow: var(--shadow-stamp-hover);
 	}
 
 	.art-plate__caption {
-		font-size: 0.75rem;
+		font-family: 'IBM Plex Mono', ui-monospace, monospace;
+		font-size: 0.6875rem;
 		line-height: 1.35;
-		color: rgba(0, 0, 0, 0.58);
+		letter-spacing: 0.02em;
+		color: rgba(0, 0, 0, 0.5);
 	}
 
 	.art-plate__link {
-		font-size: 0.75rem;
+		font-family: 'IBM Plex Mono', ui-monospace, monospace;
+		font-size: 0.6875rem;
 		line-height: 1.35;
-		color: rgba(0, 0, 0, 0.72);
+		letter-spacing: 0.02em;
+		color: var(--raw);
 		text-decoration: underline;
-		text-underline-offset: 2px;
+		text-underline-offset: 3px;
+		text-decoration-thickness: 1px;
 	}
 
 	.art-plate__link:hover,
 	.art-plate__link:focus-visible {
-		color: rgba(0, 0, 0, 0.92);
+		color: var(--raw-dark);
+		text-decoration-thickness: 2px;
 	}
+
+	/* -----------------------------------------------------------
+	 * ART SLOT: Media frame
+	 * ----------------------------------------------------------- */
 
 	.art-slot__frame {
 		position: relative;
 		width: 100%;
 		overflow: hidden;
-		background: rgba(0, 0, 0, 0.02);
+		background: rgba(0, 0, 0, 0.03);
 	}
 
 	@supports (aspect-ratio: 1 / 1) {
@@ -126,8 +410,7 @@
 			display: block;
 			padding-top: var(--slot-ratio, 56.25%);
 		}
-
-		.art-slot__frame>* {
+		.art-slot__frame > * {
 			position: absolute;
 			inset: 0;
 		}
@@ -148,38 +431,41 @@
 		justify-content: center;
 		width: 100%;
 		height: 100%;
-		background: rgba(0, 0, 0, 0.025);
+		background: rgba(0, 0, 0, 0.03);
 	}
 
 	.art-slot__empty {
 		position: relative;
 	}
 
+	/* Empty state crosshair — structural, not decorative */
 	.art-slot__empty::before,
 	.art-slot__empty::after {
 		content: '';
 		position: absolute;
-		background: rgba(0, 0, 0, 0.12);
+		background: rgba(0, 0, 0, 0.15);
 	}
 
 	.art-slot__empty::before {
 		width: 28%;
-		height: 1px;
+		height: 2px;
 		left: 36%;
 		top: 50%;
 	}
 
 	.art-slot__empty::after {
-		width: 1px;
+		width: 2px;
 		height: 28%;
 		top: 36%;
 		left: 50%;
 	}
 
-	.art-slot__empty>span {
-		font-size: 0.72rem;
-		letter-spacing: 0.02em;
-		color: rgba(0, 0, 0, 0.48);
+	.art-slot__empty > span {
+		font-family: 'IBM Plex Mono', ui-monospace, monospace;
+		font-size: 0.6875rem;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: rgba(0, 0, 0, 0.4);
 		z-index: 1;
 	}
 
@@ -223,25 +509,150 @@
 		}
 	}
 
+	/* -----------------------------------------------------------
+	 * TOOL CARD: Upgraded with stamped shadows by default
+	 * ----------------------------------------------------------- */
+
 	.tool-card {
 		background-image: var(--bg-paper);
 		background-size: 150%;
-		border-radius: 2px;
-		border: 1px solid var(--border-thin);
-		transition: all 0.2s ease;
-		box-shadow: 1px 1px 0px rgba(0, 0, 0, 0.05);
+		border: var(--border-weight) solid var(--border-color);
+		box-shadow: var(--shadow-stamp);
+		transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
 	}
 
 	.tool-card:hover {
 		transform: translate(-2px, -2px);
-		box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.1);
-		border-color: var(--charcoal);
+		box-shadow: var(--shadow-stamp-hover);
+		border-color: var(--ink);
 	}
 
 	.tool-card:focus-visible {
-		outline: 2px solid theme('colors.charcoal');
-		outline-offset: 4px;
+		outline: 2px solid var(--raw);
+		outline-offset: 3px;
 	}
+
+	/* -----------------------------------------------------------
+	 * WORDMARK: Gothic blackletter with glitch on hover
+	 * The text is the brand. No images. CSS-only animation.
+	 * ----------------------------------------------------------- */
+
+	.wordmark {
+		display: inline-block;
+		position: relative;
+		line-height: 1;
+		cursor: pointer;
+	}
+
+	.wordmark__text {
+		font-family: 'UnifrakturMaguntia', 'Times New Roman', serif;
+		font-size: 1.75rem;
+		font-weight: 400;
+		color: var(--ink);
+		letter-spacing: 0.01em;
+		display: inline-block;
+		position: relative;
+		transition: color 0.1s ease;
+	}
+
+	@media (min-width: 768px) {
+		.wordmark__text {
+			font-size: 2.25rem;
+		}
+	}
+
+	/* Glitch ghost layer — crimson, offset, clipped */
+	.wordmark__text::before,
+	.wordmark__text::after {
+		content: attr(data-text);
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		opacity: 0;
+		pointer-events: none;
+		transition: opacity 0.15s ease;
+	}
+
+	.wordmark__text::before {
+		color: var(--raw);
+		clip-path: inset(0 0 65% 0);
+		transform: translate(-2px, -1px);
+	}
+
+	.wordmark__text::after {
+		color: var(--raw);
+		clip-path: inset(60% 0 0 0);
+		transform: translate(2px, 1px);
+	}
+
+	/* Hover: ghost layers appear, main text shifts subtly */
+	.wordmark:hover .wordmark__text::before,
+	.wordmark:hover .wordmark__text::after {
+		opacity: 0.8;
+	}
+
+	.wordmark:hover .wordmark__text::before {
+		animation: wordmark-glitch-top 0.3s ease-out both;
+	}
+
+	.wordmark:hover .wordmark__text::after {
+		animation: wordmark-glitch-bottom 0.3s ease-out 0.05s both;
+	}
+
+	@keyframes wordmark-glitch-top {
+		0%   { opacity: 0; transform: translate(0, 0); clip-path: inset(0 0 65% 0); }
+		20%  { opacity: 1; transform: translate(-3px, -2px); clip-path: inset(10% 0 55% 0); }
+		40%  { opacity: 0.6; transform: translate(2px, 0); clip-path: inset(0 0 70% 0); }
+		60%  { opacity: 0.9; transform: translate(-1px, -1px); clip-path: inset(5% 0 60% 0); }
+		100% { opacity: 0.7; transform: translate(-2px, -1px); clip-path: inset(0 0 65% 0); }
+	}
+
+	@keyframes wordmark-glitch-bottom {
+		0%   { opacity: 0; transform: translate(0, 0); clip-path: inset(60% 0 0 0); }
+		20%  { opacity: 1; transform: translate(3px, 1px); clip-path: inset(50% 0 0 0); }
+		40%  { opacity: 0.6; transform: translate(-2px, 2px); clip-path: inset(65% 0 0 0); }
+		60%  { opacity: 0.9; transform: translate(1px, 1px); clip-path: inset(55% 0 0 0); }
+		100% { opacity: 0.7; transform: translate(2px, 1px); clip-path: inset(60% 0 0 0); }
+	}
+
+	/* Respect reduced motion — disable glitch, keep static */
+	@media (prefers-reduced-motion: reduce) {
+		.wordmark:hover .wordmark__text::before,
+		.wordmark:hover .wordmark__text::after {
+			animation: none;
+			opacity: 0;
+		}
+	}
+
+	/* -----------------------------------------------------------
+	 * HERO SECTION: Opening page of the manual
+	 * Subtle paper texture, structural presence.
+	 * ----------------------------------------------------------- */
+
+	.hero-section {
+		background-image: var(--bg-paper);
+		background-size: 300%;
+		background-position: center top;
+		position: relative;
+	}
+
+	/* Faint top rule inside the hero for "printed page" feel */
+	.hero-section::before {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		height: 3px;
+		background: var(--raw);
+		opacity: 0.7;
+	}
+
+	/* -----------------------------------------------------------
+	 * REVEAL ANIMATIONS
+	 * ----------------------------------------------------------- */
 
 	.art-reveal--fade {
 		animation: art-reveal-fade 420ms ease-out both;
@@ -251,33 +662,58 @@
 		content: '';
 		position: absolute;
 		inset: 0;
-		background: rgba(255, 255, 255, 0.94);
+		background: rgba(244, 244, 242, 0.96);
 		animation: art-reveal-wipe 520ms ease-out both;
 		pointer-events: none;
 	}
 
 	@keyframes art-reveal-fade {
-		from {
-			opacity: 0;
-			transform: translateY(3px);
-		}
-
-		to {
-			opacity: 1;
-			transform: translateY(0);
-		}
+		from { opacity: 0; transform: translateY(4px); }
+		to   { opacity: 1; transform: translateY(0); }
 	}
 
 	@keyframes art-reveal-wipe {
-		from {
-			transform: translateX(0%);
-		}
+		from { transform: translateX(0%); }
+		to   { transform: translateX(102%); }
+	}
 
-		to {
-			transform: translateX(102%);
-		}
+	/* -----------------------------------------------------------
+	 * PROSE OVERRIDES
+	 * When Tailwind Typography is used, maintain the aesthetic.
+	 * ----------------------------------------------------------- */
+
+	.prose a {
+		color: var(--raw);
+		text-decoration: underline;
+		text-underline-offset: 3px;
+		text-decoration-thickness: 1px;
+		transition: color 0.15s ease;
+	}
+
+	.prose a:hover {
+		color: var(--raw-dark);
+		text-decoration-thickness: 2px;
+	}
+
+	.prose code {
+		font-family: 'IBM Plex Mono', ui-monospace, monospace;
+		font-size: 0.875em;
+		background: rgba(0, 0, 0, 0.04);
+		padding: 0.15em 0.4em;
+		border: 1px solid var(--bone);
+	}
+
+	.prose blockquote {
+		border-left: 3px solid var(--raw);
+		padding-left: 1.25rem;
+		font-style: normal;
+		color: var(--charcoal);
 	}
 }
+
+/* =============================================================
+ * UTILITY LAYER
+ * ============================================================= */
 
 @layer utilities {
 	.reveal {
@@ -293,18 +729,41 @@
 		transition-duration: 0ms;
 	}
 
+	/* Paper texture background utility */
 	.bg-paper {
 		background-image: var(--bg-paper);
 		background-size: cover;
-		background-color: #ffffff;
+		background-color: var(--bg-manual);
+	}
+
+	/* Monospaced instrument text utility */
+	.font-instrument {
+		font-family: 'IBM Plex Mono', ui-monospace, monospace;
+		font-variant-numeric: tabular-nums;
+	}
+
+	/* Raw accent text */
+	.text-raw {
+		color: var(--raw);
+	}
+
+	/* Structural divider — heavier than border-b */
+	.divider-heavy {
+		border-bottom: var(--border-weight) solid var(--border-color);
+	}
+
+	/* Divider with muted color */
+	.divider-muted {
+		border-bottom: 1px solid var(--bone);
 	}
 }
 
-@media (prefers-reduced-motion: reduce) {
+/* =============================================================
+ * REDUCED MOTION: Respect user preferences
+ * ============================================================= */
 
-	*,
-	*::before,
-	*::after {
+@media (prefers-reduced-motion: reduce) {
+	*, *::before, *::after {
 		animation-duration: 0.01ms !important;
 		animation-iteration-count: 1 !important;
 		transition-duration: 0.01ms !important;
