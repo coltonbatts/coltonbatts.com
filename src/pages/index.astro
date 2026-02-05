@@ -3,25 +3,16 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import ArtSlot from '../components/ArtSlot.astro';
 import { artManifest } from '../content/art-manifest';
 import { getCollection } from 'astro:content';
-import { existsSync } from 'node:fs';
-import { resolve } from 'node:path';
 
 const tools = await getCollection('tools');
 const featuredTools = tools.slice(0, 2);
+const isGalleryMode = artManifest.mode === 'gallery';
 
-function slotHasAsset(src: string) {
-	if (!src) return false;
-	if (/^https?:\/\//.test(src)) return true;
-	return existsSync(resolve(process.cwd(), 'public', src.replace(/^\//, '')));
+function resolveToolSlot(slot: (typeof artManifest.tools)[string] | undefined) {
+	if (!slot) return undefined;
+	if (isGalleryMode) return slot;
+	return { ...slot, enabled: slot.enabled === true };
 }
-
-const heroArt = artManifest.hero.enabled && slotHasAsset(artManifest.hero.src) ? artManifest.hero : undefined;
-const motionArt =
-	artManifest.motion.rive.enabled && slotHasAsset(artManifest.motion.rive.src)
-		? artManifest.motion.rive
-		: artManifest.motion.poster.enabled && slotHasAsset(artManifest.motion.poster.src)
-			? artManifest.motion.poster
-			: undefined;
 ---
 
 <BaseLayout title="Home" description="Toolmaker. Building offline-first tools.">
@@ -36,7 +27,7 @@ const motionArt =
 				</p>
 			</div>
 			<div class="mt-8">
-				<ArtSlot slot={heroArt} fallbackLabel="Artwork slot" />
+				<ArtSlot slot={artManifest.hero} />
 			</div>
 		</section>
 
@@ -49,8 +40,7 @@ const motionArt =
 						class="border border-black p-6 hover:bg-gray-50 transition-colors block tool-card"
 					>
 						<ArtSlot
-							slot={artManifest.tools[tool.slug]}
-							fallbackLabel="Artwork slot"
+							slot={resolveToolSlot(artManifest.tools[tool.slug])}
 							class="mb-4"
 						/>
 						<h3 class="text-xl font-semibold mb-2">{tool.data.name}</h3>
@@ -75,7 +65,7 @@ const motionArt =
 
 		<section class="mb-16">
 			<h2 class="text-2xl font-semibold mb-6">Motion</h2>
-			<ArtSlot slot={motionArt} fallbackLabel="Artwork slot" />
+			<ArtSlot slot={artManifest.motion} />
 		</section>
 
 		<section>

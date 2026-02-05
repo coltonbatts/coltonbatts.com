@@ -1,5 +1,5 @@
 ---
-import type { ArtSlotConfig } from '../content/art-manifest';
+import type { ArtFit, ArtSlotConfig, ArtReveal, ArtTreatment } from '../content/art-manifest';
 import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 import ArtPlate from './ArtPlate.astro';
@@ -9,41 +9,80 @@ interface Props {
 	fallbackLabel?: string;
 	class?: string;
 	caption?: string;
+	treatment?: ArtTreatment;
 }
 
 const {
 	slot,
-	fallbackLabel = 'Artwork slot',
+	fallbackLabel,
 	class: className = '',
 	caption,
+	treatment,
 } = Astro.props;
 
-const hasAsset = Boolean(
-	slot?.src &&
-		(/^https?:\/\//.test(slot.src) ||
-			existsSync(resolve(process.cwd(), 'public', slot.src.replace(/^\//, '')))),
-);
-const isRenderable = Boolean(slot?.enabled && hasAsset);
-const resolvedCaption = caption ?? slot?.caption;
+function hasAsset(src?: string) {
+	if (!src) return false;
+	if (/^https?:\/\//.test(src)) return true;
+	return existsSync(resolve(process.cwd(), 'public', src.replace(/^\//, '')));
+}
+
+const primaryAssetExists = hasAsset(slot?.src);
+const fallbackAssetExists = hasAsset(slot?.fallbackSrc);
+const isEnabled = Boolean(slot?.enabled);
+const hasRenderableAsset = Boolean(primaryAssetExists || fallbackAssetExists);
+const isRenderable = Boolean(isEnabled && hasRenderableAsset);
+
+const shouldRenderCaption = Boolean(slot?.showCaption && (caption ?? slot?.caption));
+const resolvedCaption = shouldRenderCaption ? (caption ?? slot?.caption) : undefined;
+const resolvedTreatment = treatment ?? slot?.treatment ?? 'flat';
+const resolvedFit: ArtFit = slot?.fit ?? 'cover';
+const resolvedPosition = slot?.position ?? '50% 50%';
+const resolvedSurface = slot?.surface ?? 'none';
 const loadingValue = slot?.priority ? 'eager' : 'lazy';
 const fetchPriority = slot?.priority ? 'high' : undefined;
-const aspectRatio = slot?.aspect ? slot.aspect.replace(':', ' / ') : '16 / 9';
-const plateClass = ['art-slot', 'art-reveal', className].filter(Boolean).join(' ');
+
+const [widthPart = '16', heightPart = '9'] = (slot?.aspect ?? '16:9').split(':');
+const widthValue = Number(widthPart);
+const heightValue = Number(heightPart);
+const safeWidth = Number.isFinite(widthValue) && widthValue > 0 ? widthValue : 16;
+const safeHeight = Number.isFinite(heightValue) && heightValue > 0 ? heightValue : 9;
+const aspectRatio = `${safeWidth} / ${safeHeight}`;
+const ratioPercent = `${(safeHeight / safeWidth) * 100}%`;
+
+const revealMode: ArtReveal = slot?.animate === false ? 'none' : slot?.reveal ?? 'fade';
+const revealClass = revealMode === 'none' ? '' : `art-reveal art-reveal--${revealMode}`;
+const plateClass = ['art-slot', revealClass, className].filter(Boolean).join(' ');
+
+const shouldShowRive = Boolean(slot?.type === 'rive' && isEnabled && primaryAssetExists);
+const shouldShowVideo = Boolean(slot?.type === 'video' && isEnabled && primaryAssetExists);
+const shouldShowImage = Boolean(slot?.type === 'image' && isEnabled && primaryAssetExists);
+const shouldShowDirectFallbackImage = Boolean(
+	!shouldShowRive && !shouldShowVideo && !shouldShowImage && isEnabled && fallbackAssetExists,
+);
 ---
 
-<ArtPlate caption={resolvedCaption} class={plateClass}>
-	<div class="art-slot__frame" style={`--slot-aspect: ${aspectRatio};`}>
+<ArtPlate
+	caption={resolvedCaption}
+	class={plateClass}
+	treatment={resolvedTreatment}
+	surface={resolvedSurface}
+	link={slot?.link}
+>
+	<div
+		class="art-slot__frame"
+		style={`--slot-aspect: ${aspectRatio}; --slot-ratio: ${ratioPercent}; --slot-fit: ${resolvedFit}; --slot-position: ${resolvedPosition};`}
+	>
 		{isRenderable ? (
-			slot.type === 'image' ? (
+			shouldShowImage || shouldShowDirectFallbackImage ? (
 				<img
-					src={slot.src}
+					src={shouldShowImage ? slot.src : slot.fallbackSrc}
 					alt={slot.alt}
 					loading={loadingValue}
 					decoding="async"
 					fetchpriority={fetchPriority}
 					class="art-slot__media"
 				/>
-			) : slot.type === 'video' ? (
+			) : shouldShowVideo ? (
 				<video
 					src={slot.src}
 					class="art-slot__media"
@@ -54,23 +93,40 @@ const plateClass = ['art-slot', 'art-reveal', className].filter(Boolean).join(' 
 					controls={false}
 					aria-label={slot.alt}
 				></video>
-				) : (
-					<div class="art-slot__rive" data-rive-src={slot.src} data-rive-alt={slot.alt}>
-						<canvas class="art-slot__rive-canvas" aria-hidden="true"></canvas>
-						<span class="art-slot__rive-label">{slot.alt}</span>
-					</div>
-				)
 			) : (
-				<div class="art-slot__empty" aria-hidden="true">
-					<span>{fallbackLabel}</span>
+				<div class="art-slot__rive" data-rive-src={slot.src} data-rive-alt={slot.alt}>
+					{fallbackAssetExists ? (
+						<img
+							src={slot.fallbackSrc}
+							alt={slot.alt}
+							loading={loadingValue}
+							decoding="async"
+							class="art-slot__media art-slot__rive-fallback"
+						/>
+					) : (
+						<div class="art-slot__empty art-slot__rive-empty" aria-hidden="true">
+							{fallbackLabel && <span>{fallbackLabel}</span>}
+						</div>
+					)}
+					<canvas class="art-slot__rive-canvas" aria-hidden="true"></canvas>
+				</div>
+			)
+		) : (
+			<div class="art-slot__empty" aria-hidden="true">
+				{fallbackLabel && <span>{fallbackLabel}</span>}
 			</div>
 		)}
-		</div>
-	</ArtPlate>
+	</div>
+</ArtPlate>
 
 <script is:inline>
 	const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-	if (!prefersReducedMotion) {
+
+	if (prefersReducedMotion) {
+		document
+			.querySelectorAll('.art-slot__rive')
+			.forEach((node) => node.classList.add('art-slot__rive--reduced'));
+	} else {
 		const riveNodes = document.querySelectorAll('.art-slot__rive[data-rive-src]');
 		if (riveNodes.length > 0) {
 			import('https://unpkg.com/@rive-app/canvas@2.31.2?module')
@@ -79,23 +135,37 @@ const plateClass = ['art-slot', 'art-reveal', className].filter(Boolean).join(' 
 						const src = node.getAttribute('data-rive-src');
 						const alt = node.getAttribute('data-rive-alt') || 'Motion artwork';
 						const canvas = node.querySelector('.art-slot__rive-canvas');
-						if (!src || !canvas) return;
 
-						new Rive({
-							src,
-							canvas,
-							autoplay: true,
-							fit: Fit.Cover,
-							alignment: Alignment.Center,
-						});
+						if (!src || !canvas) {
+							node.classList.add('art-slot__rive--fallback');
+							return;
+						}
 
-						canvas.setAttribute('role', 'img');
-						canvas.setAttribute('aria-label', alt);
-						node.classList.add('art-slot__rive--loaded');
+						try {
+							new Rive({
+								src,
+								canvas,
+								autoplay: true,
+								fit: Fit.Cover,
+								alignment: Alignment.Center,
+								onLoad: () => {
+									canvas.setAttribute('role', 'img');
+									canvas.setAttribute('aria-label', alt);
+									node.classList.add('art-slot__rive--loaded');
+								},
+								onLoadError: () => {
+									node.classList.add('art-slot__rive--fallback');
+								},
+							});
+						} catch {
+							node.classList.add('art-slot__rive--fallback');
+						}
 					});
 				})
 				.catch(() => {
-					// Keep monochrome fallback label when runtime is unavailable.
+					document
+						.querySelectorAll('.art-slot__rive')
+						.forEach((node) => node.classList.add('art-slot__rive--fallback'));
 				});
 		}
 	}

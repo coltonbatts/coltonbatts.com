@@ -1,15 +1,31 @@
 ---
+import type { ArtLinkConfig, ArtSurface, ArtTreatment } from '../content/art-manifest';
+
 interface Props {
 	caption?: string;
 	class?: string;
+	treatment?: ArtTreatment;
+	surface?: ArtSurface;
+	link?: ArtLinkConfig;
 }
 
-const { caption, class: className = '' } = Astro.props;
+const { caption, class: className = '', treatment = 'flat', surface = 'none', link } = Astro.props;
+const isExternalLink = Boolean(link?.href && /^https?:\/\//.test(link.href));
 ---
 
-<figure class={`art-plate ${className}`.trim()}>
+<figure class={`art-plate art-plate--${treatment} art-plate--surface-${surface} ${className}`.trim()}>
 	<div class="art-plate__inner">
 		<slot />
 	</div>
 	{caption && <figcaption class="art-plate__caption">{caption}</figcaption>}
+	{link?.href && (
+		<a
+			href={link.href}
+			class="art-plate__link"
+			target={isExternalLink ? '_blank' : undefined}
+			rel={isExternalLink ? 'noopener noreferrer' : undefined}
+		>
+			{link.label ?? 'View artwork'}
+		</a>
+	)}
 </figure>
