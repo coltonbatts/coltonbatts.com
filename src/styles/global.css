@@ -6,6 +6,7 @@
 	--charcoal: #1a1a1a;
 	--bg-manual: #f4f4f2;
 	--border-thin: #d1d1d1;
+	--bg-paper: url('/paper-texture.jpg');
 }
 
 @layer base {
@@ -14,10 +15,14 @@
 		-webkit-font-smoothing: antialiased;
 		-moz-osx-font-smoothing: grayscale;
 		letter-spacing: -0.01em;
+		background-color: var(--bg-manual);
 	}
 
 	body {
-		background-color: var(--bg-manual);
+		background-image: var(--bg-paper);
+		background-attachment: fixed;
+		background-size: cover;
+		min-height: 100vh;
 		color: var(--charcoal);
 	}
 
@@ -51,7 +56,9 @@
 	.art-plate__inner {
 		border-radius: 1px;
 		padding: 0.5rem;
-		background: #ffffff;
+		background-image: var(--bg-paper);
+		background-size: 200%;
+		/* Zoomed for subtle contrast */
 		border: 1px solid var(--border-thin);
 		box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.05);
 		transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -217,7 +224,8 @@
 	}
 
 	.tool-card {
-		background: #ffffff;
+		background-image: var(--bg-paper);
+		background-size: 150%;
 		border-radius: 2px;
 		border: 1px solid var(--border-thin);
 		transition: all 0.2s ease;
@@ -283,6 +291,12 @@
 
 	.reveal--instant {
 		transition-duration: 0ms;
+	}
+
+	.bg-paper {
+		background-image: var(--bg-paper);
+		background-size: cover;
+		background-color: #ffffff;
 	}
 }
 

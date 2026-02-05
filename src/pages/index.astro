@@ -17,7 +17,7 @@ function resolveToolSlot(slot: (typeof artManifest.tools)[string] | undefined) {
 
 <BaseLayout title="Home" description="Toolmaker. Building offline-first tools.">
 	<div class="max-w-4xl mx-auto px-6 py-20">
-		<section class="mb-12 bg-white p-8 border border-gray-200/60 shadow-[2px_2px_0_rgba(0,0,0,0.02)]">
+		<section class="mb-12 bg-paper p-8 border border-gray-200/60 shadow-[2px_2px_0_rgba(0,0,0,0.02)]">
 			<h2 class="text-3xl font-bold mb-4 tracking-tighter">Production-first multimedia designer</h2>
 			
 			<div class="prose max-w-2xl text-charcoal/90">
@@ -67,7 +67,7 @@ function resolveToolSlot(slot: (typeof artManifest.tools)[string] | undefined) {
 				{featuredTools.map((tool) => (
 					<a
 						href={`/tools/${tool.slug}`}
-						class="p-8 hover:bg-white transition-all block tool-card group"
+						class="p-8 hover:bg-paper transition-all block tool-card group"
 					>
 						<ArtSlot
 							slot={resolveToolSlot(artManifest.tools[tool.slug])}
