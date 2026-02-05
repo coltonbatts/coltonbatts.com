@@ -169,26 +169,39 @@ const currentPath = Astro.url.pathname;
 			 CLIENT-SIDE SCRIPTS
 			 Minimal. Only what's necessary.
 			 ============================================ -->
+		<!-- Mobile menu — standalone, no dependencies, runs immediately -->
+		<script is:inline>
+			(function () {
+				var toggle = document.getElementById('mobile-menu-toggle');
+				var menu = document.getElementById('mobile-menu');
+				if (!toggle || !menu) return;
+
+				toggle.addEventListener('click', function () {
+					var isOpen = !menu.classList.contains('hidden');
+					menu.classList.toggle('hidden');
+					toggle.classList.toggle('is-open');
+					toggle.setAttribute('aria-expanded', String(!isOpen));
+				});
+
+				// Close menu when a nav link is tapped
+				menu.addEventListener('click', function (e) {
+					if (e.target.tagName === 'A') {
+						menu.classList.add('hidden');
+						toggle.classList.remove('is-open');
+						toggle.setAttribute('aria-expanded', 'false');
+					}
+				});
+			})();
+		</script>
+
+		<!-- Animations — module bundle, loaded async -->
 		<script type="module">
 			import { initLotties, cleanupLotties } from '../animations/lottie';
 			import { initReveal, cleanupReveal } from '../animations/reveal';
 
-			const initMobileMenu = () => {
-				const toggle = document.getElementById('mobile-menu-toggle');
-				const menu = document.getElementById('mobile-menu');
-				if (!toggle || !menu) return;
-
-				toggle.addEventListener('click', () => {
-					const isOpen = !menu.classList.contains('hidden');
-					menu.classList.toggle('hidden');
-					toggle.setAttribute('aria-expanded', String(!isOpen));
-				});
-			};
-
 			const initMotion = () => {
 				initLotties();
 				initReveal();
-				initMobileMenu();
 			};
 
 			const cleanupMotion = () => {
