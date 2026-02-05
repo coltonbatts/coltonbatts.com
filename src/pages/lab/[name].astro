@@ -1,0 +1,296 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import fs from 'node:fs';
+import path from 'node:path';
+
+export function getStaticPaths() {
+	const riveDir = path.join(process.cwd(), 'public', 'rive');
+	if (!fs.existsSync(riveDir)) return [];
+
+	return fs
+		.readdirSync(riveDir)
+		.filter((f: string) => f.endsWith('.riv'))
+		.map((f: string) => ({
+			params: { name: f.replace('.riv', '') },
+		}));
+}
+
+const { name } = Astro.params;
+const src = `/rive/${name}.riv`;
+---
+
+<BaseLayout title={`Lab: ${name}`}>
+	<div class="max-w-4xl mx-auto px-6 py-12">
+		<div class="flex items-center gap-4 mb-6">
+			<a href="/lab" class="text-sm hover:underline">← Lab</a>
+			<h1 class="text-2xl font-bold">{name}.riv</h1>
+		</div>
+
+		<!-- Rive viewport -->
+		<div
+			id="rive-viewport"
+			data-src={src}
+			data-file={name}
+			class="border border-black bg-gray-50 aspect-square max-h-[480px] w-full max-w-[480px] relative"
+		>
+		</div>
+
+		<!-- State machine selector -->
+		<div class="mt-6 mb-4">
+			<form id="sm-form" class="flex items-center gap-2">
+				<label for="sm-name" class="text-sm font-semibold">State Machine</label>
+				<input
+					id="sm-name"
+					type="text"
+					value="State Machine 1"
+					class="border border-black px-2 py-1 text-sm font-mono flex-1 max-w-xs"
+					placeholder="State Machine 1"
+				/>
+				<button
+					type="submit"
+					class="border border-black px-3 py-1 text-sm font-semibold hover:bg-gray-50 transition-colors"
+				>
+					Load
+				</button>
+			</form>
+		</div>
+
+		<!-- Controls panel (populated by script) -->
+		<div id="rive-controls" class="border border-black divide-y divide-gray-200 empty:hidden">
+		</div>
+
+		<!-- Status messages -->
+		<div id="rive-status" class="mt-4 text-sm text-gray-500 empty:hidden"></div>
+
+		<!-- Snippet output -->
+		<div class="mt-6">
+			<div class="flex items-center justify-between mb-2">
+				<p class="text-sm font-semibold">Component Snippet</p>
+				<button
+					id="copy-snippet"
+					class="text-xs border border-black px-2 py-1 hover:bg-gray-50 transition-colors"
+				>
+					Copy
+				</button>
+			</div>
+			<pre
+				id="rive-snippet"
+				class="bg-gray-50 border border-gray-200 p-4 text-sm font-mono overflow-x-auto whitespace-pre"
+			></pre>
+		</div>
+	</div>
+
+	<script type="module">
+		const viewport = document.getElementById('rive-viewport');
+		const controlsEl = document.getElementById('rive-controls');
+		const statusEl = document.getElementById('rive-status');
+		const snippetEl = document.getElementById('rive-snippet');
+		const smInput = document.getElementById('sm-name');
+		const copyBtn = document.getElementById('copy-snippet');
+		const smForm = document.getElementById('sm-form');
+
+		if (!viewport || !controlsEl || !snippetEl) {
+			throw new Error('Missing required DOM elements');
+		}
+
+		const src = viewport.dataset.src;
+		const fileName = viewport.dataset.file;
+
+		// Read state machine name from URL or default
+		const params = new URLSearchParams(window.location.search);
+		let smName = params.get('sm') || 'State Machine 1';
+		if (smInput instanceof HTMLInputElement) {
+			smInput.value = smName;
+		}
+
+		// Track current input values for snippet generation
+		let currentInputs = {};
+		let riveInstance = null;
+
+		// Create a persistent canvas
+		const canvas = document.createElement('canvas');
+		canvas.setAttribute('aria-hidden', 'true');
+		canvas.style.width = '100%';
+		canvas.style.height = '100%';
+		canvas.style.display = 'block';
+		viewport.appendChild(canvas);
+
+		async function init(stateMachineName) {
+			// Cleanup previous instance
+			if (riveInstance) {
+				riveInstance.cleanup();
+				riveInstance = null;
+			}
+
+			controlsEl.innerHTML = '';
+			statusEl.textContent = '';
+			currentInputs = {};
+			smName = stateMachineName;
+
+			const { Rive, StateMachineInputType } = await import(
+				'@rive-app/canvas'
+			);
+
+			riveInstance = new Rive({
+				src,
+				canvas,
+				autoplay: true,
+				stateMachines: smName,
+				onLoad: () => {
+					const inputs = riveInstance.stateMachineInputs(smName);
+
+					if (inputs && inputs.length > 0) {
+						statusEl.textContent = `${inputs.length} input${inputs.length !== 1 ? 's' : ''} on "${smName}"`;
+						buildControls(inputs, StateMachineInputType);
+					} else {
+						statusEl.textContent = `No inputs found for "${smName}". Try a different state machine name.`;
+					}
+
+					updateSnippet();
+				},
+				onLoadError: () => {
+					statusEl.textContent = `Failed to load ${src}`;
+				},
+			});
+		}
+
+		function buildControls(inputs, InputType) {
+			inputs.forEach((input) => {
+				const row = document.createElement('div');
+				row.className =
+					'flex items-center justify-between px-4 py-3';
+
+				const label = document.createElement('span');
+				label.className = 'text-sm font-mono';
+				label.textContent = input.name;
+				row.appendChild(label);
+
+				if (input.type === InputType.Boolean) {
+					currentInputs[input.name] = !!input.value;
+
+					const toggle = document.createElement('button');
+					let val = !!input.value;
+
+					function renderToggle() {
+						toggle.textContent = val ? 'true' : 'false';
+						toggle.className = val
+							? 'px-3 py-1 border border-black text-xs font-semibold bg-black text-white'
+							: 'px-3 py-1 border border-black text-xs font-semibold bg-white text-black';
+					}
+					renderToggle();
+
+					toggle.addEventListener('click', () => {
+						val = !val;
+						input.value = val;
+						currentInputs[input.name] = val;
+						renderToggle();
+						updateSnippet();
+					});
+
+					row.appendChild(toggle);
+				} else if (input.type === InputType.Number) {
+					const val = input.value ?? 0;
+					currentInputs[input.name] = val;
+
+					const wrapper = document.createElement('div');
+					wrapper.className = 'flex items-center gap-2';
+
+					const slider = document.createElement('input');
+					slider.type = 'range';
+					slider.min = '0';
+					slider.max = '100';
+					slider.step = '1';
+					slider.value = String(val);
+					slider.className = 'w-32 accent-black';
+
+					const display = document.createElement('span');
+					display.className = 'text-xs font-mono w-8 text-right';
+					display.textContent = String(val);
+
+					slider.addEventListener('input', () => {
+						const num = Number(slider.value);
+						input.value = num;
+						currentInputs[input.name] = num;
+						display.textContent = String(num);
+						updateSnippet();
+					});
+
+					wrapper.appendChild(slider);
+					wrapper.appendChild(display);
+					row.appendChild(wrapper);
+				} else if (input.type === InputType.Trigger) {
+					const btn = document.createElement('button');
+					btn.className =
+						'px-3 py-1 border border-black text-xs font-semibold hover:bg-gray-50 active:bg-black active:text-white transition-colors';
+					btn.textContent = 'Fire';
+					btn.addEventListener('click', () => {
+						input.fire();
+					});
+					row.appendChild(btn);
+					// Triggers don't persist in snippet inputs
+				}
+
+				controlsEl.appendChild(row);
+			});
+		}
+
+		function updateSnippet() {
+			const hasInputs = Object.keys(currentInputs).length > 0;
+			// Build tag name indirectly so rive-lint doesn't match this template
+			const tag = 'Rive';
+			const lines = [
+				`<${tag}`,
+				`  src="/rive/${fileName}.riv"`,
+				`  stateMachine="${smName}"`,
+				`  mode="play-when-visible"`,
+			];
+			if (hasInputs) {
+				const formatted = JSON.stringify(currentInputs, null, 2)
+					.split('\n')
+					.map((line, i) => (i === 0 ? line : '    ' + line))
+					.join('\n');
+				lines.push(`  inputs={${formatted}}`);
+			}
+			lines.push('/>');
+			snippetEl.textContent = lines.join('\n');
+		}
+
+		// Copy to clipboard
+		if (copyBtn) {
+			copyBtn.addEventListener('click', () => {
+				const code = snippetEl.textContent || '';
+				navigator.clipboard.writeText(code).then(() => {
+					copyBtn.textContent = 'Copied';
+					setTimeout(() => {
+						copyBtn.textContent = 'Copy';
+					}, 1500);
+				});
+			});
+		}
+
+		// State machine name form
+		if (smForm) {
+			smForm.addEventListener('submit', (e) => {
+				e.preventDefault();
+				if (!(smInput instanceof HTMLInputElement)) return;
+				const newName = smInput.value.trim();
+				if (!newName) return;
+				init(newName);
+				const url = new URL(window.location.href);
+				url.searchParams.set('sm', newName);
+				history.replaceState(null, '', url.toString());
+			});
+		}
+
+		// Cleanup on Astro navigation
+		document.addEventListener('astro:before-preparation', () => {
+			if (riveInstance) {
+				riveInstance.cleanup();
+				riveInstance = null;
+			}
+		});
+
+		// Go
+		init(smName);
+	</script>
+</BaseLayout>

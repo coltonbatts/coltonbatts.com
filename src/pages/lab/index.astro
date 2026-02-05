@@ -1,0 +1,71 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Rive from '../../components/interactive/Rive.astro';
+import fs from 'node:fs';
+import path from 'node:path';
+
+const riveDirPath = path.join(process.cwd(), 'public', 'rive');
+
+type RiveAsset = { name: string; file: string; src: string; size: string };
+let assets: RiveAsset[] = [];
+
+if (fs.existsSync(riveDirPath)) {
+	const entries = fs.readdirSync(riveDirPath);
+	assets = entries
+		.filter((f) => f.endsWith('.riv'))
+		.sort()
+		.map((f) => {
+			const stat = fs.statSync(`${riveDirPath}/${f}`);
+			const kb = (stat.size / 1024).toFixed(1);
+			return {
+				name: f.replace('.riv', ''),
+				file: f,
+				src: `/rive/${f}`,
+				size: `${kb} KB`,
+			};
+		});
+}
+---
+
+<BaseLayout title="Motion Lab">
+	<div class="max-w-4xl mx-auto px-6 py-12">
+		<div class="mb-8">
+			<h1 class="text-3xl font-bold mb-2">Motion Lab</h1>
+			<p class="text-gray-600 text-sm">
+				{assets.length} asset{assets.length !== 1 ? 's' : ''} in public/rive/
+			</p>
+		</div>
+
+		{assets.length === 0 ? (
+			<div class="border-2 border-dashed border-gray-300 p-12 text-center">
+				<p class="text-gray-600 mb-2">No .riv files found.</p>
+				<p class="text-sm text-gray-500">
+					Drop <code class="bg-gray-100 px-1 py-0.5 text-xs">.riv</code> files
+					into <code class="bg-gray-100 px-1 py-0.5 text-xs">public/rive/</code> and
+					refresh.
+				</p>
+			</div>
+		) : (
+			<div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+				{assets.map((asset) => (
+					<a
+						href={`/lab/${asset.name}`}
+						class="border border-black block hover:bg-gray-50 transition-colors group"
+					>
+						<div class="aspect-square bg-gray-50 border-b border-gray-200 flex items-center justify-center overflow-hidden">
+							<Rive
+								src={asset.src}
+								mode="play-when-visible"
+								class="w-full h-full"
+							/>
+						</div>
+						<div class="p-3">
+							<p class="font-semibold text-sm group-hover:underline">{asset.name}</p>
+							<p class="text-xs text-gray-500">{asset.size}</p>
+						</div>
+					</a>
+				))}
+			</div>
+		)}
+	</div>
+</BaseLayout>
