@@ -13,6 +13,7 @@ techStack:
   - CIEDE2000 Color Science
   - Pixi.js / WebGL Renderer
   - Editorial Modernism UI
+heroImage: /art/tools/magpie-hero.png
 links:
   - label: GitHub
     url: https://github.com/coltonbatts/MagpieApp
