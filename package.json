@@ -6,9 +6,11 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "rive:lint": "node scripts/rive-lint.mjs"
   },
   "dependencies": {
+    "@rive-app/canvas": "^2.34.3",
     "astro": "^5.17.1",
     "lottie-web": "^5.13.0"
   },
