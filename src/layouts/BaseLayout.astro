@@ -1,0 +1,61 @@
+---
+import { navItems, site } from '../config';
+import '../styles/global.css';
+
+interface Props {
+	title?: string;
+	description?: string;
+}
+
+const { title = site.title, description = site.description } = Astro.props;
+const fullTitle = title === site.title ? title : `${title} | ${site.title}`;
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="description" content={description} />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="icon" type="image/x-icon" href="/favicon.ico" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{fullTitle}</title>
+	</head>
+	<body class="antialiased">
+		<header class="border-b border-black">
+			<nav class="max-w-4xl mx-auto px-6 py-4">
+				<div class="flex items-center justify-between">
+					<a href="/" class="text-xl font-semibold hover:underline">
+						{site.title}
+					</a>
+					<ul class="flex gap-6 text-sm">
+						{navItems.map((item) => (
+							<li>
+								<a
+									href={item.href}
+									class="hover:underline"
+									class:list={{
+										'font-semibold': Astro.url.pathname === item.href,
+									}}
+								>
+									{item.label}
+								</a>
+							</li>
+						))}
+					</ul>
+				</div>
+			</nav>
+		</header>
+
+		<main>
+			<slot />
+		</main>
+
+		<footer class="border-t border-black mt-16">
+			<div class="max-w-4xl mx-auto px-6 py-8 text-sm text-gray-600">
+				<p>© {new Date().getFullYear()} Colton Batts. Built with Astro.</p>
+			</div>
+		</footer>
+	</body>
+</html>
