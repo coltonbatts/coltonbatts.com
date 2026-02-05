@@ -16,7 +16,7 @@ techStack:
 links:
   - label: GitHub
     url: https://github.com/coltonbatts/colorwizard
-heroImage: /art/tools/colorwizard-hero.png
+heroImage: /art/tools/colorwizard.png
 bullets:
   - Kubelka-Munk spectral mixing — not RGB averaging.
   - Physically modeled pigment database (Cadmium, Ultramarine, etc.).
