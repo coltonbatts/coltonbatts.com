@@ -148,9 +148,19 @@ const clients = ['Google', 'Under Armour', 'Kate Spade', 'Nuuly'];
 					href={`/tools/${tool.slug}`}
 					class="block tool-card group"
 				>
-					<ArtSlot
-						slot={resolveToolSlot(artManifest.tools[tool.slug])}
-					/>
+					{tool.data.heroImage ? (
+						<img
+							src={tool.data.heroImage}
+							alt={tool.data.name}
+							loading="lazy"
+							decoding="async"
+							class="w-full h-auto block"
+						/>
+					) : (
+						<ArtSlot
+							slot={resolveToolSlot(artManifest.tools[tool.slug])}
+						/>
+					)}
 				</a>
 			))}
 		</div>
