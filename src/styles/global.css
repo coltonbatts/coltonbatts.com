@@ -114,7 +114,6 @@
 		height: 100%;
 		object-fit: var(--slot-fit, cover);
 		object-position: var(--slot-position, 50% 50%);
-		filter: grayscale(1);
 		display: block;
 	}
 

@@ -41,8 +41,8 @@ export const artManifest: ArtManifest = {
 	hero: {
 		enabled: true,
 		type: 'image',
-		src: '/art/hero/hero-piece.png',
-		alt: 'Featured artwork',
+		src: '/art/hero/hero-01.png',
+		alt: 'Surreal night street scene artwork',
 		caption: 'Artwork slot',
 		showCaption: true,
 		aspect: '16:9',
