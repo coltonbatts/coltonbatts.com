@@ -4,11 +4,38 @@ import { getCollection } from 'astro:content';
 import Lottie from '../components/interactive/Lottie.astro';
 
 const tools = await getCollection('tools');
-const featuredTools = tools.slice(0, 2);
+	const featuredTools = tools.slice(0, 2);
 ---
 
 <BaseLayout title="Home" description="Toolmaker. Building offline-first tools.">
 	<div class="max-w-4xl mx-auto px-6 py-12">
+		<section class="mb-12 border border-black p-6">
+			<h2 class="text-2xl font-semibold mb-4">Production-first editor and designer</h2>
+			<div class="prose prose-lg max-w-none">
+				<p class="text-lg leading-relaxed">
+					Production-focused multimedia designer with 10+ years delivering high-volume, broadcast-quality content for global brands including Google, Under Armour, and Kate Spade.
+					Expert in Adobe Premiere Pro and After Effects with strong Photoshop-driven design support and file hygiene.
+				</p>
+			</div>
+			<p class="text-sm text-gray-600 mt-4">
+				Selected clients: Google, Under Armour, Kate Spade, Nuuly, Capture This
+			</p>
+			<div class="flex flex-wrap gap-3 mt-6">
+				<a
+					href="/resume/Colton_Batts_Resume.pdf"
+					class="border border-black px-4 py-2 text-sm font-semibold hover:bg-gray-50 transition-colors"
+				>
+					Download Resume
+				</a>
+				<a
+					href="mailto:colton.batts@gmail.com"
+					class="border border-black px-4 py-2 text-sm font-semibold hover:bg-gray-50 transition-colors"
+				>
+					Email
+				</a>
+			</div>
+		</section>
+
 		<section class="mb-16">
 			<h1 class="text-3xl font-bold mb-6">Toolmaker</h1>
 			<div class="prose prose-lg max-w-none">
