@@ -1,0 +1,56 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import resume from '../data/resume_source.json';
+
+const { summary, experience, skills } = resume;
+---
+
+<BaseLayout title="Resume" description="Professional resume and experience.">
+	<div class="max-w-4xl mx-auto px-6 py-12">
+		<h1 class="text-3xl font-bold mb-6">Resume</h1>
+
+		<div class="prose prose-lg max-w-none">
+			<p class="text-lg leading-relaxed">
+				Download the PDF or browse a clean text version of my resume below.
+			</p>
+			<p>
+				<a href="/resume/Colton_Batts_Resume.pdf" class="underline hover:no-underline">Download Resume (PDF)</a>
+			</p>
+		</div>
+
+		<section class="mt-10 border-t border-black pt-8">
+			<h2 class="text-2xl font-semibold mb-4">Professional Summary</h2>
+			<p class="text-gray-700 leading-relaxed">{summary}</p>
+		</section>
+
+		<section class="mt-10 border-t border-black pt-8">
+			<h2 class="text-2xl font-semibold mb-6">Experience</h2>
+			<div class="grid gap-8">
+				{experience.map((role) => (
+					<div>
+						<h3 class="text-xl font-semibold">{role.title}</h3>
+						<p class="text-gray-700">{role.company}</p>
+						<p class="text-sm text-gray-600">{role.location} · {role.dates}</p>
+						<ul class="mt-4 list-disc pl-5 text-gray-700">
+							{role.bullets.map((bullet) => (
+								<li>{bullet}</li>
+							))}
+						</ul>
+					</div>
+				))}
+			</div>
+		</section>
+
+		<section class="mt-10 border-t border-black pt-8">
+			<h2 class="text-2xl font-semibold mb-6">Skills</h2>
+			<div class="grid gap-6">
+				{skills.map((group) => (
+					<div>
+						<h3 class="text-lg font-semibold mb-2">{group.category}</h3>
+						<p class="text-gray-700">{group.items.join(' · ')}</p>
+					</div>
+				))}
+			</div>
+		</section>
+	</div>
+</BaseLayout>

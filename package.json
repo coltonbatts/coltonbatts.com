@@ -7,10 +7,13 @@
     "build": "astro build",
     "art:status": "node --experimental-strip-types scripts/art-status.mjs",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "rive:lint": "node scripts/rive-lint.mjs"
   },
   "dependencies": {
-    "astro": "^5.17.1"
+    "@rive-app/canvas": "^2.34.3",
+    "astro": "^5.17.1",
+    "lottie-web": "^5.13.0"
   },
   "devDependencies": {
     "@astrojs/tailwind": "^6.0.2",
