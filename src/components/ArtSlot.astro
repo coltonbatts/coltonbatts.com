@@ -54,15 +54,49 @@ const plateClass = ['art-slot', 'art-reveal', className].filter(Boolean).join(' 
 					controls={false}
 					aria-label={slot.alt}
 				></video>
+				) : (
+					<div class="art-slot__rive" data-rive-src={slot.src} data-rive-alt={slot.alt}>
+						<canvas class="art-slot__rive-canvas" aria-hidden="true"></canvas>
+						<span class="art-slot__rive-label">{slot.alt}</span>
+					</div>
+				)
 			) : (
-				<div class="art-slot__rive" aria-label={slot.alt} role="img">
-					<span>{slot.alt}</span>
-				</div>
-			)
-		) : (
-			<div class="art-slot__empty" aria-hidden="true">
-				<span>{fallbackLabel}</span>
+				<div class="art-slot__empty" aria-hidden="true">
+					<span>{fallbackLabel}</span>
 			</div>
 		)}
-	</div>
-</ArtPlate>
+		</div>
+	</ArtPlate>
+
+<script is:inline>
+	const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+	if (!prefersReducedMotion) {
+		const riveNodes = document.querySelectorAll('.art-slot__rive[data-rive-src]');
+		if (riveNodes.length > 0) {
+			import('https://unpkg.com/@rive-app/canvas@2.31.2?module')
+				.then(({ Rive, Fit, Alignment }) => {
+					riveNodes.forEach((node) => {
+						const src = node.getAttribute('data-rive-src');
+						const alt = node.getAttribute('data-rive-alt') || 'Motion artwork';
+						const canvas = node.querySelector('.art-slot__rive-canvas');
+						if (!src || !canvas) return;
+
+						new Rive({
+							src,
+							canvas,
+							autoplay: true,
+							fit: Fit.Cover,
+							alignment: Alignment.Center,
+						});
+
+						canvas.setAttribute('role', 'img');
+						canvas.setAttribute('aria-label', alt);
+						node.classList.add('art-slot__rive--loaded');
+					});
+				})
+				.catch(() => {
+					// Keep monochrome fallback label when runtime is unavailable.
+				});
+		}
+	}
+</script>
