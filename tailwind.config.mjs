@@ -23,11 +23,12 @@ export default {
 			/* -- COLOR PALETTE ---------------------------------- */
 			colors: {
 				charcoal: '#1a1a1a',
-				manual: '#f4f4f2',
+				manual: '#e8e5df',       /* Weathered concrete / old manual page */
+				'manual-light': '#edeae5',
 				raw: '#9b1b1b',          /* Deep crimson — Southern Gothic red */
 				'raw-dark': '#7a1515',   /* Darker crimson for hover states */
 				ink: '#0d0d0d',          /* Near-black for deep emphasis */
-				bone: '#e8e6e1',         /* Warm gray divider / muted bg */
+				bone: '#d5d0c8',         /* Warm gray divider / muted bg */
 			},
 
 			/* -- FONT FAMILIES ---------------------------------- */
