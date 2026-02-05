@@ -1,0 +1,15 @@
+---
+interface Props {
+	caption?: string;
+	class?: string;
+}
+
+const { caption, class: className = '' } = Astro.props;
+---
+
+<figure class={`art-plate ${className}`.trim()}>
+	<div class="art-plate__inner">
+		<slot />
+	</div>
+	{caption && <figcaption class="art-plate__caption">{caption}</figcaption>}
+</figure>

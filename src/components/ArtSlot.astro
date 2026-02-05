@@ -1,0 +1,68 @@
+---
+import type { ArtSlotConfig } from '../content/art-manifest';
+import { existsSync } from 'node:fs';
+import { resolve } from 'node:path';
+import ArtPlate from './ArtPlate.astro';
+
+interface Props {
+	slot?: ArtSlotConfig;
+	fallbackLabel?: string;
+	class?: string;
+	caption?: string;
+}
+
+const {
+	slot,
+	fallbackLabel = 'Artwork slot',
+	class: className = '',
+	caption,
+} = Astro.props;
+
+const hasAsset = Boolean(
+	slot?.src &&
+		(/^https?:\/\//.test(slot.src) ||
+			existsSync(resolve(process.cwd(), 'public', slot.src.replace(/^\//, '')))),
+);
+const isRenderable = Boolean(slot?.enabled && hasAsset);
+const resolvedCaption = caption ?? slot?.caption;
+const loadingValue = slot?.priority ? 'eager' : 'lazy';
+const fetchPriority = slot?.priority ? 'high' : undefined;
+const aspectRatio = slot?.aspect ? slot.aspect.replace(':', ' / ') : '16 / 9';
+const plateClass = ['art-slot', 'art-reveal', className].filter(Boolean).join(' ');
+---
+
+<ArtPlate caption={resolvedCaption} class={plateClass}>
+	<div class="art-slot__frame" style={`--slot-aspect: ${aspectRatio};`}>
+		{isRenderable ? (
+			slot.type === 'image' ? (
+				<img
+					src={slot.src}
+					alt={slot.alt}
+					loading={loadingValue}
+					decoding="async"
+					fetchpriority={fetchPriority}
+					class="art-slot__media"
+				/>
+			) : slot.type === 'video' ? (
+				<video
+					src={slot.src}
+					class="art-slot__media"
+					autoplay
+					loop
+					muted
+					playsinline
+					controls={false}
+					aria-label={slot.alt}
+				></video>
+			) : (
+				<div class="art-slot__rive" aria-label={slot.alt} role="img">
+					<span>{slot.alt}</span>
+				</div>
+			)
+		) : (
+			<div class="art-slot__empty" aria-hidden="true">
+				<span>{fallbackLabel}</span>
+			</div>
+		)}
+	</div>
+</ArtPlate>
