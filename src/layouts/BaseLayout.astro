@@ -26,13 +26,50 @@ const fullTitle = title === site.title ? title : `${title} | ${site.title}`;
 		<title>{fullTitle}</title>
 	</head>
 	<body class="antialiased">
-		<header class="py-4">
+		<header class="py-4 border-b border-gray-100">
 			<nav class="max-w-4xl mx-auto px-6 py-4">
 				<div class="flex items-center justify-between">
 					<a href="/" class="text-xl font-bold tracking-tighter hover:underline">
 						{site.title}
 					</a>
-					<ul class="flex gap-6 text-[11px] font-bold uppercase tracking-widest text-charcoal/60">
+					
+					<!-- Mobile Menu Toggle -->
+					<button 
+						id="mobile-menu-toggle"
+						class="md:hidden flex flex-col gap-1 p-2 border border-charcoal/10 hover:border-charcoal transition-colors group"
+						aria-label="Toggle Menu"
+					>
+						<span class="w-5 h-0.5 bg-charcoal"></span>
+						<span class="w-5 h-0.5 bg-charcoal"></span>
+						<span class="w-5 h-0.5 bg-charcoal"></span>
+					</button>
+
+					<ul 
+						id="nav-menu"
+						class="hidden md:flex gap-6 text-[11px] font-bold uppercase tracking-widest text-charcoal/60"
+					>
+						{navItems.map((item) => (
+							<li>
+								<a
+									href={item.href}
+									class="hover:text-charcoal transition-colors"
+									class:list={{
+										'text-charcoal': Astro.url.pathname === item.href,
+									}}
+								>
+									{item.label}
+								</a>
+							</li>
+						))}
+					</ul>
+				</div>
+
+				<!-- Mobile Menu Container -->
+				<div 
+					id="mobile-menu" 
+					class="hidden md:hidden pt-8 pb-4 border-t border-gray-100 mt-4"
+				>
+					<ul class="flex flex-col gap-4 text-xs font-bold uppercase tracking-widest text-charcoal/60">
 						{navItems.map((item) => (
 							<li>
 								<a
@@ -65,9 +102,18 @@ const fullTitle = title === site.title ? title : `${title} | ${site.title}`;
 			import { initLotties, cleanupLotties } from '../animations/lottie';
 			import { initReveal, cleanupReveal } from '../animations/reveal';
 
+			const initMobileMenu = () => {
+				const toggle = document.getElementById('mobile-menu-toggle');
+				const menu = document.getElementById('mobile-menu');
+				if (toggle && menu) {
+					toggle.onclick = () => menu.classList.toggle('hidden');
+				}
+			};
+
 			const initMotion = () => {
 				initLotties();
 				initReveal();
+				initMobileMenu();
 			};
 
 			const cleanupMotion = () => {
