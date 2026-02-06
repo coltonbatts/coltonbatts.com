@@ -1,0 +1,130 @@
+---
+/**
+ * FluidCanvas.astro — Interactive ink simulation
+ * WebGL 2 Navier-Stokes fluid rendered on a transparent canvas.
+ * The paper texture of the site shows through; ink appears to soak in.
+ *
+ * - Starts rendering only when scrolled into view (IntersectionObserver)
+ * - Sleeps when offscreen (cancelAnimationFrame)
+ * - Respects prefers-reduced-motion
+ * - Falls back to a static state when WebGL 2 is unavailable
+ */
+interface Props {
+	class?: string;
+}
+const { class: className = '' } = Astro.props;
+---
+
+<div class:list={['fluid-specimen', className]}>
+	<div class="fluid-specimen__frame">
+		<canvas class="fluid-specimen__canvas" data-fluid-canvas></canvas>
+		<div class="fluid-specimen__fallback" data-fluid-fallback>
+			<span>[ interactive fluid · requires WebGL 2 ]</span>
+		</div>
+	</div>
+	<p class="fluid-specimen__caption">
+		interactive ink · cursor-reactive navier-stokes
+	</p>
+</div>
+
+<script>
+	import { FluidSimulation } from '../animations/fluid-simulation';
+
+	let instance: FluidSimulation | null = null;
+	let observer: IntersectionObserver | null = null;
+
+	function init() {
+		cleanup();
+
+		const canvas = document.querySelector<HTMLCanvasElement>('[data-fluid-canvas]');
+		const fallback = document.querySelector<HTMLElement>('[data-fluid-fallback]');
+		if (!canvas) return;
+
+		if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+			canvas.hidden = true;
+			return;
+		}
+
+		instance = new FluidSimulation(canvas);
+
+		if (!instance.supported) {
+			instance = null;
+			canvas.hidden = true;
+			return;
+		}
+
+		if (fallback) fallback.remove();
+
+		observer = new IntersectionObserver(
+			(entries) => {
+				entries.forEach((entry) => {
+					if (entry.isIntersecting) instance?.start();
+					else instance?.stop();
+				});
+			},
+			{ threshold: 0.05 },
+		);
+
+		observer.observe(canvas.closest('.fluid-specimen')!);
+	}
+
+	function cleanup() {
+		observer?.disconnect();
+		observer = null;
+		instance?.destroy();
+		instance = null;
+	}
+
+	document.addEventListener('astro:page-load', init);
+	document.addEventListener('astro:before-swap', cleanup);
+	if (document.readyState !== 'loading') init();
+</script>
+
+<style>
+	.fluid-specimen {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+	}
+
+	.fluid-specimen__frame {
+		position: relative;
+		aspect-ratio: 16 / 9;
+		border: 2px solid var(--charcoal, #1a1a1a);
+		box-shadow: 6px 6px 0px rgba(0, 0, 0, 0.12);
+		background: rgba(0, 0, 0, 0.02);
+		overflow: hidden;
+		transform: translate(-1px, -1px);
+	}
+
+	.fluid-specimen__canvas {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		cursor: crosshair;
+	}
+
+	.fluid-specimen__fallback {
+		position: absolute;
+		inset: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.fluid-specimen__fallback span {
+		font-family: 'IBM Plex Mono', ui-monospace, monospace;
+		font-size: 0.6875rem;
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+		color: rgba(0, 0, 0, 0.35);
+	}
+
+	.fluid-specimen__caption {
+		font-family: 'IBM Plex Mono', ui-monospace, monospace;
+		font-size: 0.6875rem;
+		letter-spacing: 0.02em;
+		color: rgba(0, 0, 0, 0.5);
+	}
+</style>
