@@ -349,11 +349,7 @@
 
 	@media (min-width: 768px) {
 		.trusted-logo-wrap {
-			min-height: 3rem;
-		}
-
-		.trusted-logo-image {
-			max-height: 3rem;
+			min-height: 4.5rem;
 		}
 	}
 
