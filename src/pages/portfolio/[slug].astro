@@ -1,14 +1,14 @@
 ---
 /**
- * [slug].astro — Individual Painting Detail
+ * [slug].astro — Individual Project Detail
  * ==========================================
- * Full-page presentation of a single painting.
+ * Full-page presentation of a single client project.
  *
  * Layout:
  * - Large, matted image dominates the viewport.
  * - Gallery label metadata to the right (desktop) or below (mobile).
- * - Artist statement / description from the markdown body.
- * - Navigation to adjacent paintings.
+ * - Project description from the markdown body.
+ * - Navigation to adjacent projects.
  */
 
 import BaseLayout from '../../layouts/BaseLayout.astro';
@@ -33,7 +33,7 @@ const { Content } = await painting.render();
 const { title, medium, dimensions, year, image, series, available } = painting.data;
 ---
 
-<BaseLayout title={title} description={`${title} — ${medium}, ${year}. By Colton Batts.`}>
+<BaseLayout title={title} description={`${title} — ${medium}, ${year}. Colton Batts.`}>
 
 	<!-- ============================================================
 		 HEADER: Back navigation + painting title
@@ -44,7 +44,7 @@ const { title, medium, dimensions, year, image, series, available } = painting.d
 				href="/portfolio"
 				class="font-mono text-label uppercase tracking-instrument text-charcoal/40 hover:text-charcoal transition-colors"
 			>
-				&larr; All Paintings
+				&larr; All Projects
 			</a>
 		</div>
 	</section>
@@ -55,17 +55,16 @@ const { title, medium, dimensions, year, image, series, available } = painting.d
 	<div class="max-w-5xl mx-auto px-6 py-12 md:py-22">
 		<div class="grid md:grid-cols-12 gap-8 md:gap-12">
 
-			<!-- Left: The painting (matted frame) -->
+			<!-- Left: Project image (matted frame) -->
 			<div class="md:col-span-8">
 				<div class="painting-card__frame">
 					<div class="painting-card__mat" style="padding: 1.5rem;">
-						<img
-							src={image}
-							alt={title}
-							loading="eager"
-							decoding="async"
+						<div
+							style="aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;background:#1a1a1a;color:rgba(255,255,255,0.25);font-family:monospace;font-size:0.875rem;text-transform:uppercase;letter-spacing:0.1em;"
 							class="painting-card__image"
-						/>
+						>
+							{title}
+						</div>
 					</div>
 				</div>
 			</div>
@@ -83,11 +82,11 @@ const { title, medium, dimensions, year, image, series, available } = painting.d
 					<div class="divider-muted mb-6 pb-6">
 						<dl class="space-y-3">
 							<div>
-								<dt class="font-mono text-meta uppercase tracking-instrument text-charcoal/35">Medium</dt>
+								<dt class="font-mono text-meta uppercase tracking-instrument text-charcoal/35">Role</dt>
 								<dd class="font-mono text-sm text-charcoal/70 mt-0.5">{medium}</dd>
 							</div>
 							<div>
-								<dt class="font-mono text-meta uppercase tracking-instrument text-charcoal/35">Dimensions</dt>
+								<dt class="font-mono text-meta uppercase tracking-instrument text-charcoal/35">Scope</dt>
 								<dd class="font-mono text-sm text-charcoal/70 mt-0.5">{dimensions}</dd>
 							</div>
 							<div>
@@ -111,7 +110,7 @@ const { title, medium, dimensions, year, image, series, available } = painting.d
 						</div>
 					)}
 
-					<!-- Artist statement from markdown body -->
+					<!-- Project description from markdown body -->
 					<div class="prose prose-sm max-w-none text-charcoal/70 leading-relaxed">
 						<Content />
 					</div>

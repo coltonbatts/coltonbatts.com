@@ -1,8 +1,8 @@
 ---
 /**
- * portfolio.astro — Paintings Gallery
- * ====================================
- * A high-end editorial spread for oil paintings.
+ * portfolio.astro — Client Work Gallery
+ * ======================================
+ * A high-end editorial spread for professional client projects.
  *
  * Layout strategy:
  * - Full-bleed header with display type.
@@ -11,7 +11,7 @@
  *   uneven — it reads like flipping through a monograph.
  * - Heavy on paper texture space (the "white space" of the gallery).
  * - Series groupings are labeled with the section-label treatment.
- * - Individual paintings link to a detail page.
+ * - Individual projects link to a detail page.
  */
 
 import BaseLayout from '../../layouts/BaseLayout.astro';
@@ -42,7 +42,6 @@ for (const painting of paintings) {
 
 /** Total count for the header */
 const totalCount = paintings.length;
-const availableCount = paintings.filter(p => p.data.available).length;
 
 /**
  * Build an asymmetric layout sequence.
@@ -55,29 +54,28 @@ function getGridClass(featured: boolean, index: number): string {
 }
 ---
 
-<BaseLayout title="Portfolio" description="Oil paintings by Colton Batts.">
+<BaseLayout title="Portfolio" description="Production & editorial work by Colton Batts.">
 
 	<!-- ============================================================
 		 HEADER: Full-bleed gallery title
 		 ============================================================ -->
 	<section class="border-b-2 border-charcoal">
 		<div class="max-w-5xl mx-auto px-6 pt-16 pb-12 md:pt-22 md:pb-16">
-			<p class="section-label mb-6">Oil Paintings</p>
+			<p class="section-label mb-6">Client Work</p>
 			<h1 class="text-display md:text-display-lg max-w-3xl mb-8">
 				Selected<br class="hidden md:block" />
-				Works.
+				Projects.
 			</h1>
 			<div class="flex flex-wrap gap-6 items-center">
 				<p class="text-lg text-charcoal/70 max-w-xl leading-relaxed">
-					Figures, night scenes, and pattern studies in oil.
-					Each painting is an original work — no prints, no reproductions.
+					Video production, editorial, and motion design
+					for global brands — delivered at speed.
 				</p>
 			</div>
 
-			<!-- Painting count & availability — monospaced stats -->
+			<!-- Project count — monospaced stats -->
 			<div class="flex gap-8 mt-8 font-mono text-meta uppercase text-charcoal/30">
-				<span>{totalCount} works</span>
-				<span>{availableCount} available</span>
+				<span>{totalCount} projects</span>
 			</div>
 		</div>
 	</section>
@@ -149,7 +147,7 @@ function getGridClass(featured: boolean, index: number): string {
 				<p class="font-mono text-label uppercase tracking-instrument text-manual/40 mb-3">
 					Inquiries
 				</p>
-				<h2 class="text-display-sm text-manual">Interested in a piece?</h2>
+				<h2 class="text-display-sm text-manual">Let's work together.</h2>
 			</div>
 			<div class="flex flex-wrap gap-4">
 				<a href="mailto:colton.batts@gmail.com" class="btn-instrument border-manual/40 text-manual/70 hover:bg-manual hover:text-charcoal">

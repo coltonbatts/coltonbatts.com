@@ -34,18 +34,18 @@ const toolsCollection = defineCollection({
 });
 
 /* -----------------------------------------------------------
- * PAINTINGS COLLECTION
- * Oil paintings — the gallery. Each entry is a physical work.
+ * PAINTINGS COLLECTION (Client Projects)
+ * Professional production work — the portfolio.
  *
  * Fields:
- *   title       — Name of the work
- *   medium      — e.g. "Oil on Canvas", "Oil on Panel"
- *   dimensions  — e.g. "48 × 36 in" or "122 × 91 cm"
- *   year        — Year completed
+ *   title       — Client / project name
+ *   medium      — Role (e.g. "Lead Video Editor")
+ *   dimensions  — Scope (e.g. "30+ Campaign Assets")
+ *   year        — Year of engagement
  *   image       — Path to the image in /public/art/paintings/
  *   featured    — Whether to highlight in the gallery layout
- *   series      — Optional series name for grouping
- *   available   — Whether the work is for sale
+ *   series      — Category for grouping
+ *   available   — (unused — retained for schema compat)
  *   order       — Sort order (lower = first)
  * ----------------------------------------------------------- */
 
