@@ -27,8 +27,13 @@ function resolveToolSlot(slot: (typeof artManifest.tools)[string] | undefined) {
 	return { ...slot, enabled: slot.enabled === true };
 }
 
-/** Client list — rendered as a monospaced ticker strip */
-const clients = ['Google', 'Under Armour', 'Kate Spade', 'Nuuly'];
+/** Trusted-by logos — add your PNGs to /public/brands/ */
+const trustedByLogos = [
+	{ key: 'nuuly', name: 'Nuuly', src: '/brands/nuuly.png' },
+	{ key: 'kate-spade', name: 'Kate Spade', src: '/brands/kate-spade.png' },
+	{ key: 'under-armour', name: 'Under Armour', src: '/brands/under-armour.png' },
+	{ key: 'google-shopping', name: 'Google Shopping', src: '/brands/google-shopping.png' }
+];
 ---
 
 <BaseLayout title="Home" description="Toolmaker. Building offline-first tools.">
@@ -65,14 +70,22 @@ const clients = ['Google', 'Under Armour', 'Kate Spade', 'Nuuly'];
 				</a>
 			</div>
 
-			<!-- Client ticker — monospaced, muted -->
-			<div class="flex flex-wrap gap-x-6 gap-y-2 font-mono text-meta uppercase text-charcoal/30">
-				{clients.map((client, i) => (
-					<span class="flex items-center gap-3">
-						{i > 0 && <span class="text-charcoal/15" aria-hidden="true">/</span>}
-						{client}
-					</span>
-				))}
+			<!-- Trusted-by logo strip -->
+			<div class="trusted-by-strip" aria-label="Trusted By">
+				<p class="section-label mb-4 border-0 pb-0 text-charcoal/45">Trusted By</p>
+				<div class="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-5 md:gap-y-0 items-center">
+					{trustedByLogos.map((logo) => (
+						<div class="trusted-logo-wrap">
+							<img
+								src={logo.src}
+								alt={logo.name}
+								loading="lazy"
+								decoding="async"
+								class={`trusted-logo-image trusted-logo-image--${logo.key}`}
+							/>
+						</div>
+					))}
+				</div>
 			</div>
 		</div>
 	</section>

@@ -318,6 +318,56 @@
 		text-decoration: none;
 	}
 
+	/* Trusted-by logos: normalized footprint with restrained contrast */
+	.trusted-by-strip {
+		border-top: 1px solid var(--bone);
+		padding-top: 1.1rem;
+		max-width: 42rem;
+	}
+
+	.trusted-logo-wrap {
+		display: flex;
+		align-items: center;
+		justify-content: flex-start;
+		height: 2.9rem;
+		overflow: visible;
+	}
+
+	.trusted-logo-image {
+		display: block;
+		max-height: 1.5rem;
+		width: auto;
+		max-width: 100%;
+		object-fit: contain;
+		opacity: 0.72;
+		filter: grayscale(100%) contrast(110%);
+		transform-origin: left center;
+		transition: opacity 0.2s ease, transform 0.2s ease;
+	}
+
+	.trusted-logo-wrap:hover .trusted-logo-image {
+		opacity: 0.9;
+	}
+
+	.trusted-logo-image--nuuly { transform: scale(1); }
+	.trusted-logo-image--kate-spade { transform: scale(2.65); }
+	.trusted-logo-image--under-armour { transform: scale(2.45); }
+	.trusted-logo-image--google-shopping { transform: scale(2.9); }
+
+	@media (min-width: 768px) {
+		.trusted-logo-wrap {
+			height: 3.3rem;
+		}
+
+		.trusted-logo-image {
+			max-height: 1.7rem;
+		}
+
+		.trusted-logo-image--kate-spade { transform: scale(2.8); }
+		.trusted-logo-image--under-armour { transform: scale(2.55); }
+		.trusted-logo-image--google-shopping { transform: scale(3.1); }
+	}
+
 	.btn-instrument:hover {
 		background: var(--charcoal);
 		color: var(--bg-manual);
