@@ -341,6 +341,7 @@
 		object-fit: contain;
 		opacity: 0.72;
 		filter: grayscale(100%) contrast(110%);
+		mix-blend-mode: multiply;
 		transform-origin: left center;
 		transition: opacity 0.2s ease, transform 0.2s ease;
 	}
@@ -349,7 +350,7 @@
 		opacity: 0.9;
 	}
 
-	.trusted-logo-image--nuuly { transform: scale(1); }
+	.trusted-logo-image--nuuly { transform: scale(0.6); }
 	.trusted-logo-image--kate-spade { transform: scale(2.65); }
 	.trusted-logo-image--under-armour { transform: scale(2.45); }
 	.trusted-logo-image--google-shopping { transform: scale(2.9); }
@@ -363,6 +364,7 @@
 			max-height: 1.7rem;
 		}
 
+		.trusted-logo-image--nuuly { transform: scale(0.7); }
 		.trusted-logo-image--kate-spade { transform: scale(2.8); }
 		.trusted-logo-image--under-armour { transform: scale(2.55); }
 		.trusted-logo-image--google-shopping { transform: scale(3.1); }

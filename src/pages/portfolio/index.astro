@@ -44,13 +44,11 @@ for (const painting of paintings) {
 const totalCount = paintings.length;
 
 /**
- * Build an asymmetric layout sequence.
- * Featured paintings get 7-column spans, regular get 5.
- * This creates the uneven editorial rhythm.
+ * All projects get full-width treatment — each client
+ * occupies its own row for consistent visual weight.
  */
-function getGridClass(featured: boolean, index: number): string {
-	if (featured) return 'gallery-grid__item--featured';
-	return 'gallery-grid__item--regular';
+function getGridClass(_featured: boolean, _index: number): string {
+	return 'gallery-grid__item--full';
 }
 ---
 
