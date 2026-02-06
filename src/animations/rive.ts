@@ -78,6 +78,9 @@ export const prefersReducedMotion = () => {
 	if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') {
 		return false;
 	}
+	if (window.localStorage.getItem('motion-os:force-motion') === '1') {
+		return false;
+	}
 	return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 };
 

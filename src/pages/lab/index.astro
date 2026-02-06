@@ -143,65 +143,67 @@ const previewRecipe = resolveRiveRecipe('labCardPreview');
 	</div>
 
 	<script type="module">
-		const root = document.getElementById('lab-motion-grid');
-		if (!(root instanceof HTMLElement)) {
-			return;
-		}
+		(() => {
+			const root = document.getElementById('lab-motion-grid');
+			if (!(root instanceof HTMLElement)) {
+				return;
+			}
 
-		const cards = Array.from(root.querySelectorAll('[data-lab-motion-card]'));
-		if (!cards.length) {
-			return;
-		}
+			const cards = Array.from(root.querySelectorAll('[data-lab-motion-card]'));
+			if (!cards.length) {
+				return;
+			}
 
-		const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-		if (reduced) {
-			cards.forEach((card) => card.classList.add('is-awake'));
-			return;
-		}
+			const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+			if (reduced) {
+				cards.forEach((card) => card.classList.add('is-awake'));
+				return;
+			}
 
-		const observer = new IntersectionObserver(
-			(entries) => {
-				entries.forEach((entry) => {
-					if (!entry.isIntersecting) return;
-					const card = entry.target;
-					if (!(card instanceof HTMLElement) || card.classList.contains('is-awake')) return;
-					const index = cards.indexOf(card);
-					window.setTimeout(() => {
-						card.classList.add('is-awake');
-					}, Math.max(0, index) * 55);
-					observer.unobserve(card);
+			const observer = new IntersectionObserver(
+				(entries) => {
+					entries.forEach((entry) => {
+						if (!entry.isIntersecting) return;
+						const card = entry.target;
+						if (!(card instanceof HTMLElement) || card.classList.contains('is-awake')) return;
+						const index = cards.indexOf(card);
+						window.setTimeout(() => {
+							card.classList.add('is-awake');
+						}, Math.max(0, index) * 55);
+						observer.unobserve(card);
+					});
+				},
+				{ threshold: 0.2, rootMargin: '0px 0px -8% 0px' }
+			);
+
+			cards.forEach((card) => observer.observe(card));
+
+			const setActive = (active) => {
+				cards.forEach((card) => {
+					if (active && card !== active) {
+						card.classList.add('is-dimmed');
+					} else {
+						card.classList.remove('is-dimmed');
+					}
 				});
-			},
-			{ threshold: 0.2, rootMargin: '0px 0px -8% 0px' }
-		);
-
-		cards.forEach((card) => observer.observe(card));
-
-		const setActive = (active) => {
-			cards.forEach((card) => {
-				if (active && card !== active) {
-					card.classList.add('is-dimmed');
-				} else {
-					card.classList.remove('is-dimmed');
-				}
-			});
-		};
-
-		cards.forEach((card) => {
-			const enter = () => setActive(card);
-			const leave = (event) => {
-				const related = event instanceof FocusEvent ? event.relatedTarget : null;
-				if (related instanceof Node && card.contains(related)) return;
-				setActive(null);
 			};
-			card.addEventListener('mouseenter', enter);
-			card.addEventListener('focusin', enter);
-			card.addEventListener('mouseleave', leave);
-			card.addEventListener('focusout', leave);
-		});
 
-		document.addEventListener('astro:before-preparation', () => {
-			observer.disconnect();
-		});
+			cards.forEach((card) => {
+				const enter = () => setActive(card);
+				const leave = (event) => {
+					const related = event instanceof FocusEvent ? event.relatedTarget : null;
+					if (related instanceof Node && card.contains(related)) return;
+					setActive(null);
+				};
+				card.addEventListener('mouseenter', enter);
+				card.addEventListener('focusin', enter);
+				card.addEventListener('mouseleave', leave);
+				card.addEventListener('focusout', leave);
+			});
+
+			document.addEventListener('astro:before-preparation', () => {
+				observer.disconnect();
+			});
+		})();
 	</script>
 </BaseLayout>

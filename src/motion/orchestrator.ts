@@ -34,6 +34,7 @@ class RiveOrchestrator {
 	private idleMs = 6000;
 	private isIdle = false;
 	private reducedMotion = false;
+	private forcedMotion = false;
 	private lastRouteSignalAt = 0;
 	private devSummaryTimer: number | null = null;
 	private intensityMode: MotionIntensity = 'editorial';
@@ -41,7 +42,17 @@ class RiveOrchestrator {
 	init() {
 		if (typeof window === 'undefined' || this.initialized) return;
 		this.initialized = true;
-		this.reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+		const params = new URLSearchParams(window.location.search);
+		if (params.get('motion') === 'force') {
+			window.localStorage.setItem('motion-os:force-motion', '1');
+		}
+		if (params.get('motion') === 'respect') {
+			window.localStorage.removeItem('motion-os:force-motion');
+		}
+		this.forcedMotion = window.localStorage.getItem('motion-os:force-motion') === '1';
+		this.reducedMotion = this.forcedMotion
+			? false
+			: window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 		this.hudVisible = window.localStorage.getItem('motion-os:hud') === '1';
 		this.intensityMode = this.readIntensityMode();
 		this.applyIntensityMode();
@@ -368,6 +379,7 @@ class RiveOrchestrator {
 		lines.push(`players: ${this.players.size}`);
 		lines.push(`heartbeat: ${this.heartbeatFps.toFixed(0)} fps-ish`);
 		lines.push(`reducedMotion: ${this.reducedMotion ? 'true' : 'false'}`);
+		lines.push(`forcedMotion: ${this.forcedMotion ? 'true' : 'false'}`);
 		lines.push(`intensity: ${this.intensityMode}`);
 		if (this.lastRouteSignalAt) {
 			lines.push(`routeSignal: ${Math.max(0, Math.round((Date.now() - this.lastRouteSignalAt) / 1000))}s ago`);
