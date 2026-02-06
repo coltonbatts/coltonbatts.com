@@ -1,0 +1,133 @@
+---
+/**
+ * CyberHero.astro — Cyber-futuristic glassmorphism hero animation
+ * WebGL 2 powered swirling fluid gradients with glassmorphism,
+ * auto-animated cursor interactions, and post-processing effects.
+ *
+ * Features:
+ * - Electric cyan, magenta, indigo swirling fluids
+ * - Frosted glass panels with edge highlights
+ * - Auto-cursor with ripple/defrost/bloom effects
+ * - CRT scanlines, chromatic aberration, screen curvature
+ * - Respects prefers-reduced-motion
+ * - Falls back gracefully when WebGL 2 unavailable
+ */
+interface Props {
+	class?: string;
+}
+const { class: className = '' } = Astro.props;
+---
+
+<div class:list={['cyber-hero', className]}>
+	<div class="cyber-hero__container">
+		<canvas class="cyber-hero__canvas" data-cyber-canvas></canvas>
+		<div class="cyber-hero__fallback" data-cyber-fallback>
+			<span>[ cyber fluid · requires WebGL 2 ]</span>
+		</div>
+	</div>
+	<p class="cyber-hero__caption">
+		glassmorphism fluid · auto-cursor reactive
+	</p>
+</div>
+
+<script>
+	import { CyberHeroAnimation } from '../animations/cyber-hero';
+
+	let instance: CyberHeroAnimation | null = null;
+	let observer: IntersectionObserver | null = null;
+
+	function init() {
+		cleanup();
+
+		const canvas = document.querySelector<HTMLCanvasElement>('[data-cyber-canvas]');
+		const fallback = document.querySelector<HTMLElement>('[data-cyber-fallback]');
+		if (!canvas) return;
+
+		if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+			canvas.hidden = true;
+			return;
+		}
+
+		instance = new CyberHeroAnimation(canvas);
+
+		if (!instance.supported) {
+			instance = null;
+			canvas.hidden = true;
+			return;
+		}
+
+		if (fallback) fallback.remove();
+
+		observer = new IntersectionObserver(
+			(entries) => {
+				entries.forEach((entry) => {
+					if (entry.isIntersecting) instance?.start();
+					else instance?.stop();
+				});
+			},
+			{ threshold: 0.05 },
+		);
+
+		observer.observe(canvas.closest('.cyber-hero')!);
+	}
+
+	function cleanup() {
+		observer?.disconnect();
+		observer = null;
+		instance?.destroy();
+		instance = null;
+	}
+
+	document.addEventListener('astro:page-load', init);
+	document.addEventListener('astro:before-swap', cleanup);
+	if (document.readyState !== 'loading') init();
+</script>
+
+<style>
+	.cyber-hero {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+	}
+
+	.cyber-hero__container {
+		position: relative;
+		aspect-ratio: 16 / 9;
+		border: 2px solid var(--charcoal, #1a1a1a);
+		box-shadow: 6px 6px 0px rgba(0, 0, 0, 0.12);
+		background: linear-gradient(135deg, #0a0a12 0%, #0d0d1a 50%, #0a0a12 100%);
+		overflow: hidden;
+		transform: translate(-1px, -1px);
+	}
+
+	.cyber-hero__canvas {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+	}
+
+	.cyber-hero__fallback {
+		position: absolute;
+		inset: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: linear-gradient(135deg, #0a0a12 0%, #0d0d1a 50%, #0a0a12 100%);
+	}
+
+	.cyber-hero__fallback span {
+		font-family: 'IBM Plex Mono', ui-monospace, monospace;
+		font-size: 0.6875rem;
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+		color: rgba(0, 200, 255, 0.4);
+	}
+
+	.cyber-hero__caption {
+		font-family: 'IBM Plex Mono', ui-monospace, monospace;
+		font-size: 0.6875rem;
+		letter-spacing: 0.02em;
+		color: rgba(0, 0, 0, 0.5);
+	}
+</style>
