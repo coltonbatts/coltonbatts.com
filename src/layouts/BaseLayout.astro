@@ -152,6 +152,13 @@ const routeRecipe = resolveRiveRecipe('routePunctuation');
 			<slot />
 		</main>
 
+		<aside id="manual-scroller" class="manual-scroller" aria-label="Page manual progress" hidden>
+			<div class="manual-scroller__track">
+				<span class="manual-scroller__fill"></span>
+			</div>
+			<ol class="manual-scroller__sections" data-manual-sections></ol>
+		</aside>
+
 		<div id="motion-intro-curtain" aria-hidden="true">
 			<span></span>
 			<span></span>
@@ -216,10 +223,12 @@ const routeRecipe = resolveRiveRecipe('routePunctuation');
 		<script type="module">
 			import { initLotties, cleanupLotties } from '../animations/lottie';
 			import { initReveal, cleanupReveal } from '../animations/reveal';
+			import { initManualScroller, cleanupManualScroller } from '../animations/manual-scroller';
 			import { initMotionOS, notifyRouteTransitionEnd, notifyRouteTransitionStart } from '../motion/orchestrator';
 
 			const initMotion = () => {
 				initMotionOS();
+				initManualScroller();
 				initLotties();
 				initReveal();
 				notifyRouteTransitionEnd();
@@ -227,6 +236,7 @@ const routeRecipe = resolveRiveRecipe('routePunctuation');
 
 			const cleanupMotion = () => {
 				notifyRouteTransitionStart();
+				cleanupManualScroller();
 				cleanupLotties();
 				cleanupReveal();
 			};
