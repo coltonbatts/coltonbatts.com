@@ -47,6 +47,7 @@ const toolsCollection = defineCollection({
  *   series      — Category for grouping
  *   available   — (unused — retained for schema compat)
  *   order       — Sort order (lower = first)
+ *   vimeoId     — Optional Vimeo video ID for inline playback
  * ----------------------------------------------------------- */
 
 const paintingsCollection = defineCollection({
@@ -61,6 +62,7 @@ const paintingsCollection = defineCollection({
 		series: z.string().optional(),
 		available: z.boolean().default(false),
 		order: z.number().default(0),
+		vimeoId: z.string().optional(),
 	}),
 });
 

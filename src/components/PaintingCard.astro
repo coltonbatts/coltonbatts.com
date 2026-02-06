@@ -4,13 +4,11 @@
  * ==================
  * Renders a project as a card in the portfolio gallery.
  *
- * The image sits inside a heavy-bordered "matted" frame with generous
- * internal padding. Below the frame, a monospaced label displays
- * the metadata: title, role, scope, year.
+ * When a vimeoId is provided, the card displays an autoplaying
+ * Vimeo embed (muted, looping, no controls) that plays/pauses
+ * as the user scrolls it in and out of view.
  *
- * Variants:
- *   - Default: standard card for grid placement
- *   - featured: larger frame, heavier shadow, more padding
+ * Otherwise falls back to a dark placeholder div with the title.
  *
  * The card links to the individual project detail page.
  */
@@ -25,6 +23,7 @@ interface Props {
 	featured?: boolean;
 	available?: boolean;
 	series?: string;
+	vimeoId?: string;
 	class?: string;
 }
 
@@ -38,6 +37,7 @@ const {
 	featured = false,
 	available = false,
 	series,
+	vimeoId,
 	class: className = '',
 } = Astro.props;
 ---
@@ -53,12 +53,24 @@ const {
 	<!-- The Frame: matted border with stamped shadow -->
 	<div class="painting-card__frame">
 		<div class="painting-card__mat">
-			<div
-				style="aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;background:#1a1a1a;color:rgba(255,255,255,0.25);font-family:monospace;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.1em;"
-				class="painting-card__image"
-			>
-				{title}
-			</div>
+			{vimeoId ? (
+				<div class="vimeo-scroll-player" style="position:relative;aspect-ratio:16/9;overflow:hidden;">
+					<iframe
+						data-src={`https://player.vimeo.com/video/${vimeoId}?background=1&autoplay=0&loop=1&muted=1&dnt=1`}
+						style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;"
+						allow="autoplay; fullscreen"
+						loading="lazy"
+						title={title}
+					></iframe>
+				</div>
+			) : (
+				<div
+					style="aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;background:#1a1a1a;color:rgba(255,255,255,0.25);font-family:monospace;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.1em;"
+					class="painting-card__image"
+				>
+					{title}
+				</div>
+			)}
 		</div>
 	</div>
 
@@ -81,3 +93,40 @@ const {
 		)}
 	</div>
 </a>
+
+<script>
+	function initScrollPlayers() {
+		const players = document.querySelectorAll('.vimeo-scroll-player');
+		if (!players.length) return;
+
+		const observer = new IntersectionObserver((entries) => {
+			entries.forEach((entry) => {
+				const iframe = entry.target.querySelector('iframe') as HTMLIFrameElement | null;
+				if (!iframe) return;
+
+				if (entry.isIntersecting) {
+					// Lazy-load: set src on first intersection
+					if (!iframe.src && iframe.dataset.src) {
+						iframe.src = iframe.dataset.src.replace('autoplay=0', 'autoplay=1');
+					} else if (iframe.contentWindow) {
+						iframe.contentWindow.postMessage(
+							JSON.stringify({ method: 'play' }), '*'
+						);
+					}
+				} else {
+					if (iframe.contentWindow && iframe.src) {
+						iframe.contentWindow.postMessage(
+							JSON.stringify({ method: 'pause' }), '*'
+						);
+					}
+				}
+			});
+		}, { threshold: 0.25 });
+
+		players.forEach((player) => observer.observe(player));
+	}
+
+	// Run on initial load and on Astro page transitions
+	initScrollPlayers();
+	document.addEventListener('astro:page-load', initScrollPlayers);
+</script>
