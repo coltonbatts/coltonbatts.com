@@ -1,5 +1,6 @@
 ---
 import type { RiveInputs, RiveInteraction, RiveMode } from '../../animations/rive';
+import type { MotionRecipe } from '../../motion/recipes';
 import RivePlayer from './RivePlayer.astro';
 
 interface Props {
@@ -14,6 +15,8 @@ interface Props {
 	ariaLabel?: string;
 	debug?: boolean;
 	respectReducedMotion?: boolean;
+	recipe?: MotionRecipe;
+	id?: string;
 }
 
 const props = Astro.props as Props;

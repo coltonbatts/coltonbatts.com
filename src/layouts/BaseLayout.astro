@@ -13,6 +13,8 @@
 
 import { navItems, site } from '../config';
 import Wordmark from '../components/Wordmark.astro';
+import RivePlayer from '../components/interactive/RivePlayer.astro';
+import { resolveRiveRecipe } from '../content/rive-recipes';
 import '../styles/global.css';
 
 interface Props {
@@ -23,6 +25,7 @@ interface Props {
 const { title = site.title, description = site.description } = Astro.props;
 const fullTitle = title === site.title ? title : `${title} | ${site.title}`;
 const currentPath = Astro.url.pathname;
+const routeRecipe = resolveRiveRecipe('routePunctuation');
 ---
 
 <!doctype html>
@@ -149,6 +152,17 @@ const currentPath = Astro.url.pathname;
 			<slot />
 		</main>
 
+		<div id="route-kinetic-punctuation" aria-hidden="true"></div>
+		<RivePlayer
+			id="route-punctuation-player"
+			class="route-punctuation-rive"
+			src="/rive/ui/button.riv"
+			recipe={routeRecipe}
+			respectReducedMotion={false}
+		>
+			<div slot="fallback" class="route-punctuation-fallback" aria-hidden="true"></div>
+		</RivePlayer>
+
 		<!-- ============================================
 			 FOOTER
 			 Heavy top border. Monospaced metadata stamp.
@@ -198,13 +212,17 @@ const currentPath = Astro.url.pathname;
 		<script type="module">
 			import { initLotties, cleanupLotties } from '../animations/lottie';
 			import { initReveal, cleanupReveal } from '../animations/reveal';
+			import { initMotionOS, notifyRouteTransitionEnd, notifyRouteTransitionStart } from '../motion/orchestrator';
 
 			const initMotion = () => {
+				initMotionOS();
 				initLotties();
 				initReveal();
+				notifyRouteTransitionEnd();
 			};
 
 			const cleanupMotion = () => {
+				notifyRouteTransitionStart();
 				cleanupLotties();
 				cleanupReveal();
 			};
@@ -217,6 +235,7 @@ const currentPath = Astro.url.pathname;
 
 			document.addEventListener('astro:page-load', initMotion);
 			document.addEventListener('astro:before-swap', cleanupMotion);
+			document.addEventListener('astro:before-preparation', cleanupMotion);
 		</script>
 	</body>
 </html>

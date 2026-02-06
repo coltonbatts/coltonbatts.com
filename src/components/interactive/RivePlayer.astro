@@ -1,5 +1,6 @@
 ---
 import type { RiveInputs, RiveInteraction, RiveMode } from '../../animations/rive';
+import type { MotionRecipe } from '../../motion/recipes';
 
 interface Props {
 	src: string;
@@ -13,6 +14,8 @@ interface Props {
 	ariaLabel?: string;
 	debug?: boolean;
 	respectReducedMotion?: boolean;
+	recipe?: MotionRecipe;
+	id?: string;
 }
 
 const {
@@ -27,15 +30,19 @@ const {
 	ariaLabel,
 	debug = false,
 	respectReducedMotion = true,
+	recipe,
+	id,
 } = Astro.props;
 
 const inputsPayload = inputs ? JSON.stringify(inputs) : undefined;
 const interactionsPayload = interactions ? JSON.stringify(interactions) : undefined;
+const recipePayload = recipe ? JSON.stringify(recipe) : undefined;
 ---
 
 <div
 	class={['rive-player', className].filter(Boolean).join(' ')}
 	data-rive-player
+	data-rive-id={id}
 	data-rive-src={src}
 	data-rive-artboard={artboard}
 	data-rive-state-machine={stateMachine}
@@ -45,6 +52,7 @@ const interactionsPayload = interactions ? JSON.stringify(interactions) : undefi
 	data-rive-interactions={interactionsPayload}
 	data-rive-debug={debug}
 	data-rive-respect-reduced-motion={respectReducedMotion}
+	data-rive-recipe={recipePayload}
 	role={ariaLabel ? 'img' : undefined}
 	aria-label={ariaLabel}
 	aria-hidden={ariaLabel ? undefined : 'true'}

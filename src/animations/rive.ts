@@ -1,13 +1,13 @@
+import { applyMotionAction, type InputBridgeTarget } from '../motion/input-bridge';
+import { getRiveOrchestrator } from '../motion/orchestrator';
+import type { MotionRecipe, MotionSignal, MotionSignalAction } from '../motion/recipes';
+
 type RiveModule = typeof import('@rive-app/canvas');
-
 type RiveInstance = import('@rive-app/canvas').Rive;
-
 type RiveInput = import('@rive-app/canvas').StateMachineInput;
 
 export type RiveInputValue = boolean | number | string;
-
 export type RiveInputs = Record<string, RiveInputValue>;
-
 export type RiveMode = 'play-when-visible' | 'always';
 
 export type RiveInteraction =
@@ -45,9 +45,12 @@ type RiveInitOptions = {
 	interactions?: RiveInteraction[];
 	debug?: boolean;
 	respectReducedMotion?: boolean;
+	recipe?: MotionRecipe;
+	id?: string;
 };
 
 type RiveManagedInstance = {
+	id: string;
 	rive: RiveInstance;
 	canvas: HTMLCanvasElement;
 	container: HTMLElement;
@@ -62,12 +65,14 @@ type RiveManagedInstance = {
 	cleanupFns: Array<() => void>;
 	debug: boolean;
 	debugPanel: HTMLElement | null;
+	recipe?: MotionRecipe;
 };
 
 type RiveCleanup = () => void;
 
 const instances = new Map<HTMLElement, RiveCleanup>();
 const managedInstances = new Map<HTMLElement, RiveManagedInstance>();
+let idCounter = 0;
 
 export const prefersReducedMotion = () => {
 	if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') {
@@ -105,6 +110,15 @@ const parseInteractions = (value: string | null): RiveInteraction[] => {
 	}
 };
 
+const parseRecipe = (value: string | null): MotionRecipe | undefined => {
+	if (!value) return undefined;
+	try {
+		return JSON.parse(value) as MotionRecipe;
+	} catch {
+		return undefined;
+	}
+};
+
 const loadRive = (() => {
 	let cached: Promise<RiveModule> | null = null;
 	return () => {
@@ -133,8 +147,10 @@ const updateDebugPanel = (instance: RiveManagedInstance) => {
 	if (!instance.debug || !instance.debugPanel) return;
 	const names = Array.from(instance.inputsByName.keys());
 	const lines = [
+		`id: ${instance.id}`,
 		`stateMachine: ${instance.stateMachine ?? 'none'}`,
 		`inputs: ${names.length ? names.join(', ') : 'none'}`,
+		`recipe: ${instance.recipe?.id ?? 'none'}`,
 	];
 	instance.debugPanel.textContent = lines.join('\n');
 };
@@ -164,10 +180,7 @@ const syncPlayback = (instance: RiveManagedInstance) => {
 		return;
 	}
 
-	const shouldRun =
-		instance.mode === 'always'
-			? instance.isPageVisible
-			: instance.isVisible && instance.isPageVisible;
+	const shouldRun = instance.mode === 'always' ? instance.isPageVisible : instance.isVisible && instance.isPageVisible;
 
 	setRenderActive(instance, shouldRun);
 };
@@ -218,6 +231,30 @@ const applyInputs = (instance: RiveManagedInstance, inputs: RiveInputs | undefin
 	});
 };
 
+const applySignalActions = (
+	instance: RiveManagedInstance,
+	signal: MotionSignal,
+	actions: MotionSignalAction[] | undefined
+) => {
+	if (!actions || !actions.length) return;
+	const bridge: InputBridgeTarget = {
+		setBoolean: (inputName, value) => applyInputValue(instance, inputName, value),
+		setNumber: (inputName, value) => applyInputValue(instance, inputName, value),
+		fireTrigger: (inputName) => applyInputValue(instance, inputName, 'fire'),
+		play: () => setRenderActive(instance, true),
+		pause: () => setRenderActive(instance, false),
+	};
+	actions.forEach((action) => {
+		applyMotionAction(bridge, action, signal);
+	});
+};
+
+const applyRecipeSignal = (instance: RiveManagedInstance, signal: MotionSignal) => {
+	const signals = instance.recipe?.signals;
+	if (!signals) return;
+	applySignalActions(instance, signal, signals[signal.type]);
+};
+
 const bindInteractions = (instance: RiveManagedInstance) => {
 	const { container, interactions } = instance;
 	if (!interactions.length) return;
@@ -226,6 +263,11 @@ const bindInteractions = (instance: RiveManagedInstance) => {
 		if (interaction.event === 'hover') {
 			const onEnter = () => {
 				instance.isHovered = true;
+				applyRecipeSignal(instance, {
+					type: 'hover',
+					active: true,
+					timestamp: Date.now(),
+				});
 				if (interaction.action === 'play-pause') {
 					syncPlayback(instance);
 					return;
@@ -237,6 +279,11 @@ const bindInteractions = (instance: RiveManagedInstance) => {
 
 			const onLeave = () => {
 				instance.isHovered = false;
+				applyRecipeSignal(instance, {
+					type: 'hover',
+					active: false,
+					timestamp: Date.now(),
+				});
 				if (interaction.action === 'play-pause') {
 					syncPlayback(instance);
 					return;
@@ -258,6 +305,11 @@ const bindInteractions = (instance: RiveManagedInstance) => {
 		if (interaction.event === 'click' && interaction.action === 'trigger') {
 			const onClick = () => {
 				applyInputValue(instance, interaction.input, 'fire');
+				applyRecipeSignal(instance, {
+					type: 'click',
+					active: true,
+					timestamp: Date.now(),
+				});
 			};
 			container.addEventListener('click', onClick);
 			instance.cleanupFns.push(() => container.removeEventListener('click', onClick));
@@ -276,12 +328,14 @@ const bindInteractions = (instance: RiveManagedInstance) => {
 					const rect = container.getBoundingClientRect();
 					const viewport = Math.max(window.innerHeight, 1);
 					const total = rect.height + viewport;
-					const progress = Math.min(
-						1,
-						Math.max(0, (viewport - rect.top) / Math.max(total, 1))
-					);
+					const progress = Math.min(1, Math.max(0, (viewport - rect.top) / Math.max(total, 1)));
 					const mapped = min + progress * (max - min);
 					applyInputValue(instance, interaction.input, mapped);
+					applyRecipeSignal(instance, {
+						type: 'scroll-progress',
+						progress,
+						timestamp: Date.now(),
+					});
 					ticking = false;
 				});
 			};
@@ -299,21 +353,13 @@ const bindInteractions = (instance: RiveManagedInstance) => {
 
 const getManagedInstance = (container: HTMLElement) => managedInstances.get(container);
 
-export const setRiveBoolean = (
-	container: HTMLElement,
-	inputName: string,
-	value: boolean
-) => {
+export const setRiveBoolean = (container: HTMLElement, inputName: string, value: boolean) => {
 	const instance = getManagedInstance(container);
 	if (!instance) return;
 	applyInputValue(instance, inputName, value);
 };
 
-export const setRiveNumber = (
-	container: HTMLElement,
-	inputName: string,
-	value: number
-) => {
+export const setRiveNumber = (container: HTMLElement, inputName: string, value: number) => {
 	const instance = getManagedInstance(container);
 	if (!instance) return;
 	applyInputValue(instance, inputName, value);
@@ -325,33 +371,45 @@ export const fireRiveTrigger = (container: HTMLElement, inputName: string) => {
 	applyInputValue(instance, inputName, 'fire');
 };
 
-export const initRiveCanvas = async (
-	container: HTMLElement,
-	options: RiveInitOptions = {}
-) => {
+const preflightAsset = (container: HTMLElement, src: string) => {
+	if (!import.meta.env.DEV) return;
+	if (!src.startsWith('/')) return;
+	void fetch(src, { method: 'HEAD' })
+		.then((response) => {
+			if (!response.ok) {
+				warn(container, `Asset preflight failed with HTTP ${response.status}`);
+			}
+		})
+		.catch(() => {
+			warn(container, 'Asset preflight failed. Check path or static output.');
+		});
+};
+
+export const initRiveCanvas = async (container: HTMLElement, options: RiveInitOptions = {}) => {
 	if (typeof window === 'undefined') return;
 	if (instances.has(container) || container.dataset.riveInit === 'true') return;
 
 	const src = options.src ?? container.dataset.riveSrc;
-	if (!src) return;
+	if (!src) {
+		warn(container, 'Missing required src');
+		return;
+	}
 
 	container.dataset.riveInit = 'true';
+	container.dataset.motionManaged = 'true';
 
-	const artboard = options.artboard ?? container.dataset.riveArtboard ?? undefined;
+	const parsedRecipe = options.recipe ?? parseRecipe(container.dataset.riveRecipe);
+	const artboard = options.artboard ?? parsedRecipe?.artboard ?? container.dataset.riveArtboard ?? undefined;
 	const stateMachine =
-		options.stateMachine ?? container.dataset.riveStateMachine ?? undefined;
-	const autoplay =
-		options.autoplay ?? parseBoolean(container.dataset.riveAutoplay, true);
-	const mode =
-		options.mode ??
-		(container.dataset.riveMode as RiveMode | undefined) ??
-		'play-when-visible';
-	const inputs = options.inputs ?? parseInputs(container.dataset.riveInputs);
-	const interactions =
-		options.interactions ?? parseInteractions(container.dataset.riveInteractions);
-	const debug = options.debug ?? parseBoolean(container.dataset.riveDebug, false);
+		options.stateMachine ?? parsedRecipe?.stateMachine ?? container.dataset.riveStateMachine ?? undefined;
+	const autoplay = options.autoplay ?? parsedRecipe?.autoplay ?? parseBoolean(container.dataset.riveAutoplay, true);
+	const mode = options.mode ?? parsedRecipe?.mode ?? ((container.dataset.riveMode as RiveMode | undefined) ?? 'play-when-visible');
+	const inputs = options.inputs ?? parsedRecipe?.inputs ?? parseInputs(container.dataset.riveInputs);
+	const interactions = options.interactions ?? parsedRecipe?.interactions ?? parseInteractions(container.dataset.riveInteractions);
+	const debug = options.debug ?? parsedRecipe?.debug ?? parseBoolean(container.dataset.riveDebug, false);
 	const respectReducedMotion =
 		options.respectReducedMotion ??
+		parsedRecipe?.respectReducedMotion ??
 		parseBoolean(container.dataset.riveRespectReducedMotion, true);
 
 	if (respectReducedMotion && prefersReducedMotion()) {
@@ -362,6 +420,8 @@ export const initRiveCanvas = async (
 		container.dataset.riveInit = 'false';
 		return;
 	}
+
+	preflightAsset(container, src);
 
 	const { Rive } = await loadRive();
 
@@ -376,7 +436,11 @@ export const initRiveCanvas = async (
 	let observer: IntersectionObserver | null = null;
 	let resizeObserver: ResizeObserver | null = null;
 
+	const id = options.id ?? container.dataset.riveId ?? `rive-${++idCounter}`;
+	container.dataset.riveId = id;
+
 	const managed: RiveManagedInstance = {
+		id,
 		rive: null as unknown as RiveInstance,
 		canvas,
 		container,
@@ -391,7 +455,10 @@ export const initRiveCanvas = async (
 		cleanupFns: [],
 		debug,
 		debugPanel: container.querySelector<HTMLElement>('[data-rive-debug-panel]'),
+		recipe: parsedRecipe,
 	};
+
+	const orchestrator = getRiveOrchestrator();
 
 	const rive = new Rive({
 		src,
@@ -449,6 +516,18 @@ export const initRiveCanvas = async (
 			}
 			applyInputs(managed, inputs);
 			bindInteractions(managed);
+
+			orchestrator.registerPlayer({
+				id,
+				container,
+				stateMachine,
+				getInputNames: () => Array.from(managed.inputsByName.keys()),
+				onSignal: (signal) => {
+					applyRecipeSignal(managed, signal);
+				},
+			});
+			managed.cleanupFns.push(() => orchestrator.unregisterPlayer(id));
+
 			updateDebugPanel(managed);
 			syncPlayback(managed);
 		},
@@ -492,9 +571,7 @@ export const cleanupRiveCanvas = (container: HTMLElement) => {
 
 export const initRives = (root: ParentNode = document) => {
 	if (typeof window === 'undefined') return;
-	const containers = Array.from(
-		root.querySelectorAll<HTMLElement>('[data-rive-player]')
-	);
+	const containers = Array.from(root.querySelectorAll<HTMLElement>('[data-rive-player]'));
 	if (!containers.length) return;
 	containers.forEach((container) => {
 		void initRiveCanvas(container);

@@ -117,10 +117,13 @@ What it does:
 Example:
 
 ```ts
-motionSpecimen: {
-  autoplay: false,
-  mode: 'always',
-  interactions: [{ event: 'hover', action: 'play-pause' }],
+homepageMotionHero: {
+  stateMachine: 'Button',
+  inputs: { isHover: false, progress: 0 },
+  signals: {
+    hover: [{ type: 'set-boolean-from-active', input: 'isHover' }],
+    'scroll-progress': [{ type: 'set-number-from-progress', input: 'progress', min: 0, max: 100 }],
+  },
 }
 ```
 
@@ -149,12 +152,13 @@ How to use:
 Why it matters:
 - Faster state-machine integration and safer iteration.
 
-## Implemented Tonight
+## Implemented In Repo
 
 1. `RivePlayer.astro` (Astro-first embed + SSR-safe init)
-2. Unified runtime controls in `src/animations/rive.ts`
-3. `ArtSlot` migration off CDN inline loader onto shared runtime
-4. Recipe system (`src/content/rive-recipes.ts`) + motion section wiring
+2. Motion OS orchestrator in `src/motion/orchestrator.ts`
+3. Input bridge in `src/motion/input-bridge.ts`
+4. Recipe system in `src/content/rive-recipes.ts` with scene signal mapping
+5. Route transition punctuation + debug HUD wiring in `BaseLayout`
 
 ## Simple Embed vs Advanced Control
 

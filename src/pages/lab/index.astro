@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Rive from '../../components/interactive/Rive.astro';
+import { resolveRiveRecipe } from '../../content/rive-recipes';
 import fs from 'node:fs';
 import path from 'node:path';
 
@@ -61,6 +62,7 @@ function getAssets(dir: string, baseDir: string): RiveAsset[] {
 
 const allAssets = getAssets(riveDirPath, riveDirPath).sort((a, b) => a.path.localeCompare(b.path));
 const categories = [...new Set(allAssets.map(a => a.category))].sort();
+const previewRecipe = resolveRiveRecipe('labCardPreview');
 ---
 
 <BaseLayout title="Motion Lab">
@@ -95,14 +97,19 @@ const categories = [...new Set(allAssets.map(a => a.category))].sort();
 								.map((asset) => (
 									<a
 										href={`/lab/${asset.path}`}
-										class="border border-black block hover:bg-gray-50 transition-colors group"
+										class="border border-black block hover:bg-gray-50 transition-colors group focus-visible:outline-2 focus-visible:outline-raw focus-visible:outline-offset-2"
 									>
 										<div class="aspect-square bg-gray-50 border-b border-gray-200 flex items-center justify-center overflow-hidden">
 											<Rive
 												src={asset.src}
-												mode="play-when-visible"
+												recipe={previewRecipe}
+												id={`lab-card-${asset.path.replace(/[\\/]/g, '-')}`}
 												class="w-full h-full"
-											/>
+											>
+												<div slot="fallback" class="lab-rive-fallback" aria-hidden="true">
+													<span>Preview</span>
+												</div>
+											</Rive>
 										</div>
 										<div class="p-4">
 											<div class="flex items-center justify-between mb-1">

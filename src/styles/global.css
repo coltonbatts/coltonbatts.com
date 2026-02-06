@@ -617,8 +617,136 @@
 		z-index: 2;
 	}
 
+	.motion-os-hud {
+		position: fixed;
+		left: 0.75rem;
+		bottom: 0.75rem;
+		width: min(26rem, calc(100vw - 1.5rem));
+		background: rgba(10, 10, 10, 0.9);
+		color: #f5f5f5;
+		border: 1px solid rgba(255, 255, 255, 0.35);
+		z-index: 12000;
+		backdrop-filter: blur(6px);
+	}
+
+	.motion-os-hud__head {
+		font-family: 'IBM Plex Mono', ui-monospace, monospace;
+		font-size: 0.625rem;
+		font-weight: 700;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+		padding: 0.4rem 0.55rem;
+		border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+	}
+
+	.motion-os-hud__body {
+		margin: 0;
+		padding: 0.55rem;
+		font-family: 'IBM Plex Mono', ui-monospace, monospace;
+		font-size: 0.625rem;
+		line-height: 1.45;
+		white-space: pre-wrap;
+	}
+
+	.motion-os-hud-toggle {
+		position: fixed;
+		left: 0.75rem;
+		bottom: 0.75rem;
+		z-index: 11999;
+		font-family: 'IBM Plex Mono', ui-monospace, monospace;
+		font-size: 0.625rem;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+		padding: 0.3rem 0.5rem;
+		border: 1px solid var(--charcoal);
+		background: rgba(232, 229, 223, 0.92);
+		color: var(--charcoal);
+	}
+
+	.motion-os-hud:not([hidden]) + .motion-os-hud-toggle {
+		bottom: calc(0.75rem + 10.75rem);
+	}
+
+	.lab-rive-fallback {
+		width: 100%;
+		height: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: linear-gradient(135deg, rgba(0, 0, 0, 0.035), rgba(0, 0, 0, 0.01));
+	}
+
+	.lab-rive-fallback span {
+		font-family: 'IBM Plex Mono', ui-monospace, monospace;
+		font-size: 0.625rem;
+		text-transform: uppercase;
+		letter-spacing: 0.12em;
+		color: rgba(0, 0, 0, 0.45);
+	}
+
+	#route-kinetic-punctuation {
+		position: fixed;
+		inset: 0;
+		pointer-events: none;
+		z-index: 11000;
+		opacity: 0;
+		background:
+			linear-gradient(90deg, transparent 0%, transparent 22%, rgba(155, 27, 27, 0.3) 50%, transparent 78%, transparent 100%);
+		transform: translateX(-18%);
+	}
+
+	.motion-route-pulse #route-kinetic-punctuation {
+		animation: route-punctuation-sweep 520ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+	}
+
+	.route-punctuation-rive {
+		position: fixed;
+		right: 1rem;
+		bottom: 1rem;
+		width: 82px;
+		height: 82px;
+		pointer-events: none;
+		z-index: 11001;
+		opacity: 0.45;
+		mix-blend-mode: multiply;
+	}
+
+	.route-punctuation-rive .rive-player__canvas {
+		opacity: 1;
+	}
+
+	.route-punctuation-fallback {
+		position: absolute;
+		inset: 0;
+		border: 2px solid rgba(26, 26, 26, 0.18);
+		background: linear-gradient(145deg, rgba(155, 27, 27, 0.12), rgba(155, 27, 27, 0.03));
+	}
+
+	@keyframes route-punctuation-sweep {
+		0% {
+			opacity: 0;
+			transform: translateX(-20%);
+		}
+		18% {
+			opacity: 1;
+		}
+		100% {
+			opacity: 0;
+			transform: translateX(20%);
+		}
+	}
+
 	@media (prefers-reduced-motion: reduce) {
 		.art-slot__rive-canvas {
+			display: none;
+		}
+
+		.motion-route-pulse #route-kinetic-punctuation {
+			animation: none;
+			opacity: 0.28;
+		}
+
+		.route-punctuation-rive .rive-player__canvas {
 			display: none;
 		}
 	}

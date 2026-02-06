@@ -29,7 +29,8 @@ function hasAsset(src?: string) {
 }
 
 const primaryAssetExists = hasAsset(slot?.src);
-const fallbackAssetExists = hasAsset(slot?.fallbackSrc);
+const recipeFallbackSrc = resolveRiveRecipe(slot?.riveRecipe)?.fallbackPoster;
+const fallbackAssetExists = hasAsset(slot?.fallbackSrc ?? recipeFallbackSrc);
 const isEnabled = Boolean(slot?.enabled);
 const hasRenderableAsset = Boolean(primaryAssetExists || fallbackAssetExists);
 const isRenderable = Boolean(isEnabled && hasRenderableAsset);
@@ -59,6 +60,7 @@ const shouldShowRive = Boolean(slot?.type === 'rive' && isEnabled && primaryAsse
 const shouldShowVideo = Boolean(slot?.type === 'video' && isEnabled && primaryAssetExists);
 const shouldShowImage = Boolean(slot?.type === 'image' && isEnabled && primaryAssetExists);
 const riveRecipe = resolveRiveRecipe(slot?.riveRecipe);
+const resolvedFallbackSrc = slot?.fallbackSrc ?? recipeFallbackSrc;
 const shouldShowDirectFallbackImage = Boolean(
 	!shouldShowRive && !shouldShowVideo && !shouldShowImage && isEnabled && fallbackAssetExists,
 );
@@ -101,18 +103,13 @@ const shouldShowDirectFallbackImage = Boolean(
 					src={slot.src}
 					ariaLabel={slot.alt}
 					class="art-slot__rive"
-					artboard={riveRecipe?.artboard}
-					stateMachine={riveRecipe?.stateMachine}
-					mode={riveRecipe?.mode}
-					autoplay={riveRecipe?.autoplay}
-					inputs={riveRecipe?.inputs}
-					interactions={riveRecipe?.interactions}
-					debug={riveRecipe?.debug}
+					recipe={riveRecipe}
+					id={slot?.riveRecipe ? `slot-${slot.riveRecipe}` : undefined}
 				>
-					{fallbackAssetExists ? (
+					{resolvedFallbackSrc ? (
 						<img
 							slot="fallback"
-							src={slot.fallbackSrc}
+							src={resolvedFallbackSrc}
 							alt={slot.alt}
 							loading={loadingValue}
 							decoding="async"

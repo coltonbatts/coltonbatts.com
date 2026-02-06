@@ -143,7 +143,7 @@ export const artManifest = {
     type: 'rive',
     src: '/rive/ui/button.riv',
     fallbackSrc: '/art/motion/motion-poster.png',
-    riveRecipe: 'motionSpecimen',
+    riveRecipe: 'homepageMotionHero',
     alt: 'Motion slot',
     caption: 'Motion slot',
     showCaption: true,
