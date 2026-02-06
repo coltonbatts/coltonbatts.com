@@ -169,9 +169,11 @@ class RiveOrchestrator {
 
 	private runIntroSequence() {
 		if (this.reducedMotion) return;
+		const params = new URLSearchParams(window.location.search);
+		const forceReplay = params.get('motion') === 'force';
 		const seenKey = 'motion-os:intro-seen';
 		const seen = window.sessionStorage.getItem(seenKey) === '1';
-		if (seen) return;
+		if (seen && !forceReplay) return;
 		window.sessionStorage.setItem(seenKey, '1');
 		const root = document.documentElement;
 		root.classList.add('motion-intro-sequence');

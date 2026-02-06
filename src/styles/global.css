@@ -741,7 +741,7 @@
 		height: calc(82px + (48px * var(--motion-strength)));
 		pointer-events: none;
 		z-index: 11001;
-		opacity: 0.45;
+		opacity: 0;
 		mix-blend-mode: multiply;
 		transition: transform 220ms ease, opacity 220ms ease;
 	}
@@ -760,6 +760,11 @@
 		inset: 0;
 		border: 2px solid rgba(26, 26, 26, 0.18);
 		background: linear-gradient(145deg, rgba(155, 27, 27, 0.12), rgba(155, 27, 27, 0.03));
+		opacity: 0;
+	}
+
+	.motion-route-pulse .route-punctuation-fallback {
+		opacity: 1;
 	}
 
 	@keyframes route-punctuation-sweep {
