@@ -14,8 +14,14 @@
 
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ArtSlot from '../components/ArtSlot.astro';
+import PaintingCard from '../components/PaintingCard.astro';
 import { artManifest } from '../content/art-manifest';
 import { getCollection } from 'astro:content';
+
+const paintings = await getCollection('paintings');
+const clientVideos = paintings
+	.filter(p => p.data.vimeoId)
+	.sort((a, b) => a.data.order - b.data.order);
 
 const tools = await getCollection('tools');
 const featuredTools = tools.slice(0, 2);
@@ -91,7 +97,47 @@ const trustedByLogos = [
 	</section>
 
 	<!-- ============================================================
-		 SECTION 02: HERO ART — Full-bleed artwork
+		 SECTION 02: CLIENT WORK — Featured video reels
+		 Scroll-triggered Vimeo embeds for top client projects.
+		 ============================================================ -->
+	<section class="max-w-5xl mx-auto px-6 py-16 md:py-22">
+		<div class="flex items-end justify-between mb-10">
+			<div>
+				<p class="section-label mb-0 border-0 pb-0">Client Work</p>
+				<h2 class="mt-3">Recent Projects</h2>
+			</div>
+			<a href="/portfolio" class="hidden md:block font-mono text-label uppercase tracking-instrument text-raw hover:text-raw-dark transition-colors">
+				All Projects &rarr;
+			</a>
+		</div>
+
+		<div class="grid gap-8">
+			{clientVideos.map((project) => (
+				<PaintingCard
+					title={project.data.title}
+					medium={project.data.medium}
+					dimensions={project.data.dimensions}
+					year={project.data.year}
+					image={project.data.image}
+					slug={project.slug}
+					featured={project.data.featured}
+					available={project.data.available}
+					series={project.data.series}
+					vimeoId={project.data.vimeoId}
+				/>
+			))}
+		</div>
+
+		<!-- Mobile "All Projects" link -->
+		<div class="mt-8 md:hidden">
+			<a href="/portfolio" class="btn-instrument w-full text-center">
+				All Projects &rarr;
+			</a>
+		</div>
+	</section>
+
+	<!-- ============================================================
+		 SECTION 03: HERO ART — Full-bleed artwork
 		 The image breaks out of padding — edge to edge.
 		 ============================================================ -->
 	<section class="border-b-2 border-charcoal">
