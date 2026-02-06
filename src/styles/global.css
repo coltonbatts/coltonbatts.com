@@ -334,9 +334,7 @@
 
 	.trusted-logo-image {
 		display: block;
-		max-height: 4.5rem;
 		width: auto;
-		max-width: 100%;
 		object-fit: contain;
 		opacity: 0.72;
 		filter: grayscale(100%) contrast(110%);
@@ -347,11 +345,20 @@
 		opacity: 0.9;
 	}
 
-	@media (min-width: 768px) {
-		.trusted-logo-wrap {
-			min-height: 4.5rem;
-		}
-	}
+	/*
+	 * Per-logo optical sizing.
+	 * Each height is hand-tuned so the primary wordmark / mark
+	 * in every logo reads at the same visual weight.
+	 *
+	 *   nuuly          — bold, ultra-wide wordmark (4:1)
+	 *   kate spade     — light wordmark + "NEW YORK" (1.4:1)
+	 *   under armour   — UA shield + stacked text (1.2:1)
+	 *   google shopping — bag icon + text (1.7:1)
+	 */
+	.trusted-logo-image--nuuly          { height: 1.5rem; }
+	.trusted-logo-image--kate-spade     { height: 3.2rem; }
+	.trusted-logo-image--under-armour   { height: 3rem; }
+	.trusted-logo-image--google-shopping { height: 2.2rem; }
 
 	.btn-instrument:hover {
 		background: var(--charcoal);
@@ -561,6 +568,10 @@
 		position: relative;
 	}
 
+	.rive-player {
+		position: relative;
+	}
+
 	.art-slot__rive-canvas,
 	.art-slot__rive-fallback,
 	.art-slot__rive-empty {
@@ -589,6 +600,21 @@
 
 	.art-slot__rive--loaded .art-slot__rive-canvas {
 		pointer-events: auto;
+	}
+
+	.rive-player__debug {
+		position: absolute;
+		right: 0.5rem;
+		bottom: 0.5rem;
+		margin: 0;
+		padding: 0.4rem 0.5rem;
+		font-family: 'IBM Plex Mono', ui-monospace, monospace;
+		font-size: 0.625rem;
+		line-height: 1.35;
+		color: rgba(255, 255, 255, 0.9);
+		background: rgba(0, 0, 0, 0.65);
+		pointer-events: none;
+		z-index: 2;
 	}
 
 	@media (prefers-reduced-motion: reduce) {
