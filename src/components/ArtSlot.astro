@@ -1,8 +1,10 @@
 ---
 import type { ArtFit, ArtSlotConfig, ArtReveal, ArtTreatment } from '../content/art-manifest';
+import { resolveRiveRecipe } from '../content/rive-recipes';
 import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 import ArtPlate from './ArtPlate.astro';
+import RivePlayer from './interactive/RivePlayer.astro';
 
 interface Props {
 	slot?: ArtSlotConfig;
@@ -56,6 +58,7 @@ const plateClass = ['art-slot', revealClass, className].filter(Boolean).join(' '
 const shouldShowRive = Boolean(slot?.type === 'rive' && isEnabled && primaryAssetExists);
 const shouldShowVideo = Boolean(slot?.type === 'video' && isEnabled && primaryAssetExists);
 const shouldShowImage = Boolean(slot?.type === 'image' && isEnabled && primaryAssetExists);
+const riveRecipe = resolveRiveRecipe(slot?.riveRecipe);
 const shouldShowDirectFallbackImage = Boolean(
 	!shouldShowRive && !shouldShowVideo && !shouldShowImage && isEnabled && fallbackAssetExists,
 );
@@ -94,9 +97,21 @@ const shouldShowDirectFallbackImage = Boolean(
 					aria-label={slot.alt}
 				></video>
 			) : (
-				<div class="art-slot__rive" data-rive-src={slot.src} data-rive-alt={slot.alt}>
+				<RivePlayer
+					src={slot.src}
+					ariaLabel={slot.alt}
+					class="art-slot__rive"
+					artboard={riveRecipe?.artboard}
+					stateMachine={riveRecipe?.stateMachine}
+					mode={riveRecipe?.mode}
+					autoplay={riveRecipe?.autoplay}
+					inputs={riveRecipe?.inputs}
+					interactions={riveRecipe?.interactions}
+					debug={riveRecipe?.debug}
+				>
 					{fallbackAssetExists ? (
 						<img
+							slot="fallback"
 							src={slot.fallbackSrc}
 							alt={slot.alt}
 							loading={loadingValue}
@@ -104,12 +119,11 @@ const shouldShowDirectFallbackImage = Boolean(
 							class="art-slot__media art-slot__rive-fallback"
 						/>
 					) : (
-						<div class="art-slot__empty art-slot__rive-empty" aria-hidden="true">
+						<div slot="fallback" class="art-slot__empty art-slot__rive-empty" aria-hidden="true">
 							{fallbackLabel && <span>{fallbackLabel}</span>}
 						</div>
 					)}
-					<canvas class="art-slot__rive-canvas" aria-hidden="true"></canvas>
-				</div>
+				</RivePlayer>
 			)
 		) : (
 			<div class="art-slot__empty" aria-hidden="true">
@@ -118,55 +132,3 @@ const shouldShowDirectFallbackImage = Boolean(
 		)}
 	</div>
 </ArtPlate>
-
-<script is:inline>
-	const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-	if (prefersReducedMotion) {
-		document
-			.querySelectorAll('.art-slot__rive')
-			.forEach((node) => node.classList.add('art-slot__rive--reduced'));
-	} else {
-		const riveNodes = document.querySelectorAll('.art-slot__rive[data-rive-src]');
-		if (riveNodes.length > 0) {
-			import('https://unpkg.com/@rive-app/canvas@2.31.2?module')
-				.then(({ Rive, Fit, Alignment }) => {
-					riveNodes.forEach((node) => {
-						const src = node.getAttribute('data-rive-src');
-						const alt = node.getAttribute('data-rive-alt') || 'Motion artwork';
-						const canvas = node.querySelector('.art-slot__rive-canvas');
-
-						if (!src || !canvas) {
-							node.classList.add('art-slot__rive--fallback');
-							return;
-						}
-
-						try {
-							new Rive({
-								src,
-								canvas,
-								autoplay: true,
-								fit: Fit.Cover,
-								alignment: Alignment.Center,
-								onLoad: () => {
-									canvas.setAttribute('role', 'img');
-									canvas.setAttribute('aria-label', alt);
-									node.classList.add('art-slot__rive--loaded');
-								},
-								onLoadError: () => {
-									node.classList.add('art-slot__rive--fallback');
-								},
-							});
-						} catch {
-							node.classList.add('art-slot__rive--fallback');
-						}
-					});
-				})
-				.catch(() => {
-					document
-						.querySelectorAll('.art-slot__rive')
-						.forEach((node) => node.classList.add('art-slot__rive--fallback'));
-				});
-		}
-	}
-</script>

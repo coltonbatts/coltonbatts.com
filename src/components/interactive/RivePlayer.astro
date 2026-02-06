@@ -1,0 +1,80 @@
+---
+import type { RiveInputs, RiveInteraction, RiveMode } from '../../animations/rive';
+
+interface Props {
+	src: string;
+	artboard?: string;
+	stateMachine?: string;
+	autoplay?: boolean;
+	mode?: RiveMode;
+	inputs?: RiveInputs;
+	interactions?: RiveInteraction[];
+	class?: string;
+	ariaLabel?: string;
+	debug?: boolean;
+	respectReducedMotion?: boolean;
+}
+
+const {
+	src,
+	artboard,
+	stateMachine,
+	autoplay = true,
+	mode = 'play-when-visible',
+	inputs,
+	interactions,
+	class: className,
+	ariaLabel,
+	debug = false,
+	respectReducedMotion = true,
+} = Astro.props;
+
+const inputsPayload = inputs ? JSON.stringify(inputs) : undefined;
+const interactionsPayload = interactions ? JSON.stringify(interactions) : undefined;
+---
+
+<div
+	class={['rive-player', className].filter(Boolean).join(' ')}
+	data-rive-player
+	data-rive-src={src}
+	data-rive-artboard={artboard}
+	data-rive-state-machine={stateMachine}
+	data-rive-autoplay={autoplay}
+	data-rive-mode={mode}
+	data-rive-inputs={inputsPayload}
+	data-rive-interactions={interactionsPayload}
+	data-rive-debug={debug}
+	data-rive-respect-reduced-motion={respectReducedMotion}
+	role={ariaLabel ? 'img' : undefined}
+	aria-label={ariaLabel}
+	aria-hidden={ariaLabel ? undefined : 'true'}
+>
+	<slot name="fallback" />
+	{debug && <pre class="rive-player__debug" data-rive-debug-panel aria-hidden="true"></pre>}
+</div>
+
+<script type="module">
+	import { initRiveCanvas, cleanupRiveCanvas } from '../../animations/rive';
+
+	const target = document.currentScript?.previousElementSibling;
+
+	const init = () => {
+		if (!(target instanceof HTMLElement)) return;
+		void initRiveCanvas(target);
+	};
+
+	const cleanup = () => {
+		if (!(target instanceof HTMLElement)) return;
+		cleanupRiveCanvas(target);
+	};
+
+	if (document.readyState === 'loading') {
+		document.addEventListener('DOMContentLoaded', init, { once: true });
+	} else {
+		init();
+	}
+
+	document.addEventListener('astro:page-load', init);
+	document.addEventListener('astro:before-swap', cleanup);
+	document.addEventListener('astro:before-preparation', cleanup);
+</script>

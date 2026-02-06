@@ -1,64 +1,22 @@
 ---
+import type { RiveInputs, RiveInteraction, RiveMode } from '../../animations/rive';
+import RivePlayer from './RivePlayer.astro';
+
 interface Props {
 	src: string;
 	artboard?: string;
 	stateMachine?: string;
 	autoplay?: boolean;
-	mode?: 'play-when-visible' | 'always';
-	inputs?: Record<string, boolean | number | string>;
+	mode?: RiveMode;
+	inputs?: RiveInputs;
+	interactions?: RiveInteraction[];
 	class?: string;
 	ariaLabel?: string;
+	debug?: boolean;
+	respectReducedMotion?: boolean;
 }
 
-const {
-	src,
-	artboard,
-	stateMachine,
-	autoplay = true,
-	mode = 'play-when-visible',
-	inputs,
-	class: className,
-	ariaLabel,
-} = Astro.props;
-
-const inputsPayload = inputs ? JSON.stringify(inputs) : undefined;
+const props = Astro.props as Props;
 ---
 
-<div
-	class={className}
-	data-rive
-	data-rive-src={src}
-	data-rive-artboard={artboard}
-	data-rive-state-machine={stateMachine}
-	data-rive-autoplay={autoplay}
-	data-rive-mode={mode}
-	data-rive-inputs={inputsPayload}
-	role={ariaLabel ? 'img' : undefined}
-	aria-label={ariaLabel}
-	aria-hidden={ariaLabel ? undefined : 'true'}
-></div>
-
-<script type="module">
-	import { initRiveCanvas, cleanupRiveCanvas } from '../../animations/rive';
-
-	const target = document.currentScript?.previousElementSibling;
-
-	const init = () => {
-		if (!(target instanceof HTMLElement)) return;
-		void initRiveCanvas(target);
-	};
-
-	const cleanup = () => {
-		if (!(target instanceof HTMLElement)) return;
-		cleanupRiveCanvas(target);
-	};
-
-	if (document.readyState === 'loading') {
-		document.addEventListener('DOMContentLoaded', init, { once: true });
-	} else {
-		init();
-	}
-
-	document.addEventListener('astro:page-load', init);
-	document.addEventListener('astro:before-preparation', cleanup);
-</script>
+<RivePlayer {...props} />

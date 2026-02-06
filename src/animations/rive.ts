@@ -2,11 +2,38 @@ type RiveModule = typeof import('@rive-app/canvas');
 
 type RiveInstance = import('@rive-app/canvas').Rive;
 
-type RiveInputValue = boolean | number | string;
+type RiveInput = import('@rive-app/canvas').StateMachineInput;
 
-type RiveInputs = Record<string, RiveInputValue>;
+export type RiveInputValue = boolean | number | string;
 
-type RiveMode = 'play-when-visible' | 'always';
+export type RiveInputs = Record<string, RiveInputValue>;
+
+export type RiveMode = 'play-when-visible' | 'always';
+
+export type RiveInteraction =
+	| {
+			event: 'hover';
+			action: 'play-pause';
+	  }
+	| {
+			event: 'hover';
+			action: 'boolean';
+			input: string;
+			enter?: boolean;
+			leave?: boolean;
+	  }
+	| {
+			event: 'click';
+			action: 'trigger';
+			input: string;
+	  }
+	| {
+			event: 'scroll';
+			action: 'number';
+			input: string;
+			min?: number;
+			max?: number;
+	  };
 
 type RiveInitOptions = {
 	src?: string;
@@ -15,11 +42,32 @@ type RiveInitOptions = {
 	autoplay?: boolean;
 	mode?: RiveMode;
 	inputs?: RiveInputs;
+	interactions?: RiveInteraction[];
+	debug?: boolean;
+	respectReducedMotion?: boolean;
+};
+
+type RiveManagedInstance = {
+	rive: RiveInstance;
+	canvas: HTMLCanvasElement;
+	container: HTMLElement;
+	stateMachine?: string;
+	inputsByName: Map<string, RiveInput>;
+	interactions: RiveInteraction[];
+	isVisible: boolean;
+	isPageVisible: boolean;
+	isHovered: boolean;
+	autoplay: boolean;
+	mode: RiveMode;
+	cleanupFns: Array<() => void>;
+	debug: boolean;
+	debugPanel: HTMLElement | null;
 };
 
 type RiveCleanup = () => void;
 
 const instances = new Map<HTMLElement, RiveCleanup>();
+const managedInstances = new Map<HTMLElement, RiveManagedInstance>();
 
 export const prefersReducedMotion = () => {
 	if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') {
@@ -46,6 +94,17 @@ const parseInputs = (value: string | null): RiveInputs | undefined => {
 	}
 };
 
+const parseInteractions = (value: string | null): RiveInteraction[] => {
+	if (!value) return [];
+	try {
+		const parsed = JSON.parse(value);
+		if (!Array.isArray(parsed)) return [];
+		return parsed as RiveInteraction[];
+	} catch {
+		return [];
+	}
+};
+
 const loadRive = (() => {
 	let cached: Promise<RiveModule> | null = null;
 	return () => {
@@ -56,43 +115,214 @@ const loadRive = (() => {
 	};
 })();
 
-const applyInputs = (
-	rive: RiveInstance,
-	stateMachine: string | undefined,
-	inputs: RiveInputs | undefined
-) => {
-	if (!stateMachine || !inputs) return;
-	const machineInputs = rive.stateMachineInputs(stateMachine);
-	if (!machineInputs?.length) return;
+const warn = (container: HTMLElement, message: string) => {
+	const src = container.dataset.riveSrc ?? 'unknown-src';
+	console.warn(`[RivePlayer] ${message} (${src})`);
+};
 
+const refreshInputMap = (instance: RiveManagedInstance) => {
+	instance.inputsByName.clear();
+	if (!instance.stateMachine) return;
+	const machineInputs = instance.rive.stateMachineInputs(instance.stateMachine) ?? [];
 	machineInputs.forEach((input) => {
-		if (!(input.name in inputs)) return;
-		const value = inputs[input.name];
+		instance.inputsByName.set(input.name, input);
+	});
+};
 
-		if (typeof value === 'boolean' || typeof value === 'number') {
-			input.value = value;
+const updateDebugPanel = (instance: RiveManagedInstance) => {
+	if (!instance.debug || !instance.debugPanel) return;
+	const names = Array.from(instance.inputsByName.keys());
+	const lines = [
+		`stateMachine: ${instance.stateMachine ?? 'none'}`,
+		`inputs: ${names.length ? names.join(', ') : 'none'}`,
+	];
+	instance.debugPanel.textContent = lines.join('\n');
+};
+
+const setRenderActive = (instance: RiveManagedInstance, active: boolean) => {
+	if (active) {
+		if (typeof instance.rive.startRendering === 'function') {
+			instance.rive.startRendering();
+		}
+		instance.rive.play();
+		return;
+	}
+
+	instance.rive.pause();
+	if (typeof instance.rive.stopRendering === 'function') {
+		instance.rive.stopRendering();
+	}
+};
+
+const syncPlayback = (instance: RiveManagedInstance) => {
+	if (!instance.autoplay) {
+		if (instance.interactions.some((interaction) => interaction.action === 'play-pause')) {
+			setRenderActive(instance, instance.isHovered && instance.isPageVisible);
+			return;
+		}
+		setRenderActive(instance, false);
+		return;
+	}
+
+	const shouldRun =
+		instance.mode === 'always'
+			? instance.isPageVisible
+			: instance.isVisible && instance.isPageVisible;
+
+	setRenderActive(instance, shouldRun);
+};
+
+const applyInputValue = (
+	instance: RiveManagedInstance,
+	inputName: string,
+	value: RiveInputValue
+) => {
+	const targetInput = instance.inputsByName.get(inputName);
+	if (!targetInput) {
+		warn(instance.container, `Input "${inputName}" was not found on state machine`);
+		return;
+	}
+
+	if (typeof value === 'boolean' || typeof value === 'number') {
+		targetInput.value = value;
+		updateDebugPanel(instance);
+		return;
+	}
+
+	if (value === 'fire' || value === 'trigger') {
+		if (typeof targetInput.fire === 'function') {
+			targetInput.fire();
+			return;
+		}
+		warn(instance.container, `Input "${inputName}" is not trigger-compatible`);
+		return;
+	}
+
+	if (value === 'true' || value === 'false') {
+		targetInput.value = value === 'true';
+		updateDebugPanel(instance);
+		return;
+	}
+
+	const numeric = Number(value);
+	if (!Number.isNaN(numeric)) {
+		targetInput.value = numeric;
+		updateDebugPanel(instance);
+	}
+};
+
+const applyInputs = (instance: RiveManagedInstance, inputs: RiveInputs | undefined) => {
+	if (!inputs) return;
+	Object.entries(inputs).forEach(([name, value]) => {
+		applyInputValue(instance, name, value);
+	});
+};
+
+const bindInteractions = (instance: RiveManagedInstance) => {
+	const { container, interactions } = instance;
+	if (!interactions.length) return;
+
+	interactions.forEach((interaction) => {
+		if (interaction.event === 'hover') {
+			const onEnter = () => {
+				instance.isHovered = true;
+				if (interaction.action === 'play-pause') {
+					syncPlayback(instance);
+					return;
+				}
+				if (interaction.action === 'boolean') {
+					applyInputValue(instance, interaction.input, interaction.enter ?? true);
+				}
+			};
+
+			const onLeave = () => {
+				instance.isHovered = false;
+				if (interaction.action === 'play-pause') {
+					syncPlayback(instance);
+					return;
+				}
+				if (interaction.action === 'boolean') {
+					applyInputValue(instance, interaction.input, interaction.leave ?? false);
+				}
+			};
+
+			container.addEventListener('mouseenter', onEnter);
+			container.addEventListener('mouseleave', onLeave);
+			instance.cleanupFns.push(() => {
+				container.removeEventListener('mouseenter', onEnter);
+				container.removeEventListener('mouseleave', onLeave);
+			});
 			return;
 		}
 
-		if (typeof value === 'string') {
-			if (value === 'fire' || value === 'trigger') {
-				if (typeof input.fire === 'function') {
-					input.fire();
-				}
-				return;
-			}
+		if (interaction.event === 'click' && interaction.action === 'trigger') {
+			const onClick = () => {
+				applyInputValue(instance, interaction.input, 'fire');
+			};
+			container.addEventListener('click', onClick);
+			instance.cleanupFns.push(() => container.removeEventListener('click', onClick));
+			return;
+		}
 
-			if (value === 'true' || value === 'false') {
-				input.value = value === 'true';
-				return;
-			}
+		if (interaction.event === 'scroll' && interaction.action === 'number') {
+			const min = interaction.min ?? 0;
+			const max = interaction.max ?? 1;
+			let ticking = false;
 
-			const numeric = Number(value);
-			if (!Number.isNaN(numeric)) {
-				input.value = numeric;
-			}
+			const updateOnScroll = () => {
+				if (ticking) return;
+				ticking = true;
+				window.requestAnimationFrame(() => {
+					const rect = container.getBoundingClientRect();
+					const viewport = Math.max(window.innerHeight, 1);
+					const total = rect.height + viewport;
+					const progress = Math.min(
+						1,
+						Math.max(0, (viewport - rect.top) / Math.max(total, 1))
+					);
+					const mapped = min + progress * (max - min);
+					applyInputValue(instance, interaction.input, mapped);
+					ticking = false;
+				});
+			};
+
+			window.addEventListener('scroll', updateOnScroll, { passive: true });
+			window.addEventListener('resize', updateOnScroll);
+			updateOnScroll();
+			instance.cleanupFns.push(() => {
+				window.removeEventListener('scroll', updateOnScroll);
+				window.removeEventListener('resize', updateOnScroll);
+			});
 		}
 	});
+};
+
+const getManagedInstance = (container: HTMLElement) => managedInstances.get(container);
+
+export const setRiveBoolean = (
+	container: HTMLElement,
+	inputName: string,
+	value: boolean
+) => {
+	const instance = getManagedInstance(container);
+	if (!instance) return;
+	applyInputValue(instance, inputName, value);
+};
+
+export const setRiveNumber = (
+	container: HTMLElement,
+	inputName: string,
+	value: number
+) => {
+	const instance = getManagedInstance(container);
+	if (!instance) return;
+	applyInputValue(instance, inputName, value);
+};
+
+export const fireRiveTrigger = (container: HTMLElement, inputName: string) => {
+	const instance = getManagedInstance(container);
+	if (!instance) return;
+	applyInputValue(instance, inputName, 'fire');
 };
 
 export const initRiveCanvas = async (
@@ -117,75 +347,137 @@ export const initRiveCanvas = async (
 		(container.dataset.riveMode as RiveMode | undefined) ??
 		'play-when-visible';
 	const inputs = options.inputs ?? parseInputs(container.dataset.riveInputs);
+	const interactions =
+		options.interactions ?? parseInteractions(container.dataset.riveInteractions);
+	const debug = options.debug ?? parseBoolean(container.dataset.riveDebug, false);
+	const respectReducedMotion =
+		options.respectReducedMotion ??
+		parseBoolean(container.dataset.riveRespectReducedMotion, true);
+
+	if (respectReducedMotion && prefersReducedMotion()) {
+		container.classList.add('rive-player--reduced');
+		container.classList.add('art-slot__rive--reduced');
+		container.classList.remove('rive-player--loaded');
+		container.classList.remove('art-slot__rive--loaded');
+		container.dataset.riveInit = 'false';
+		return;
+	}
 
 	const { Rive } = await loadRive();
 
 	const canvas = document.createElement('canvas');
 	canvas.setAttribute('aria-hidden', 'true');
+	canvas.className = 'rive-player__canvas art-slot__rive-canvas';
 	canvas.style.width = '100%';
 	canvas.style.height = '100%';
 	canvas.style.display = 'block';
 	container.appendChild(canvas);
 
-	const reduced = prefersReducedMotion();
-	const shouldAutoplay = autoplay && !reduced;
-
 	let observer: IntersectionObserver | null = null;
+	let resizeObserver: ResizeObserver | null = null;
+
+	const managed: RiveManagedInstance = {
+		rive: null as unknown as RiveInstance,
+		canvas,
+		container,
+		stateMachine,
+		inputsByName: new Map(),
+		interactions,
+		isVisible: mode === 'always',
+		isPageVisible: document.visibilityState !== 'hidden',
+		isHovered: false,
+		autoplay,
+		mode,
+		cleanupFns: [],
+		debug,
+		debugPanel: container.querySelector<HTMLElement>('[data-rive-debug-panel]'),
+	};
 
 	const rive = new Rive({
 		src,
 		canvas,
-		autoplay: mode === 'always' ? shouldAutoplay : false,
+		autoplay: false,
 		artboard,
 		stateMachines: stateMachine,
 		onLoad: () => {
-			applyInputs(rive, stateMachine, inputs);
+			managed.rive.resizeDrawingSurfaceToCanvas();
+			container.classList.add('rive-player--loaded');
+			container.classList.add('art-slot__rive--loaded');
 
-			if (reduced) {
-				rive.pause();
-				return;
+			if (typeof ResizeObserver !== 'undefined') {
+				resizeObserver = new ResizeObserver(() => {
+					managed.rive.resizeDrawingSurfaceToCanvas();
+				});
+				resizeObserver.observe(container);
+				managed.cleanupFns.push(() => resizeObserver?.disconnect());
 			}
 
-			if (mode === 'always') {
-				if (shouldAutoplay) {
-					rive.play();
+			if (mode === 'play-when-visible') {
+				if ('IntersectionObserver' in window) {
+					observer = new IntersectionObserver(
+						(entries) => {
+							entries.forEach((entry) => {
+								managed.isVisible = entry.isIntersecting;
+								syncPlayback(managed);
+							});
+						},
+						{ threshold: 0.2 }
+					);
+					observer.observe(container);
+					managed.cleanupFns.push(() => observer?.disconnect());
+				} else {
+					managed.isVisible = true;
 				}
-				return;
 			}
 
-			if (!shouldAutoplay) {
-				rive.pause();
+			const onVisibilityChange = () => {
+				managed.isPageVisible = document.visibilityState !== 'hidden';
+				syncPlayback(managed);
+			};
+			document.addEventListener('visibilitychange', onVisibilityChange);
+			managed.cleanupFns.push(() => {
+				document.removeEventListener('visibilitychange', onVisibilityChange);
+			});
+
+			if (artboard && !managed.rive.artboard) {
+				warn(container, `Artboard "${artboard}" was not found`);
 			}
+
+			refreshInputMap(managed);
+			if (stateMachine && managed.inputsByName.size === 0) {
+				warn(container, `State machine "${stateMachine}" has no available inputs`);
+			}
+			applyInputs(managed, inputs);
+			bindInteractions(managed);
+			updateDebugPanel(managed);
+			syncPlayback(managed);
+		},
+		onLoadError: () => {
+			warn(container, 'Failed to load Rive file');
+			container.classList.add('rive-player--fallback');
+			container.classList.add('art-slot__rive--fallback');
 		},
 	});
 
-	if (mode === 'play-when-visible' && shouldAutoplay) {
-		if ('IntersectionObserver' in window) {
-			observer = new IntersectionObserver(
-				(entries) => {
-					entries.forEach((entry) => {
-						if (entry.isIntersecting) {
-							rive.play();
-						} else {
-							rive.pause();
-						}
-					});
-				},
-				{ threshold: 0.25 }
-			);
-			observer.observe(container);
-		} else {
-			rive.play();
-		}
-	}
+	managed.rive = rive;
+	managedInstances.set(container, managed);
 
 	const cleanup = () => {
+		managed.cleanupFns.forEach((fn) => {
+			fn();
+		});
+		managed.cleanupFns = [];
 		observer?.disconnect();
 		observer = null;
-		rive.cleanup();
+		resizeObserver?.disconnect();
+		resizeObserver = null;
+		managed.rive.cleanup();
+		managedInstances.delete(container);
 		if (container.contains(canvas)) {
 			container.removeChild(canvas);
 		}
+		container.classList.remove('rive-player--loaded');
+		container.classList.remove('art-slot__rive--loaded');
 		container.dataset.riveInit = 'false';
 		instances.delete(container);
 	};
@@ -198,7 +490,19 @@ export const cleanupRiveCanvas = (container: HTMLElement) => {
 	if (cleanup) cleanup();
 };
 
+export const initRives = (root: ParentNode = document) => {
+	if (typeof window === 'undefined') return;
+	const containers = Array.from(
+		root.querySelectorAll<HTMLElement>('[data-rive-player]')
+	);
+	if (!containers.length) return;
+	containers.forEach((container) => {
+		void initRiveCanvas(container);
+	});
+};
+
 export const cleanupRives = () => {
 	instances.forEach((cleanup) => cleanup());
 	instances.clear();
+	managedInstances.clear();
 };

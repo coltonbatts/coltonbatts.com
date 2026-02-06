@@ -4,32 +4,50 @@
 
 Use the `Lottie` component for JSON-based motion clips. Files live under `public/lottie/`.
 
-Example:
-
 ```astro
+---
 import Lottie from '../components/interactive/Lottie.astro';
+---
 
 <Lottie src="/lottie/example.json" class="w-32 h-32" ariaLabel="Pulsing circle" />
 ```
 
 ## Rive
 
-Use the `Rive` component for `.riv` assets stored in `public/rive/`. By default it plays only when visible and respects reduced motion.
-
-Example:
+Use `RivePlayer` for `.riv` assets under `public/rive/`.
 
 ```astro
-import Rive from '../components/interactive/Rive.astro';
+---
+import RivePlayer from '../components/interactive/RivePlayer.astro';
+---
 
-<Rive
-	src="/rive/example.riv"
-	stateMachine="Main"
-	inputs={{ isActive: true, progress: 0.75, burst: 'fire' }}
-	class="w-40 h-40"
+<RivePlayer
+	src="/rive/ui/button.riv"
+	mode="play-when-visible"
 	ariaLabel="Rive demo"
 />
 ```
 
-Notes:
-- Use `mode="always"` if you want continuous playback.
-- `inputs` accepts booleans or numbers, and strings like `"fire"` to trigger a state machine input.
+State-machine inputs + interactions:
+
+```astro
+<RivePlayer
+	src="/rive/ui/button.riv"
+	stateMachine="Button"
+	inputs={{ isHover: false, progress: 0 }}
+	interactions={[
+		{ event: 'hover', action: 'boolean', input: 'isHover' },
+		{ event: 'click', action: 'trigger', input: 'burst' },
+		{ event: 'scroll', action: 'number', input: 'progress', min: 0, max: 1 },
+	]}
+	debug={true}
+/>
+```
+
+`Rive.astro` remains as a compatibility wrapper around `RivePlayer`.
+
+## Recipes
+
+Rive behavior recipes live in `src/content/rive-recipes.ts` and can be referenced from `ArtSlot` via `slot.riveRecipe`.
+
+For full runtime patterns, controls, and pipeline guidance see `docs/RIVE_SKILLS.md`.

@@ -15,6 +15,7 @@ export interface ArtSlotConfig {
 	type: ArtType;
 	src: string;
 	fallbackSrc?: string;
+	riveRecipe?: string;
 	alt: string;
 	caption?: string;
 	showCaption?: boolean;
@@ -89,8 +90,9 @@ export const artManifest: ArtManifest = {
 	motion: {
 		enabled: true,
 		type: 'rive',
-		src: '/rive/demo.riv',
+		src: '/rive/ui/button.riv',
 		fallbackSrc: '/art/motion/motion-poster.png',
+		riveRecipe: 'motionSpecimen',
 		alt: 'Motion slot',
 		caption: 'Motion slot',
 		showCaption: true,

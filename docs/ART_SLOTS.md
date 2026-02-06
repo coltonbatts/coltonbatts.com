@@ -8,7 +8,7 @@
   - magpie: `/art/tools/magpie.png`
 - MOTION_SLOT:
   - type: `rive`
-  - src: `/rive/demo.riv`
+  - src: `/rive/ui/button.riv`
   - fallbackSrc: `/art/motion/motion-poster.png`
 
 ## Overview
@@ -41,6 +41,7 @@ Each slot supports:
 - `type`: `'image' | 'video' | 'rive'`
 - `src`: primary asset path in `/public`
 - `fallbackSrc` (optional): backup asset path in `/public`
+- `riveRecipe` (optional): key from `src/content/rive-recipes.ts` for shared interaction/runtime behavior
 - `alt`: required accessible description
 - `caption` (optional): copy for caption line
 - `showCaption` (optional): show caption only when `true` and caption exists; default is `false`
@@ -140,8 +141,9 @@ export const artManifest = {
   motion: {
     enabled: true,
     type: 'rive',
-    src: '/rive/demo.riv',
+    src: '/rive/ui/button.riv',
     fallbackSrc: '/art/motion/motion-poster.png',
+    riveRecipe: 'motionSpecimen',
     alt: 'Motion slot',
     caption: 'Motion slot',
     showCaption: true,
