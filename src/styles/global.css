@@ -100,6 +100,9 @@
 	--shadow-stamp: 3px 3px 0px rgba(0, 0, 0, 0.15);
 	--shadow-stamp-lg: 6px 6px 0px rgba(0, 0, 0, 0.12);
 	--shadow-stamp-hover: 6px 6px 0px rgba(0, 0, 0, 0.18);
+	--motion-strength: 0.66;
+	--motion-hero-progress: 0;
+	--motion-specimen-progress: 0;
 }
 
 /* =============================================================
@@ -663,6 +666,21 @@
 		color: var(--charcoal);
 	}
 
+	.motion-os-intensity-toggle {
+		position: fixed;
+		left: 0.75rem;
+		bottom: 2.7rem;
+		z-index: 11999;
+		font-family: 'IBM Plex Mono', ui-monospace, monospace;
+		font-size: 0.625rem;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+		padding: 0.3rem 0.5rem;
+		border: 1px solid var(--charcoal);
+		background: rgba(232, 229, 223, 0.92);
+		color: var(--charcoal);
+	}
+
 	.motion-os-hud:not([hidden]) + .motion-os-hud-toggle {
 		bottom: calc(0.75rem + 10.75rem);
 	}
@@ -690,25 +708,47 @@
 		pointer-events: none;
 		z-index: 11000;
 		opacity: 0;
-		background:
-			linear-gradient(90deg, transparent 0%, transparent 22%, rgba(155, 27, 27, 0.3) 50%, transparent 78%, transparent 100%);
-		transform: translateX(-18%);
+		background: linear-gradient(90deg, transparent 0%, rgba(155, 27, 27, 0.22) 40%, rgba(155, 27, 27, 0.6) 50%, rgba(155, 27, 27, 0.22) 60%, transparent 100%);
+		transform: translateX(-30%) skewX(-8deg);
 	}
 
 	.motion-route-pulse #route-kinetic-punctuation {
-		animation: route-punctuation-sweep 520ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+		animation: route-punctuation-sweep calc(520ms + (360ms * var(--motion-strength))) cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+	}
+
+	.motion-route-pulse #route-kinetic-punctuation::before,
+	.motion-route-pulse #route-kinetic-punctuation::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+	}
+
+	.motion-route-pulse #route-kinetic-punctuation::before {
+		background: radial-gradient(circle at center, rgba(155, 27, 27, 0.3), transparent 58%);
+		animation: route-punctuation-bloom calc(420ms + (260ms * var(--motion-strength))) ease-out;
+	}
+
+	.motion-route-pulse #route-kinetic-punctuation::after {
+		background: repeating-linear-gradient(-12deg, transparent 0 20px, rgba(255, 255, 255, 0.18) 20px 22px);
+		animation: route-punctuation-scan calc(320ms + (220ms * var(--motion-strength))) ease-out;
 	}
 
 	.route-punctuation-rive {
 		position: fixed;
-		right: 1rem;
-		bottom: 1rem;
-		width: 82px;
-		height: 82px;
+		right: 1.2rem;
+		bottom: 1.2rem;
+		width: calc(82px + (48px * var(--motion-strength)));
+		height: calc(82px + (48px * var(--motion-strength)));
 		pointer-events: none;
 		z-index: 11001;
 		opacity: 0.45;
 		mix-blend-mode: multiply;
+		transition: transform 220ms ease, opacity 220ms ease;
+	}
+
+	.motion-route-pulse .route-punctuation-rive {
+		transform: scale(calc(1 + (0.22 * var(--motion-strength)))) rotate(-3deg);
+		opacity: 0.85;
 	}
 
 	.route-punctuation-rive .rive-player__canvas {
@@ -725,15 +765,124 @@
 	@keyframes route-punctuation-sweep {
 		0% {
 			opacity: 0;
-			transform: translateX(-20%);
+			transform: translateX(-35%) skewX(-8deg);
 		}
-		18% {
+		16% {
 			opacity: 1;
 		}
 		100% {
 			opacity: 0;
-			transform: translateX(20%);
+			transform: translateX(35%) skewX(-8deg);
 		}
+	}
+
+	@keyframes route-punctuation-bloom {
+		0% { opacity: 0; transform: scale(0.92); }
+		30% { opacity: 1; }
+		100% { opacity: 0; transform: scale(1.05); }
+	}
+
+	@keyframes route-punctuation-scan {
+		0% { opacity: 0; transform: translateX(-8%); }
+		20% { opacity: 0.9; }
+		100% { opacity: 0; transform: translateX(8%); }
+	}
+
+	#motion-intro-curtain {
+		position: fixed;
+		inset: 0;
+		pointer-events: none;
+		z-index: 11500;
+		opacity: 0;
+	}
+
+	#motion-intro-curtain > span {
+		position: absolute;
+		inset: 0;
+		display: block;
+		background: linear-gradient(105deg, rgba(26, 26, 26, 0.94), rgba(13, 13, 13, 0.92));
+		transform: translateX(-102%);
+	}
+
+	#motion-intro-curtain > span:last-child {
+		background: linear-gradient(105deg, rgba(155, 27, 27, 0.7), rgba(26, 26, 26, 0.84));
+		transform: translateX(102%);
+	}
+
+	html.motion-intro-sequence #motion-intro-curtain {
+		opacity: 1;
+	}
+
+	html.motion-intro-sequence #motion-intro-curtain > span:first-child {
+		animation: intro-curtain-left calc(780ms + (720ms * var(--motion-strength))) cubic-bezier(0.2, 0.9, 0.2, 1) forwards;
+	}
+
+	html.motion-intro-sequence #motion-intro-curtain > span:last-child {
+		animation: intro-curtain-right calc(920ms + (760ms * var(--motion-strength))) cubic-bezier(0.2, 0.9, 0.2, 1) forwards;
+	}
+
+	html[data-motion-intensity] [data-motion-chapter] {
+		opacity: 0.08;
+		transform: translateY(calc(30px * var(--motion-strength)));
+		transition: transform calc(220ms + (380ms * var(--motion-strength))) cubic-bezier(0.2, 0.8, 0.2, 1), opacity calc(220ms + (380ms * var(--motion-strength))) ease;
+	}
+
+	html[data-motion-intensity] [data-motion-chapter].motion-chapter-in {
+		opacity: 1;
+		transform: translateY(0);
+	}
+
+	html[data-motion-intensity] .hero-section {
+		transform: translateY(calc(var(--motion-hero-progress) * -22px * var(--motion-strength)));
+		filter: saturate(calc(1 + (0.16 * var(--motion-hero-progress) * var(--motion-strength))));
+		will-change: transform;
+	}
+
+	#home-motion-moment {
+		position: relative;
+		overflow: clip;
+	}
+
+	#home-motion-moment::after {
+		content: '';
+		position: absolute;
+		left: 0;
+		right: 0;
+		top: 0;
+		height: 4px;
+		background: linear-gradient(90deg, transparent 0%, var(--raw) 50%, transparent 100%);
+		transform-origin: center;
+		transform: scaleX(calc(0.2 + (var(--motion-specimen-progress) * 0.8)));
+		opacity: calc(0.25 + (var(--motion-specimen-progress) * 0.6));
+		pointer-events: none;
+	}
+
+	.motion-lab-card {
+		opacity: 0.2;
+		transform: translateY(16px) scale(0.985);
+		transition: transform 360ms cubic-bezier(0.2, 0.8, 0.2, 1), opacity 320ms ease, filter 280ms ease;
+	}
+
+	.motion-lab-card.is-awake {
+		opacity: 1;
+		transform: translateY(0) scale(1);
+	}
+
+	.motion-lab-card.is-dimmed {
+		opacity: 0.45;
+		filter: grayscale(38%) contrast(92%);
+	}
+
+	@keyframes intro-curtain-left {
+		0% { transform: translateX(-102%); }
+		22% { transform: translateX(0); }
+		100% { transform: translateX(102%); }
+	}
+
+	@keyframes intro-curtain-right {
+		0% { transform: translateX(102%); }
+		28% { transform: translateX(0); }
+		100% { transform: translateX(-102%); }
 	}
 
 	@media (prefers-reduced-motion: reduce) {
@@ -746,8 +895,18 @@
 			opacity: 0.28;
 		}
 
+		html[data-motion-intensity] [data-motion-chapter] {
+			opacity: 1;
+			transform: none;
+		}
+
 		.route-punctuation-rive .rive-player__canvas {
 			display: none;
+		}
+
+		.motion-lab-card {
+			opacity: 1;
+			transform: none;
 		}
 	}
 

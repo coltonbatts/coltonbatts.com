@@ -29,6 +29,8 @@ export const riveRecipes: Record<string, MotionRecipe> = {
 			hover: [
 				{ type: 'set-boolean-from-active', input: 'isHover' },
 			],
+			'section-enter': [{ type: 'fire-trigger', input: 'burst' }],
+			click: [{ type: 'fire-trigger', input: 'burst' }],
 			'scroll-progress': [
 				{ type: 'set-number-from-progress', input: 'progress', min: 0, max: 100 },
 			],
@@ -64,6 +66,7 @@ export const riveRecipes: Record<string, MotionRecipe> = {
 		mode: 'always',
 		signals: {
 			'route-transition-start': [{ type: 'fire-trigger', input: 'burst' }],
+			'route-transition-end': [{ type: 'fire-trigger', input: 'burst' }],
 		},
 	},
 };
