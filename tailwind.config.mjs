@@ -22,13 +22,13 @@ export default {
 		extend: {
 			/* -- COLOR PALETTE ---------------------------------- */
 			colors: {
-				charcoal: '#1a1a1a',
-				manual: '#e8e5df',       /* Weathered concrete / old manual page */
-				'manual-light': '#edeae5',
-				raw: '#9b1b1b',          /* Deep crimson — Southern Gothic red */
-				'raw-dark': '#7a1515',   /* Darker crimson for hover states */
-				ink: '#0d0d0d',          /* Near-black for deep emphasis */
-				bone: '#d5d0c8',         /* Warm gray divider / muted bg */
+				charcoal: '#ffffff',
+				manual: '#000000',
+				'manual-light': '#000000',
+				raw: '#ffffff',
+				'raw-dark': '#ffffff',
+				ink: '#ffffff',
+				bone: '#000000',
 			},
 
 			/* -- FONT FAMILIES ---------------------------------- */
@@ -84,12 +84,12 @@ export default {
 			 * feel like physical depth — letterpress, not glass.
 			 * --------------------------------------------------- */
 			boxShadow: {
-				'stamp-sm': '2px 2px 0px rgba(0, 0, 0, 0.12)',
-				'stamp': '3px 3px 0px rgba(0, 0, 0, 0.15)',
-				'stamp-md': '4px 4px 0px rgba(0, 0, 0, 0.15)',
-				'stamp-lg': '6px 6px 0px rgba(0, 0, 0, 0.12)',
-				'stamp-hover': '6px 6px 0px rgba(0, 0, 0, 0.18)',
-				'stamp-raw': '4px 4px 0px rgba(155, 27, 27, 0.25)',
+				'stamp-sm': '2px 2px 0px rgba(255, 255, 255, 1)',
+				'stamp': '3px 3px 0px rgba(255, 255, 255, 1)',
+				'stamp-md': '4px 4px 0px rgba(255, 255, 255, 1)',
+				'stamp-lg': '6px 6px 0px rgba(255, 255, 255, 1)',
+				'stamp-hover': '8px 8px 0px rgba(255, 255, 255, 1)',
+				'stamp-raw': '4px 4px 0px rgba(255, 255, 255, 1)',
 				'none': 'none',
 			},
 

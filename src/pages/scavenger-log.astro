@@ -1,0 +1,76 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Scavenger Log" description="Technical haul and exploration records.">
+	<div class="max-w-4xl mx-auto px-6 py-16">
+		<header class="mb-12 border-b-4 border-charcoal pb-8">
+			<p class="section-label mb-2">Registry: SCAVENGER_RUN</p>
+			<h1 class="text-display">Technical Haul</h1>
+			<p class="text-xl mt-4 text-charcoal">
+				Extracting knowledge, patterns, and aesthetics from the digital wild.
+			</p>
+		</header>
+
+		<div class="grid gap-12">
+			<section class="section-block shadow-stamp-lg">
+				<p class="section-label">LOG_ENTRY: 2026-02-07</p>
+				<h2 class="text-2xl font-black mb-6 uppercase tracking-tight">Educational Brutalism Update</h2>
+				
+				<div class="prose prose-charcoal max-w-none">
+					<p class="mb-6 font-mono text-sm border-l-4 border-raw pl-4 italic">
+						"Ownership > Subscription | Educational Brutalism | Swift+Rust+Python Synergy"
+					</p>
+
+					<h3 class="font-bold text-lg mb-4 uppercase underline decoration-2 underline-offset-4">Extracted Parts</h3>
+					<ul class="list-triangle mb-8">
+						<li class="border-2 border-charcoal p-4 bg-manual">
+							<strong class="block mb-1 text-raw uppercase">GlobalHotkey.swift</strong>
+							<span class="text-xs text-charcoal">Drop-in integration for Cmd+Shift+C global color picker.</span>
+						</li>
+						<li class="border-2 border-charcoal p-4 bg-manual">
+							<strong class="block mb-1 text-raw uppercase">brutalist-theme.css</strong>
+							<span class="text-xs text-charcoal">Complete industrial CSS design system (Monospace @ 11px).</span>
+						</li>
+						<li class="border-2 border-charcoal p-4 bg-manual">
+							<strong class="block mb-1 text-raw uppercase">NBBoxModifier.swift</strong>
+							<span class="text-xs text-charcoal">The signature shadow(radius: 0, x: 4, y: 4) modifier.</span>
+						</li>
+						<li class="border-2 border-charcoal p-4 bg-manual">
+							<strong class="block mb-1 text-raw uppercase">extract_wisdom.md</strong>
+							<span class="text-xs text-charcoal">Fabric's masterclass in hierarchical content extraction.</span>
+						</li>
+					</ul>
+
+					<h3 class="font-bold text-lg mb-4 uppercase underline decoration-2 underline-offset-4">Aesthetic Notes</h3>
+					<p class="text-sm leading-relaxed mb-6">
+						The goal is <span class="bg-charcoal text-bg-manual px-1">Functional Tension</span>. Monospace fonts, tight tracking, 
+						and hard geometric shadows create an interface that feels like an instrument rather than a product. 
+						It rejects the soft, floating shadows of modern SaaS in favor of <span class="text-raw">"stamped"</span> physical presence.
+					</p>
+
+					<div class="mt-8 pt-8 border-t-2 border-charcoal flex justify-between items-center">
+						<span class="font-mono text-[10px] uppercase text-charcoal">Status: ARCHIVED_IN_WORKSHOP</span>
+						<a href="/lab" class="btn-instrument text-[10px] py-2 px-4">View Lab Integration</a>
+					</div>
+				</div>
+			</section>
+		</div>
+
+		<footer class="mt-16 pt-8 border-t border-charcoal">
+			<a href="/" class="font-mono text-xs uppercase tracking-widest text-charcoal hover:text-raw transition-colors">&larr; Return to Central Command</a>
+		</footer>
+	</div>
+</BaseLayout>
+
+<style>
+	.shadow-stamp-lg {
+		box-shadow: 8px 8px 0px rgba(255, 255, 255, 1);
+	}
+	
+	@media (max-width: 768px) {
+		.shadow-stamp-lg {
+			box-shadow: 4px 4px 0px rgba(255, 255, 255, 1);
+		}
+	}
+</style>

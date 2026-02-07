@@ -93,9 +93,9 @@ const { class: className = '' } = Astro.props;
 	.cyber-hero__container {
 		position: relative;
 		aspect-ratio: 16 / 9;
-		border: 2px solid var(--charcoal, #1a1a1a);
-		box-shadow: 6px 6px 0px rgba(0, 0, 0, 0.12);
-		background: linear-gradient(135deg, #0a0a12 0%, #0d0d1a 50%, #0a0a12 100%);
+		border: 2px solid var(--charcoal, #ffffff);
+		box-shadow: 6px 6px 0px var(--charcoal, #ffffff);
+		background: var(--bg-manual, #000000);
 		overflow: hidden;
 		transform: translate(-1px, -1px);
 	}
@@ -115,7 +115,7 @@ const { class: className = '' } = Astro.props;
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		background: linear-gradient(135deg, #0a0a12 0%, #0d0d1a 50%, #0a0a12 100%);
+		background: var(--bg-manual, #000000);
 	}
 
 	.cyber-hero__fallback span {
@@ -123,13 +123,19 @@ const { class: className = '' } = Astro.props;
 		font-size: 0.6875rem;
 		text-transform: uppercase;
 		letter-spacing: 0.08em;
-		color: rgba(0, 200, 255, 0.4);
+		color: var(--charcoal, #ffffff);
 	}
 
 	.cyber-hero__caption {
 		font-family: 'IBM Plex Mono', ui-monospace, monospace;
 		font-size: 0.6875rem;
 		letter-spacing: 0.02em;
-		color: rgba(0, 0, 0, 0.5);
+		color: var(--charcoal, #ffffff);
+	}
+	.cyber-hero__vignette {
+		position: absolute;
+		inset: 0;
+		background: radial-gradient(circle at center, transparent 0%, rgba(0, 0, 0, 0.5) 100%);
+		pointer-events: none;
 	}
 </style>

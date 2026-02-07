@@ -20,10 +20,10 @@ const IDLE_SPLAT_INTERVAL = 800;
 const INITIAL_SPLATS = 6;
 
 const PALETTE: [number, number, number][] = [
-	[0.7, 0.08, 0.08],
-	[0.9, 0.14, 0.14],
-	[0.5, 0.06, 0.06],
-	[0.15, 0.06, 0.06],
+	[1.0, 1.0, 1.0],
+	[0.8, 0.8, 0.8],
+	[0.6, 0.6, 0.6],
+	[0.4, 0.4, 0.4],
 ];
 
 // ---- Shader sources ----

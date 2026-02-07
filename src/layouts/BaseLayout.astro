@@ -43,6 +43,8 @@ const routeRecipe = resolveRiveRecipe('routePunctuation');
 			 Critical fonts loaded first to prevent FOUT.
 			 Only preload the weights we use above the fold.
 			 ============================================ -->
+		<link rel="preload" href="/fonts/GeistPixel-Square.woff2" as="font" type="font/woff2" crossorigin />
+		<link rel="preload" href="/fonts/GeistPixel-Circle.woff2" as="font" type="font/woff2" crossorigin />
 		<link rel="preload" href="/fonts/Inter-Black.woff2" as="font" type="font/woff2" crossorigin />
 		<link rel="preload" href="/fonts/Inter-Bold.woff2" as="font" type="font/woff2" crossorigin />
 		<link rel="preload" href="/fonts/IBMPlexMono-Bold.woff2" as="font" type="font/woff2" crossorigin />
@@ -95,7 +97,7 @@ const routeRecipe = resolveRiveRecipe('routePunctuation');
 					<!-- Desktop Navigation -->
 					<ul
 						id="nav-menu"
-						class="hidden md:flex gap-8 font-mono text-label uppercase tracking-instrument text-charcoal/50"
+						class="hidden md:flex gap-8 font-mono text-label uppercase tracking-instrument text-charcoal"
 					>
 						{navItems.map((item) => (
 							<li>
@@ -124,7 +126,7 @@ const routeRecipe = resolveRiveRecipe('routePunctuation');
 					id="mobile-menu"
 					class="hidden md:hidden pt-6 pb-2 mt-5 border-t-2 border-charcoal"
 				>
-					<ul class="flex flex-col gap-4 font-mono text-label uppercase tracking-instrument text-charcoal/50">
+					<ul class="flex flex-col gap-4 font-mono text-label uppercase tracking-instrument text-charcoal">
 						{navItems.map((item) => (
 							<li>
 								<a
@@ -174,10 +176,10 @@ const routeRecipe = resolveRiveRecipe('routePunctuation');
 			 ============================================ -->
 		<footer class="mt-20 border-t-2 border-charcoal">
 			<div class="max-w-5xl mx-auto px-6 py-10 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-				<p class="font-mono text-meta uppercase text-charcoal/30">
+				<p class="font-mono text-meta uppercase text-charcoal">
 					&copy; {new Date().getFullYear()} Colton Batts
 				</p>
-				<p class="font-mono text-meta uppercase text-charcoal/20">
+				<p class="font-mono text-meta uppercase text-charcoal">
 					REF: {new Date().toISOString().split('T')[0].replace(/-/g, '.')} &middot; Built with Astro
 				</p>
 			</div>

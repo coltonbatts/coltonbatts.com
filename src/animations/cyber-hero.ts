@@ -13,7 +13,7 @@
 
 const LOOP_DURATION = 13.5;
 const RIPPLE_RADIUS = 0.28;
-const RIPPLE_STRENGTH = 1.0;
+const RIPPLE_STRENGTH = "1.0";
 const DEFROST_RADIUS = 0.22;
 const BLOOM_INTENSITY = 0.65;
 const SCANLINE_INTENSITY = 0.035;
@@ -177,13 +177,13 @@ void main() {
 	streams *= sin(streamUv.y + snoise(vec3(uv * 3.5 + 50.0, t * 0.25)) * 2.0) * 0.5 + 0.5;
 	streams = pow(streams, 3.0);
 
-	// Palette
-	vec3 cyan = vec3(0.0, 0.9, 1.0);
-	vec3 magenta = vec3(1.0, 0.05, 0.6);
-	vec3 indigo = vec3(0.2, 0.05, 0.9);
-	vec3 purple = vec3(0.6, 0.1, 1.0);
-	vec3 hotWhite = vec3(0.9, 0.95, 1.0);
-	vec3 hotPink = vec3(1.0, 0.3, 0.5);
+	// Palette (Monochromatic)
+	vec3 cyan = vec3(1.0);
+	vec3 magenta = vec3(0.6);
+	vec3 indigo = vec3(0.1);
+	vec3 purple = vec3(0.4);
+	vec3 hotWhite = vec3(1.0);
+	vec3 hotPink = vec3(0.8);
 
 	// Velocity color temperature
 	float velocityHeat = uCursorVelocity * ${VELOCITY_COLOR_SHIFT};
@@ -213,7 +213,7 @@ void main() {
 	// Pulsing energy cores
 	float pulse = sin(t * 2.0) * 0.5 + 0.5;
 	float energyCores = pow(max(0.0, n1 + n2 * 0.6 + n4 * 0.3), 4.0) * 3.0;
-	color += vec3(0.4, 0.7, 1.0) * energyCores * (0.8 + pulse * 0.4);
+	color += vec3(1.0) * energyCores * (0.8 + pulse * 0.4);
 
 	// Hot spots
 	float hotSpots = pow(max(0.0, n3 * n4), 2.0) * 4.0;
@@ -395,12 +395,12 @@ void main() {
 	// Compose
 	vec3 color = fluid;
 	color += leakColor * glass;
-	color += vec3(0.7, 0.9, 1.0) * edges;
-	color += vec3(0.5, 0.7, 1.0) * innerGlow;
-	color += vec3(1.0, 0.98, 0.95) * spec;
-	color += vec3(0.6, 0.85, 1.0) * ripple * glass;
-	color += vec3(0.4, 0.8, 1.0) * rays;
-	color += vec3(1.0, 0.9, 0.95) * shockwave;
+	color += vec3(1.0) * edges;
+	color += vec3(0.8) * innerGlow;
+	color += vec3(1.0) * spec;
+	color += vec3(1.0) * ripple * glass;
+	color += vec3(1.0) * rays;
+	color += vec3(1.0) * shockwave;
 
 	float refract = glass * 0.35;
 
@@ -459,10 +459,7 @@ void main() {
 	// Velocity-directional split: fast mouse shatters RGB along motion vector
 	vec2 velCA = uVelocityDir * uCursorVelocity * ${CHROMATIC_VELOCITY};
 
-	vec3 color;
-	color.r = texture(uScene, uv + caRadial * 1.2 + velCA * 0.8).r;
-	color.g = texture(uScene, uv).g;
-	color.b = texture(uScene, uv - caRadial * 1.2 - velCA * 0.8).b;
+	vec3 color = texture(uScene, uv).rgb;
 
 	// Particles overlay
 	vec4 particles = texture(uParticles, vUv);
@@ -475,11 +472,11 @@ void main() {
 	// Cursor bloom
 	float cursorBloom = smoothstep(0.2, 0.0, cursorDist) * ${BLOOM_INTENSITY} * uCursorActive;
 	cursorBloom *= 1.0 + uCursorVelocity * 1.5;
-	color += vec3(0.5, 0.8, 1.0) * cursorBloom;
+	color += vec3(1.0) * cursorBloom;
 
 	// Click flash
 	float flash = uClickIntensity * smoothstep(0.4, 0.0, cursorDist);
-	color += vec3(1.0, 0.95, 0.9) * flash * 3.0;
+	color += vec3(1.0) * flash * 3.0;
 
 	// Wide bloom pass
 	vec3 bloomColor = vec3(0.0);
@@ -541,10 +538,8 @@ void main() {
 	vignette = pow(vignette, 0.8);
 	color *= vignette;
 
-	// Color grading
+	// Color grading: Removed blue/red tints
 	color = pow(color, vec3(0.92));
-	color.b *= 1.08;
-	color.r *= 1.02;
 
 	// Saturation boost
 	float luma = dot(color, vec3(0.299, 0.587, 0.114));
@@ -578,17 +573,17 @@ void main() {
 
 		if (type < 0.33) {
 			float spark = smoothstep(0.02, 0.0, d) * uParticleAlphas[i];
-			particleColor += vec3(0.4, 0.9, 1.0) * spark;
+			particleColor += vec3(1.0) * spark;
 			particleAlpha += spark * 0.5;
 		} else if (type < 0.66) {
 			float orb = smoothstep(0.025, 0.0, d) * uParticleAlphas[i];
 			float glow = smoothstep(0.06, 0.0, d) * uParticleAlphas[i] * 0.3;
-			particleColor += vec3(1.0, 0.3, 0.7) * orb + vec3(1.0, 0.5, 0.8) * glow;
+			particleColor += vec3(0.8) * orb + vec3(0.9) * glow;
 			particleAlpha += orb * 0.6 + glow * 0.2;
 		} else {
 			float core = smoothstep(0.015, 0.0, d) * uParticleAlphas[i];
 			float halo = smoothstep(0.04, 0.0, d) * uParticleAlphas[i] * 0.4;
-			particleColor += vec3(1.0, 0.98, 0.95) * core + vec3(0.6, 0.8, 1.0) * halo;
+			particleColor += vec3(1.0) * core + vec3(0.7) * halo;
 			particleAlpha += core * 0.8 + halo * 0.3;
 		}
 	}
@@ -651,7 +646,7 @@ void main() {
 		// Cyan glow halo
 		float glow = smoothstep(0.04, 0.0, d) * uArcAlphas[i] * 0.4;
 
-		arcColor += vec3(0.7, 0.9, 1.0) * arc + vec3(0.4, 0.6, 1.0) * glow;
+		arcColor += vec3(1.0) * arc + vec3(0.8) * glow;
 		arcAlpha += arc * 0.9 + glow * 0.3;
 	}
 

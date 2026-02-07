@@ -90,9 +90,9 @@ const { class: className = '' } = Astro.props;
 	.fluid-specimen__frame {
 		position: relative;
 		aspect-ratio: 16 / 9;
-		border: 2px solid var(--charcoal, #1a1a1a);
-		box-shadow: 6px 6px 0px rgba(0, 0, 0, 0.12);
-		background: rgba(0, 0, 0, 0.02);
+		border: 2px solid var(--charcoal, #ffffff);
+		box-shadow: 6px 6px 0px var(--charcoal, #ffffff);
+		background: var(--bg-manual, #000000);
 		overflow: hidden;
 		transform: translate(-1px, -1px);
 	}
@@ -118,13 +118,13 @@ const { class: className = '' } = Astro.props;
 		font-size: 0.6875rem;
 		text-transform: uppercase;
 		letter-spacing: 0.08em;
-		color: rgba(0, 0, 0, 0.35);
+		color: var(--charcoal, #ffffff);
 	}
 
 	.fluid-specimen__caption {
 		font-family: 'IBM Plex Mono', ui-monospace, monospace;
 		font-size: 0.6875rem;
 		letter-spacing: 0.02em;
-		color: rgba(0, 0, 0, 0.5);
+		color: var(--charcoal, #ffffff);
 	}
 </style>
