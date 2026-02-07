@@ -14,7 +14,7 @@
 	src: url('/fonts/GeistPixel-Square.woff2') format('woff2');
 	font-weight: 400;
 	font-style: normal;
-	font-display: swap;
+	font-display: block;
 }
 
 @font-face {
@@ -22,7 +22,7 @@
 	src: url('/fonts/GeistPixel-Circle.woff2') format('woff2');
 	font-weight: 400;
 	font-style: normal;
-	font-display: swap;
+	font-display: block;
 }
 
 @font-face {
@@ -30,7 +30,7 @@
 	src: url('/fonts/GeistPixel-Triangle.woff2') format('woff2');
 	font-weight: 400;
 	font-style: normal;
-	font-display: swap;
+	font-display: block;
 }
 
 @font-face {
@@ -38,7 +38,7 @@
 	src: url('/fonts/GeistPixel-Grid.woff2') format('woff2');
 	font-weight: 400;
 	font-style: normal;
-	font-display: swap;
+	font-display: block;
 }
 
 @font-face {
@@ -46,7 +46,7 @@
 	src: url('/fonts/GeistPixel-Line.woff2') format('woff2');
 	font-weight: 400;
 	font-style: normal;
-	font-display: swap;
+	font-display: block;
 }
 
 @font-face {
@@ -270,43 +270,52 @@
 	}
 
 	/* -----------------------------------------------------------
-	 * FONT CYCLING ANIMATION: The "Technical Specimen" flourish
-	 * Cycles through the Geist Pixel family to show variety.
+	 * FONT CYCLING ANIMATION: "Technical Pixelation"
+	 * High-tension cycling with offset pixel depth shadows.
 	 * ----------------------------------------------------------- */
 
 	@keyframes geist-cycle {
 
 		0%,
-		19% {
+		15% {
 			font-family: 'Geist Pixel', sans-serif;
+			text-shadow: 2px 2px 0px rgba(255, 255, 255, 0.2);
 		}
 
-		20%,
-		39% {
+		16%,
+		31% {
 			font-family: 'Geist Pixel Circle', sans-serif;
+			text-shadow: -2px 2px 0px rgba(255, 255, 255, 0.3);
 		}
 
-		40%,
-		59% {
+		32%,
+		47% {
 			font-family: 'Geist Pixel Triangle', sans-serif;
+			text-shadow: 2px -2px 0px rgba(255, 255, 255, 0.2);
 		}
 
-		60%,
-		79% {
+		48%,
+		63% {
 			font-family: 'Geist Pixel Grid', sans-serif;
+			text-shadow: 3px 3px 0px rgba(255, 255, 255, 0.4);
+		}
+
+		64%,
+		79% {
+			font-family: 'Geist Pixel Line', sans-serif;
+			text-shadow: -1px -1px 0px rgba(255, 255, 255, 0.2);
 		}
 
 		80%,
 		100% {
-			font-family: 'Geist Pixel Line', sans-serif;
+			font-family: 'Geist Pixel', sans-serif;
+			text-shadow: 0px 0px 0px rgba(255, 255, 255, 0);
 		}
 	}
 
 	.animate-font-cycle {
-		animation: geist-cycle 2s infinite;
+		animation: geist-cycle 1.2s steps(1) infinite;
 		display: inline-block;
-		min-width: 6ch;
-		/* Prevent layout shift if possible */
 	}
 }
 
