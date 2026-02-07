@@ -70,14 +70,52 @@ const trustedByLogos = [
 				<p class="section-label section-label--right">Colton Batts &mdash; Fort Worth, TX</p>
 			</div>
 
-			<!-- Display headline — the steel beam -->
-			<h1 class="text-display md:text-display-lg max-w-4xl mb-8 mx-auto text-center">
-				Production-first designer.<br class="hidden md:block" />
-				<span class="text-raw animate-font-cycle">Toolmaker.</span>
-			</h1>
+			<!-- Display headline — the technical specimen -->
+			<div class="relative max-w-4xl mx-auto py-12 md:py-20 mb-12">
+				
+				<!-- Corner Marks -->
+				<div class="specimen-crosshair -top-4 -left-4"></div>
+				<div class="specimen-crosshair -top-4 -right-4"></div>
+				<div class="specimen-crosshair -bottom-4 -left-4"></div>
+				<div class="specimen-crosshair -bottom-4 -right-4"></div>
+
+				<!-- Top Metadata -->
+				<div class="absolute -top-10 left-0 flex gap-8">
+					<span class="specimen-tag">[SYSTEM: GEIST-PIXEL]</span>
+					<span class="specimen-tag">TYPE: DISPLAY_POSTER</span>
+				</div>
+
+				<!-- Wordmark Block -->
+				<div class="text-center overflow-visible">
+					<h1 class="text-display md:text-display-lg leading-tight tracking-tighter mb-4">
+						Production-first designer.<br class="hidden md:block" />
+						<div class="relative inline-block mt-4 md:mt-2">
+							<!-- Shadow Glitch Layer (Offset) -->
+							<span class="absolute inset-0 text-raw opacity-40 blur-[1px] animate-glitch" style="animation-delay: -0.1s; transform: translate(3px, 3px);">Toolmaker.</span>
+							<!-- Main Animated Layer -->
+							<span class="relative text-raw animate-glitch">Toolmaker.</span>
+						</div>
+					</h1>
+				</div>
+
+				<!-- Side Metadata (Vertical) -->
+				<div class="absolute -right-8 top-1/2 -translate-y-1/2 hidden md:block">
+					<span class="specimen-tag specimen-tag--vertical">REF: 2026.02.07</span>
+					<span class="specimen-tag specimen-tag--vertical mt-8">GLYPH_COUNT: 482</span>
+				</div>
+
+				<!-- Bottom Metadata -->
+				<div class="absolute -bottom-10 right-0 flex gap-8">
+					<span class="specimen-tag">SPECIMEN NO. 133</span>
+					<div class="specimen-grid">
+						<span></span><span></span><span></span><span></span>
+						<span></span><span></span><span></span><span></span>
+					</div>
+				</div>
+			</div>
 
 			<!-- Sub-statement -->
-			<p class="text-lg md:text-xl leading-relaxed max-w-2xl text-charcoal mb-10 mx-auto text-center">
+			<p class="text-lg md:text-xl leading-relaxed max-w-2xl text-charcoal mb-10 mx-auto text-center border-t border-charcoal/20 pt-8">
 				10+ years delivering high-volume content for global brands.
 				Now building offline-first software that you actually own.
 			</p>

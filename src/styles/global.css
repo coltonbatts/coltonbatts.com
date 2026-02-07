@@ -270,52 +270,145 @@
 	}
 
 	/* -----------------------------------------------------------
-	 * FONT CYCLING ANIMATION: "Technical Pixelation"
-	 * High-tension cycling with offset pixel depth shadows.
+	 * FONT CLUSTERING: "Technical Poster Specimen"
+	 * Aggressive glitch-jitter with layered pixel depth.
 	 * ----------------------------------------------------------- */
 
-	@keyframes geist-cycle {
+	@keyframes geist-glitch {
 
 		0%,
-		15% {
+		10% {
 			font-family: 'Geist Pixel', sans-serif;
-			text-shadow: 2px 2px 0px rgba(255, 255, 255, 0.2);
+			text-shadow: 4px 4px 0px rgba(255, 255, 255, 0.4);
+			letter-spacing: -0.04em;
+			transform: scale(1);
+			opacity: 1;
 		}
 
-		16%,
-		31% {
+		11%,
+		25% {
 			font-family: 'Geist Pixel Circle', sans-serif;
-			text-shadow: -2px 2px 0px rgba(255, 255, 255, 0.3);
+			text-shadow: -3px 2px 0px rgba(255, 255, 255, 0.6);
+			letter-spacing: 0.02em;
+			transform: skewX(-2deg);
 		}
 
-		32%,
-		47% {
+		26%,
+		40% {
 			font-family: 'Geist Pixel Triangle', sans-serif;
-			text-shadow: 2px -2px 0px rgba(255, 255, 255, 0.2);
+			text-shadow: 6px -2px 0px rgba(255, 255, 255, 0.3);
+			letter-spacing: -0.06em;
+			transform: scale(1.02);
 		}
 
-		48%,
-		63% {
+		41%,
+		55% {
 			font-family: 'Geist Pixel Grid', sans-serif;
-			text-shadow: 3px 3px 0px rgba(255, 255, 255, 0.4);
+			text-shadow: 2px 5px 0px rgba(255, 255, 255, 0.5);
+			letter-spacing: 0em;
+			opacity: 0.8;
 		}
 
-		64%,
-		79% {
+		56%,
+		70% {
 			font-family: 'Geist Pixel Line', sans-serif;
-			text-shadow: -1px -1px 0px rgba(255, 255, 255, 0.2);
+			text-shadow: -4px -4px 0px rgba(255, 255, 255, 0.4);
+			letter-spacing: 0.04em;
+			transform: skewX(2deg);
 		}
 
-		80%,
+		71%,
+		85% {
+			font-family: 'Geist Pixel', sans-serif;
+			text-shadow: 0px 8px 0px rgba(255, 255, 255, 0.2);
+			letter-spacing: -0.04em;
+			opacity: 0.9;
+		}
+
+		86%,
 		100% {
 			font-family: 'Geist Pixel', sans-serif;
 			text-shadow: 0px 0px 0px rgba(255, 255, 255, 0);
+			letter-spacing: -0.05em;
+			transform: scale(1);
 		}
 	}
 
-	.animate-font-cycle {
-		animation: geist-cycle 1.2s steps(1) infinite;
+	.animate-glitch {
+		animation: geist-glitch 0.4s steps(1) infinite;
 		display: inline-block;
+		will-change: transform, opacity, font-family, text-shadow;
+	}
+
+	/* -----------------------------------------------------------
+	 * SPECIMEN DECORATORS: Poster-aesthetic technical marks
+	 * ----------------------------------------------------------- */
+
+	.specimen-tag {
+		font-family: 'IBM Plex Mono', monospace;
+		font-size: 9px;
+		font-weight: 700;
+		text-transform: uppercase;
+		letter-spacing: 0.2em;
+		color: #ffffff;
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		opacity: 0.6;
+	}
+
+	.specimen-tag--vertical {
+		writing-mode: vertical-rl;
+		text-orientation: mixed;
+	}
+
+	.specimen-tag::before {
+		content: '';
+		width: 1rem;
+		height: 1px;
+		background: currentColor;
+	}
+
+	.specimen-grid {
+		display: grid;
+		grid-template-columns: repeat(4, 1fr);
+		gap: 2px;
+		opacity: 0.3;
+	}
+
+	.specimen-grid span {
+		display: block;
+		width: 2px;
+		height: 2px;
+		background: white;
+	}
+
+	.specimen-crosshair {
+		position: absolute;
+		width: 20px;
+		height: 20px;
+		opacity: 0.5;
+	}
+
+	.specimen-crosshair::before,
+	.specimen-crosshair::after {
+		content: '';
+		position: absolute;
+		background: white;
+	}
+
+	.specimen-crosshair::before {
+		top: 50%;
+		left: 0;
+		width: 100%;
+		height: 1px;
+	}
+
+	.specimen-crosshair::after {
+		left: 50%;
+		top: 0;
+		width: 1px;
+		height: 100%;
 	}
 }
 
