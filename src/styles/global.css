@@ -34,6 +34,22 @@
 }
 
 @font-face {
+	font-family: 'Geist Pixel Grid';
+	src: url('/fonts/GeistPixel-Grid.woff2') format('woff2');
+	font-weight: 400;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Geist Pixel Line';
+	src: url('/fonts/GeistPixel-Line.woff2') format('woff2');
+	font-weight: 400;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
 	font-family: 'IBM Plex Mono';
 	src: url('/fonts/IBMPlexMono-Regular.woff2') format('woff2');
 	font-weight: 400;
@@ -251,6 +267,46 @@
 			font-size: 0.8em;
 			color: #666;
 		}
+	}
+
+	/* -----------------------------------------------------------
+	 * FONT CYCLING ANIMATION: The "Technical Specimen" flourish
+	 * Cycles through the Geist Pixel family to show variety.
+	 * ----------------------------------------------------------- */
+
+	@keyframes geist-cycle {
+
+		0%,
+		19% {
+			font-family: 'Geist Pixel', sans-serif;
+		}
+
+		20%,
+		39% {
+			font-family: 'Geist Pixel Circle', sans-serif;
+		}
+
+		40%,
+		59% {
+			font-family: 'Geist Pixel Triangle', sans-serif;
+		}
+
+		60%,
+		79% {
+			font-family: 'Geist Pixel Grid', sans-serif;
+		}
+
+		80%,
+		100% {
+			font-family: 'Geist Pixel Line', sans-serif;
+		}
+	}
+
+	.animate-font-cycle {
+		animation: geist-cycle 2s infinite;
+		display: inline-block;
+		min-width: 6ch;
+		/* Prevent layout shift if possible */
 	}
 }
 
