@@ -301,9 +301,33 @@
 		display: inline-block;
 	}
 
+	@keyframes toolmaker-type {
+		from {
+			max-width: 0;
+		}
+
+		to {
+			max-width: 11ch;
+		}
+	}
+
+	@keyframes toolmaker-caret {
+		0%,
+		45% {
+			opacity: 1;
+		}
+
+		46%,
+		100% {
+			opacity: 0;
+		}
+	}
+
 	.toolmaker-display {
 		position: relative;
-		display: inline-block;
+		display: inline-flex;
+		align-items: flex-end;
+		gap: 0.16em;
 		font-size: clamp(2.25rem, 6.6vw, 5.15rem);
 		line-height: 1;
 		letter-spacing: 0.005em;
@@ -337,9 +361,23 @@
 		-webkit-font-smoothing: none;
 		-moz-osx-font-smoothing: auto;
 		font-weight: 400;
-		letter-spacing: 0.02em;
+		letter-spacing: 0.045em;
 		color: #ffffff;
 		text-shadow: none;
+		display: inline-block;
+		overflow: hidden;
+		white-space: nowrap;
+		max-width: 11ch;
+		animation: toolmaker-type 1.4s steps(11, end) 1;
+	}
+
+	.toolmaker-display::after {
+		content: '';
+		width: 0.56em;
+		height: 0.92em;
+		border: 2px solid rgba(255, 255, 255, 0.95);
+		margin-bottom: 0.06em;
+		animation: toolmaker-caret 1.05s steps(1, end) infinite;
 	}
 
 	.tool-thumb-pixel {
