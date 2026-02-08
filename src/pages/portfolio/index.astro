@@ -1,19 +1,4 @@
 ---
-/**
- * portfolio.astro — Client Work Gallery
- * ======================================
- * A high-end editorial spread for professional client projects.
- *
- * Layout strategy:
- * - Full-bleed header with display type.
- * - Asymmetric 12-column grid: featured works span 7 cols,
- *   regular works span 5 cols. The rhythm is intentionally
- *   uneven — it reads like flipping through a monograph.
- * - Heavy on paper texture space (the "white space" of the gallery).
- * - Series groupings are labeled with the section-label treatment.
- * - Individual projects link to a detail page.
- */
-
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PaintingCard from '../../components/PaintingCard.astro';
 import { getCollection } from 'astro:content';
@@ -54,43 +39,27 @@ function getGridClass(_featured: boolean, _index: number): string {
 
 <BaseLayout title="Portfolio" description="Production & editorial work by Colton Batts.">
 
-	<!-- ============================================================
-		 HEADER: Full-bleed gallery title
-		 ============================================================ -->
 	<section class="border-b-2 border-charcoal">
 		<div class="max-w-5xl mx-auto px-6 pt-16 pb-12 md:pt-22 md:pb-16">
-			<p class="section-label mb-6">Client Work</p>
 			<h1 class="text-display md:text-display-lg max-w-3xl mb-8">
 				Selected<br class="hidden md:block" />
 				Projects.
 			</h1>
-			<div class="flex flex-wrap gap-6 items-center">
-				<p class="text-lg text-charcoal/70 max-w-xl leading-relaxed">
-					Video production, editorial, and motion design
-					for global brands — delivered at speed.
-				</p>
-			</div>
-
-			<!-- Project count — monospaced stats -->
-			<div class="flex gap-8 mt-8 font-mono text-meta uppercase text-charcoal/30">
-				<span>{totalCount} projects</span>
-			</div>
+			<p class="text-lg text-charcoal/70 max-w-xl leading-relaxed">
+				Video production, editorial, and motion design
+				for global brands.
+			</p>
 		</div>
 	</section>
 
-	<!-- ============================================================
-		 GALLERY: Asymmetric grid, grouped by series
-		 ============================================================ -->
 	<div class="max-w-5xl mx-auto px-6 py-16 md:py-22">
 
 		{[...seriesMap.entries()].map(([series, seriesPaintings]) => (
 			<section class="mb-20 last:mb-0">
-				<!-- Series header -->
 				<div class="mb-10">
 					<p class="section-label">{series}</p>
 				</div>
 
-				<!-- Asymmetric grid -->
 				<div class="gallery-grid">
 					{seriesPaintings.map((painting, i) => (
 						<div class={getGridClass(painting.data.featured, i)}>
@@ -115,7 +84,7 @@ function getGridClass(_featured: boolean, _index: number): string {
 		{unsorted.length > 0 && (
 			<section class="mb-20 last:mb-0">
 				<div class="mb-10">
-					<p class="section-label">Uncollected</p>
+					<p class="section-label">Other</p>
 				</div>
 				<div class="gallery-grid">
 					{unsorted.map((painting, i) => (
@@ -138,9 +107,6 @@ function getGridClass(_featured: boolean, _index: number): string {
 		)}
 	</div>
 
-	<!-- ============================================================
-		 FOOTER CTA: Contact for commissions / availability
-		 ============================================================ -->
 	<section class="border-t-2 border-charcoal bg-charcoal text-manual">
 		<div class="max-w-5xl mx-auto px-6 py-16 md:py-22 flex flex-col md:flex-row md:items-center md:justify-between gap-8">
 			<div>

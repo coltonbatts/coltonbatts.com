@@ -1,17 +1,4 @@
 ---
-/**
- * [slug].astro — Tool Deep Dive
- * ==============================
- * Industrial technical manual layout for individual tools.
- *
- * Structure:
- * - Back nav with heavy border
- * - Massive title block (Inter Black, 2px bordered)
- * - Asymmetric columns: wide narrative + narrow sticky metadata
- * - IBM Plex Mono "Data Block" for tech specs / hardware
- * - Philosophy section on offline-first ownership
- * - Prev/next tool navigation
- */
 
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
@@ -41,9 +28,6 @@ const {
 
 <BaseLayout title={name} description={oneLiner}>
 
-	<!-- ============================================================
-		 BACK NAV
-		 ============================================================ -->
 	<section class="border-b-2 border-charcoal">
 		<div class="max-w-5xl mx-auto px-6 pt-8 pb-6">
 			<a
@@ -55,13 +39,9 @@ const {
 		</div>
 	</section>
 
-	<!-- ============================================================
-		 TITLE BLOCK — Massive, bordered, the manual's cover page
-		 ============================================================ -->
 	<section class="border-b-2 border-charcoal">
 		<div class="max-w-5xl mx-auto px-6 pt-12 pb-10 md:pt-16 md:pb-12">
 
-			<!-- Status / version / platform stamps -->
 			<div class="flex flex-wrap items-center gap-3 mb-6">
 				<span class:list={[
 					'status-badge',
@@ -83,15 +63,12 @@ const {
 				</span>
 			</div>
 
-			<!-- Tool name — the steel beam -->
 			<h1 class="text-display md:text-display-lg mb-4">{name}</h1>
 
-			<!-- One-liner -->
 			<p class="text-lg md:text-xl leading-relaxed max-w-3xl text-charcoal/75 mb-8">
 				{oneLiner}
 			</p>
 
-			<!-- CTA row -->
 			<div class="flex flex-wrap gap-4">
 				{links.map((link) => (
 					<a
@@ -110,9 +87,6 @@ const {
 		</div>
 	</section>
 
-	<!-- ============================================================
-		 FEATURE BULLETS — Horizontal strip, monospaced
-		 ============================================================ -->
 	{bullets.length > 0 && (
 		<section class="border-b-2 border-charcoal bg-charcoal text-manual">
 			<div class="max-w-5xl mx-auto px-6 py-8">
@@ -128,28 +102,20 @@ const {
 		</section>
 	)}
 
-	<!-- ============================================================
-		 MAIN BODY — Asymmetric columns
-		 Left: wide narrative column (markdown body)
-		 Right: narrow sticky metadata + tech specs data block
-		 ============================================================ -->
 	<div class="max-w-5xl mx-auto px-6 py-12 md:py-22">
 		<div class="grid md:grid-cols-12 gap-8 md:gap-12">
 
-			<!-- ========== NARRATIVE COLUMN (wide) ========== -->
 			<div class="md:col-span-8 order-2 md:order-1">
 				<div class="prose prose-lg max-w-none text-charcoal/85 leading-relaxed">
 					<Content />
 				</div>
 			</div>
 
-			<!-- ========== METADATA SIDEBAR (narrow, sticky) ========== -->
 			<aside class="md:col-span-4 order-1 md:order-2">
 				<div class="md:sticky md:top-8 space-y-6">
 
-					<!-- Metadata block -->
 					<div class="section-block section-block--static p-6">
-						<p class="section-label">Instrument Data</p>
+						<p class="section-label">Details</p>
 						<dl class="space-y-4">
 							{version && (
 								<div>
@@ -195,7 +161,6 @@ const {
 						</dl>
 					</div>
 
-					<!-- Tech Stack data block -->
 					{techStack && techStack.length > 0 && (
 						<div class="section-block section-block--static p-6">
 							<p class="section-label">Tech Stack</p>
@@ -210,7 +175,6 @@ const {
 						</div>
 					)}
 
-					<!-- Hardware requirements data block -->
 					{hardware && (
 						<div class="section-block section-block--static p-6 bg-charcoal text-manual">
 							<p class="font-mono text-meta uppercase tracking-instrument text-manual/40 pb-3 border-b border-manual/15 mb-4">
@@ -240,9 +204,6 @@ const {
 		</div>
 	</div>
 
-	<!-- ============================================================
-		 NAVIGATION: Previous / Next tools
-		 ============================================================ -->
 	<section class="border-t-2 border-charcoal">
 		<div class="max-w-5xl mx-auto px-6 py-10">
 			<div class="flex items-center justify-between">

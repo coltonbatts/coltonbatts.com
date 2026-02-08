@@ -1,16 +1,4 @@
 ---
-/**
- * BaseLayout.astro
- * ================
- * The structural skeleton of coltonbatts.com.
- *
- * Design language: Editorial Modernism for Tools.
- * - Self-hosted fonts (IBM Plex Mono + Inter), preloaded.
- * - No external CDN calls. Zero tracking.
- * - Thick borders, monospaced nav, stamped shadows.
- * - Paper texture background persists behind a heavy structural grid.
- */
-
 import { navItems, site } from '../config';
 import Wordmark from '../components/Wordmark.astro';
 import RivePlayer from '../components/interactive/RivePlayer.astro';
@@ -38,11 +26,6 @@ const routeRecipe = resolveRiveRecipe('routePunctuation');
 		<link rel="apple-touch-icon" href="/favicon-custom.png" />
 		<meta name="generator" content={Astro.generator} />
 
-		<!-- ============================================
-			 FONT PRELOADS
-			 Critical fonts loaded first to prevent FOUT.
-			 Only preload the weights we use above the fold.
-			 ============================================ -->
 		<link rel="preload" href="/fonts/GeistPixel-Square.woff2" as="font" type="font/woff2" crossorigin />
 		<link rel="preload" href="/fonts/GeistPixel-Circle.woff2" as="font" type="font/woff2" crossorigin />
 		<link rel="preload" href="/fonts/GeistPixel-Triangle.woff2" as="font" type="font/woff2" crossorigin />
@@ -70,21 +53,14 @@ const routeRecipe = resolveRiveRecipe('routePunctuation');
 
 	<body class="antialiased min-h-screen flex flex-col">
 
-		<!-- ============================================
-			 HEADER / NAVIGATION
-			 Monospaced, uppercase, heavy bottom border.
-			 The nav feels like a label maker, not a menu.
-			 ============================================ -->
 		<header class="border-b-2 border-charcoal">
 			<nav class="max-w-5xl mx-auto px-6 py-5">
 				<div class="flex items-center justify-between">
 
-					<!-- Wordmark -->
 					<a href="/" class="block" aria-label="Home">
 						<Wordmark />
 					</a>
 
-					<!-- Mobile Menu Toggle -->
 					<button
 						id="mobile-menu-toggle"
 						class="md:hidden flex flex-col gap-1.5 p-2 border-2 border-charcoal hover:bg-charcoal hover:text-manual transition-colors group"
@@ -96,7 +72,6 @@ const routeRecipe = resolveRiveRecipe('routePunctuation');
 						<span class="w-5 h-0.5 bg-charcoal group-hover:bg-manual transition-colors"></span>
 					</button>
 
-					<!-- Desktop Navigation -->
 					<ul
 						id="nav-menu"
 						class="hidden md:flex gap-8 font-mono text-label uppercase tracking-instrument text-charcoal"
@@ -113,7 +88,6 @@ const routeRecipe = resolveRiveRecipe('routePunctuation');
 									]}
 								>
 									{item.label}
-									{/* Active indicator: a raw accent underline */}
 									{(currentPath === item.href || (item.href !== '/' && currentPath.startsWith(item.href))) && (
 										<span class="absolute -bottom-[1.4rem] left-0 w-full h-[2px] bg-raw"></span>
 									)}
@@ -123,7 +97,6 @@ const routeRecipe = resolveRiveRecipe('routePunctuation');
 					</ul>
 				</div>
 
-				<!-- Mobile Menu -->
 				<div
 					id="mobile-menu"
 					class="hidden md:hidden pt-6 pb-2 mt-5 border-t-2 border-charcoal"
@@ -149,9 +122,6 @@ const routeRecipe = resolveRiveRecipe('routePunctuation');
 			</nav>
 		</header>
 
-		<!-- ============================================
-			 MAIN CONTENT
-			 ============================================ -->
 		<main class="flex-1">
 			<slot />
 		</main>
@@ -171,26 +141,16 @@ const routeRecipe = resolveRiveRecipe('routePunctuation');
 			<div slot="fallback" class="route-punctuation-fallback" aria-hidden="true"></div>
 		</RivePlayer>
 
-		<!-- ============================================
-			 FOOTER
-			 Heavy top border. Monospaced metadata stamp.
-			 Feels like the colophon of a printed manual.
-			 ============================================ -->
 		<footer class="mt-20 border-t-2 border-charcoal">
 			<div class="max-w-5xl mx-auto px-6 py-10 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
 				<p class="font-mono text-meta uppercase text-charcoal">
 					&copy; {new Date().getFullYear()} Colton Batts
 				</p>
 				<p class="font-mono text-meta uppercase text-charcoal">
-					REF: {new Date().toISOString().split('T')[0].replace(/-/g, '.')} &middot; Built with Astro
+					{new Date().toISOString().split('T')[0].replace(/-/g, '.')}
 				</p>
 			</div>
 		</footer>
-
-		<!-- ============================================
-			 CLIENT-SIDE SCRIPTS
-			 Minimal. Only what's necessary.
-			 ============================================ -->
 		<!-- Mobile menu — standalone, no dependencies, runs immediately -->
 		<script is:inline>
 			(function () {

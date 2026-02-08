@@ -1,16 +1,4 @@
 ---
-/**
- * [slug].astro — Individual Project Detail
- * ==========================================
- * Full-page presentation of a single client project.
- *
- * Layout:
- * - Large, matted image dominates the viewport.
- * - Gallery label metadata to the right (desktop) or below (mobile).
- * - Project description from the markdown body.
- * - Navigation to adjacent projects.
- */
-
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
 
@@ -35,9 +23,6 @@ const { title, medium, dimensions, year, image, series, available, vimeoId } = p
 
 <BaseLayout title={title} description={`${title} — ${medium}, ${year}. Colton Batts.`}>
 
-	<!-- ============================================================
-		 HEADER: Back navigation + painting title
-		 ============================================================ -->
 	<section class="border-b-2 border-charcoal">
 		<div class="max-w-5xl mx-auto px-6 pt-8 pb-6">
 			<a
@@ -49,13 +34,9 @@ const { title, medium, dimensions, year, image, series, available, vimeoId } = p
 		</div>
 	</section>
 
-	<!-- ============================================================
-		 PAINTING: The main event
-		 ============================================================ -->
 	<div class="max-w-5xl mx-auto px-6 py-12 md:py-22">
 		<div class="grid md:grid-cols-12 gap-8 md:gap-12">
 
-			<!-- Left: Project media (matted frame) -->
 			<div class="md:col-span-8">
 				<div class="painting-card__frame">
 					<div class="painting-card__mat" style="padding: 1.5rem;">
@@ -81,7 +62,6 @@ const { title, medium, dimensions, year, image, series, available, vimeoId } = p
 				</div>
 			</div>
 
-			<!-- Right: Gallery wall label -->
 			<div class="md:col-span-4 md:pt-4">
 				<div class="sticky top-8">
 					{series && (
@@ -122,7 +102,6 @@ const { title, medium, dimensions, year, image, series, available, vimeoId } = p
 						</div>
 					)}
 
-					<!-- Project description from markdown body -->
 					<div class="prose prose-sm max-w-none text-charcoal/70 leading-relaxed">
 						<Content />
 					</div>
@@ -131,9 +110,6 @@ const { title, medium, dimensions, year, image, series, available, vimeoId } = p
 		</div>
 	</div>
 
-	<!-- ============================================================
-		 NAVIGATION: Previous / Next paintings
-		 ============================================================ -->
 	<section class="border-t-2 border-charcoal">
 		<div class="max-w-5xl mx-auto px-6 py-10">
 			<div class="flex items-center justify-between">

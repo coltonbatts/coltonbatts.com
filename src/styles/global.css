@@ -269,11 +269,6 @@
 		}
 	}
 
-	/* -----------------------------------------------------------
-	 * FONT CLUSTERING: "Technical Poster Specimen"
-	 * Aggressive glitch-jitter with layered pixel depth.
-	 * ----------------------------------------------------------- */
-
 	@keyframes geist-glitch {
 
 		0%,
@@ -340,76 +335,6 @@
 		will-change: transform, opacity, font-family, text-shadow;
 	}
 
-	/* -----------------------------------------------------------
-	 * SPECIMEN DECORATORS: Poster-aesthetic technical marks
-	 * ----------------------------------------------------------- */
-
-	.specimen-tag {
-		font-family: 'IBM Plex Mono', monospace;
-		font-size: 9px;
-		font-weight: 700;
-		text-transform: uppercase;
-		letter-spacing: 0.2em;
-		color: #ffffff;
-		display: flex;
-		align-items: center;
-		gap: 0.5rem;
-		opacity: 0.6;
-	}
-
-	.specimen-tag--vertical {
-		writing-mode: vertical-rl;
-		text-orientation: mixed;
-	}
-
-	.specimen-tag::before {
-		content: '';
-		width: 1rem;
-		height: 1px;
-		background: currentColor;
-	}
-
-	.specimen-grid {
-		display: grid;
-		grid-template-columns: repeat(4, 1fr);
-		gap: 2px;
-		opacity: 0.3;
-	}
-
-	.specimen-grid span {
-		display: block;
-		width: 2px;
-		height: 2px;
-		background: white;
-	}
-
-	.specimen-crosshair {
-		position: absolute;
-		width: 20px;
-		height: 20px;
-		opacity: 0.5;
-	}
-
-	.specimen-crosshair::before,
-	.specimen-crosshair::after {
-		content: '';
-		position: absolute;
-		background: white;
-	}
-
-	.specimen-crosshair::before {
-		top: 50%;
-		left: 0;
-		width: 100%;
-		height: 1px;
-	}
-
-	.specimen-crosshair::after {
-		left: 50%;
-		top: 0;
-		width: 1px;
-		height: 100%;
-	}
 }
 
 /* =============================================================

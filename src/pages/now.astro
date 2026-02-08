@@ -12,7 +12,6 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 					<h2 class="text-xs font-bold uppercase tracking-[0.3em] text-charcoal/40 mb-6 pb-2 border-b border-gray-100">Building</h2>
 					<ul class="space-y-3 font-medium">
 						<li class="flex items-center gap-3"><span class="text-charcoal/20">/</span> Offline-first tools</li>
-						<li class="flex items-center gap-3"><span class="text-charcoal/20">/</span> This site</li>
 					</ul>
 				</section>
 				
@@ -26,7 +25,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 			</div>
 			
 			<p class="text-[10px] font-bold uppercase mt-16 tracking-widest text-charcoal/30">
-				REF: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '.')}
+				{new Date().toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '.')}
 			</p>
 		</div>
 	</div>

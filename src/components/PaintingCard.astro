@@ -1,17 +1,4 @@
 ---
-/**
- * PaintingCard.astro
- * ==================
- * Renders a project as a card in the portfolio gallery.
- *
- * When a vimeoId is provided, the card displays an autoplaying
- * Vimeo embed (muted, looping, no controls) that plays/pauses
- * as the user scrolls it in and out of view.
- *
- * Otherwise falls back to a dark placeholder div with the title.
- *
- * The card links to the individual project detail page.
- */
 
 interface Props {
 	title: string;
@@ -50,7 +37,6 @@ const {
 		className,
 	]}
 >
-	<!-- The Frame: matted border with stamped shadow -->
 	<div class="painting-card__frame">
 		<div class="painting-card__mat">
 			{vimeoId ? (
@@ -74,7 +60,6 @@ const {
 		</div>
 	</div>
 
-	<!-- Gallery Label: monospaced metadata block -->
 	<div class="painting-card__label">
 		<h3 class="painting-card__title">
 			{title}
