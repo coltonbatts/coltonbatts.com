@@ -3,15 +3,15 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
 <BaseLayout title="Contact" description="Get in touch.">
-	<div class="max-w-5xl mx-auto px-6 py-20">
+	<div class="min-h-[80vh] flex flex-col items-center justify-center max-w-5xl mx-auto px-6 py-20">
 		<div class="contact-shell">
-			<div class="contact-shell__header">
+			<div class="contact-shell__header text-center mx-auto">
 				<p class="contact-kicker">Direct line</p>
 				<h1 class="contact-title">Contact</h1>
 				<p class="contact-subtitle">Best way to reach me is email. Keep it simple.</p>
 			</div>
 
-			<div class="contact-terminal" role="region" aria-label="Contact details">
+			<div class="contact-terminal mx-auto" role="region" aria-label="Contact details">
 				<div class="contact-terminal__bar">
 					<span class="contact-dot" aria-hidden="true"></span>
 					<span class="contact-dot" aria-hidden="true"></span>
@@ -19,7 +19,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 					<span class="contact-terminal__label">message://colton</span>
 				</div>
 
-				<div class="contact-terminal__body">
+				<div class="contact-terminal__body text-center">
 					<p class="contact-line">for projects / collaboration / product + design work</p>
 					<a href="mailto:colton.batts@gmail.com" class="contact-email">colton.batts@gmail.com</a>
 					<p class="contact-meta">response window: usually same day</p>
@@ -32,7 +32,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 <style>
 	.contact-shell {
 		display: grid;
-		gap: 1.25rem;
+		gap: 2rem;
+		width: 100%;
 	}
 
 	.contact-shell__header {
@@ -62,7 +63,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 	.contact-terminal {
 		border: 1px solid rgba(255, 255, 255, 0.25);
 		background: #000;
-		max-width: 46rem;
+		width: 100%;
+		max-width: 52rem;
 	}
 
 	.contact-terminal__bar {
@@ -89,9 +91,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 	}
 
 	.contact-terminal__body {
-		padding: 1.2rem 1rem 1.35rem;
+		padding: 2rem 1.5rem 2.5rem;
 		display: grid;
-		gap: 0.8rem;
+		gap: 1.2rem;
+		place-items: center;
 	}
 
 	.contact-line,
@@ -105,16 +108,20 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 	.contact-email {
 		display: inline-block;
 		font-family: 'Geist Pixel Circle', sans-serif;
-		font-size: clamp(1.25rem, 4.2vw, 2.2rem);
-		letter-spacing: -0.02em;
-		line-height: 1;
+		/* Cranked up size to showcase the pixel geometry */
+		font-size: clamp(1.5rem, 6vw, 3.5rem);
+		letter-spacing: -0.01em;
+		line-height: 1.1;
 		color: #fff;
 		text-decoration: none;
-		border-bottom: 1px solid rgba(255, 255, 255, 0.35);
+		border-bottom: 2px solid rgba(255, 255, 255, 0.35);
 		padding-bottom: 0.24rem;
+		transition: all 0.2s ease;
 	}
 
 	.contact-email:hover {
-		opacity: 0.82;
+		opacity: 1;
+		border-bottom-color: #fff;
+		transform: translateY(-2px);
 	}
 </style>
