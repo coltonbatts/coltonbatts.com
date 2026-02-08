@@ -14,92 +14,110 @@ const timeline = await Promise.all(
 		const raw = entry.data.date;
 		const date = raw instanceof Date ? raw : new Date(raw);
 
-		const label = date.toLocaleDateString('en-US', {
-			month: 'numeric',
-			day: 'numeric',
-			year: '2-digit',
-		});
+		const day = date.toLocaleDateString('en-US', { day: '2-digit' });
+		const month = date.toLocaleDateString('en-US', { month: 'short' }).toUpperCase();
+		const year = date.toLocaleDateString('en-US', { year: '2-digit' });
 
-		return { ...entry, Content, label };
+		return { ...entry, Content, day, month, year };
 	})
 );
 ---
 
 <BaseLayout title="Now" description="A running timeline of notes and links.">
 	<div class="max-w-4xl mx-auto px-6 py-20">
-		<div class="mb-10">
-			<h1 class="text-3xl font-bold tracking-tighter">Now</h1>
-			<p class="mt-2 text-sm text-charcoal/70">Date-indexed log.</p>
+		<div class="mb-16">
+			<h1 class="text-3xl font-bold tracking-tighter uppercase font-sans">Now</h1>
+			<div class="flex items-center gap-4 mt-2">
+				<span class="section-label !mb-0">Archive_Log</span>
+				<div class="h-[1px] flex-1 bg-charcoal/20"></div>
+				<p class="text-xs font-mono text-charcoal/50 uppercase tracking-widest">v2.0.0</p>
+			</div>
 		</div>
 
 		{timeline.length === 0 ? (
-			<p class="text-charcoal/70">No entries yet.</p>
+			<p class="font-mono text-charcoal/70">NO_ENTRIES_FOUND</p>
 		) : (
-			<div class="space-y-4">
+			<div class="relative border-l-2 border-charcoal/20 ml-4 md:ml-24 pl-8 md:pl-12 space-y-20">
 				{timeline.map((entry, index) => {
 					const { Content } = entry;
 					return (
-						<details class="now-entry" open={index === 0}>
-							<summary class="now-entry__summary">
-								<span class="now-entry__date">{entry.label}</span>
-								{entry.data.summary && <span class="now-entry__blurb">{entry.data.summary}</span>}
-							</summary>
-							<div class="now-entry__content prose prose-invert max-w-none">
-								<Content />
-								{entry.data.links?.length ? (
-									<ul class="mt-6 space-y-1 now-links">
-										{entry.data.links.map((link) => (
-											<li><a href={link.url}>{link.label ?? link.url}</a></li>
-										))}
-									</ul>
-								) : null}
+						<div class="relative">
+							{/* Date Tag - Desktop: Floating left, Mobile: Top */}
+							<div class="md:absolute md:-left-[154px] md:top-0 mb-6 md:mb-0">
+								<div class="flex md:flex-col items-baseline md:items-end gap-2 md:gap-0">
+									<span class="text-4xl font-bold leading-none tracking-tighter text-charcoal font-sans">{entry.day}</span>
+									<div class="flex flex-col md:items-end">
+										<span class="text-[10px] font-bold font-mono text-charcoal leading-none tracking-[0.2em]">{entry.month}</span>
+										<span class="text-[10px] font-mono text-charcoal/40 leading-none mt-1">'{entry.year}</span>
+									</div>
+								</div>
 							</div>
-						</details>
+
+							{/* Node Point */}
+							<div class="absolute -left-[41px] md:-left-[57px] top-3 w-4 h-4 bg-black border-2 border-charcoal rotate-45 z-10"></div>
+
+							<div class="section-block">
+								<div class="flex flex-col gap-6">
+									<header>
+										<div class="flex items-center gap-3 mb-2">
+											<span class="text-[10px] font-mono px-1.5 py-0.5 border border-charcoal/30 text-charcoal/50 uppercase">Entry_{timeline.length - index}</span>
+											{index === 0 && <span class="text-[10px] font-mono px-1.5 py-0.5 bg-charcoal text-black font-bold uppercase">Latest</span>}
+										</div>
+										<h2 class="text-xl md:text-2xl font-bold tracking-tight uppercase leading-tight font-sans">
+											{entry.data.title || "Log Entry"}
+										</h2>
+										{entry.data.summary && (
+											<p class="mt-3 text-sm text-charcoal/70 font-mono italic leading-relaxed">
+												{entry.data.summary}
+											</p>
+										)}
+									</header>
+
+									<div class="prose prose-invert max-w-none text-sm leading-relaxed font-sans prose-headings:font-sans prose-headings:uppercase prose-headings:tracking-tighter">
+										<Content />
+									</div>
+
+									{entry.data.links?.length ? (
+										<div class="pt-6 border-t border-charcoal/10">
+											<span class="text-[10px] font-mono uppercase text-charcoal/40 block mb-3 tracking-widest">Reference_Links</span>
+											<div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+												{entry.data.links.map((link) => (
+													<a 
+														href={link.url} 
+														class="group flex items-center justify-between p-3 border border-charcoal/20 hover:border-charcoal hover:bg-charcoal/5 transition-all text-xs font-mono"
+													>
+														<span class="truncate pr-4">{link.label || link.url}</span>
+														<span class="opacity-0 group-hover:opacity-100 transition-opacity">-></span>
+													</a>
+												))}
+											</div>
+										</div>
+									) : null}
+								</div>
+							</div>
+						</div>
 					);
 				})}
+				
+				{/* Terminal End */}
+				<div class="pt-8">
+					<div class="flex items-center gap-4 opacity-20">
+						<div class="h-[2px] w-8 bg-charcoal"></div>
+						<span class="font-mono text-[10px] tracking-[0.3em]">EOF</span>
+						<div class="h-[2px] flex-1 bg-charcoal"></div>
+					</div>
+				</div>
 			</div>
 		)}
 	</div>
 </BaseLayout>
 
-<style>
-	.now-entry {
-		border: 1px solid rgba(255, 255, 255, 0.18);
-		background: #000;
+<style is:global>
+	/* Timeline specific overrides to fit the section-block better */
+	.now-entry-content p {
+		margin-bottom: 1.5rem;
 	}
-
-	.now-entry__summary {
-		list-style: none;
-		cursor: pointer;
-		padding: 1rem 1.1rem;
-		display: grid;
-		gap: 0.28rem;
-		border-left: 2px solid rgba(255, 255, 255, 0.5);
-	}
-
-	.now-entry__summary::-webkit-details-marker {
-		display: none;
-	}
-
-	.now-entry__date {
-		font-size: 0.85rem;
-		letter-spacing: 0.12em;
-		text-transform: uppercase;
-		font-family: 'Geist Mono', 'Geist Pixel', monospace;
-	}
-
-	.now-entry__blurb {
-		font-size: 0.82rem;
-		opacity: 0.7;
-	}
-
-	.now-entry__content {
-		padding: 0.35rem 1.1rem 1.1rem;
-	}
-
-	.now-links a {
-		font-family: 'Geist Mono', monospace;
-		font-size: 0.85rem;
-		word-break: break-all;
+	.now-entry-content p:last-child {
+		margin-bottom: 0;
 	}
 </style>
