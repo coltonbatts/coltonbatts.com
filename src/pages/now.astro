@@ -1,32 +1,110 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const entries = await getCollection('now');
+
+const sortedEntries = entries.sort((a, b) =>
+	new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
+);
+
+const timeline = await Promise.all(
+	sortedEntries.map(async (entry) => {
+		const { Content } = await entry.render();
+		const date = new Date(`${entry.data.date}T12:00:00`);
+		const today = new Date();
+		today.setHours(0, 0, 0, 0);
+		const dayDiff = Math.round((date.getTime() - today.getTime()) / 86400000);
+
+		let label = date.toLocaleDateString('en-US', {
+			month: 'numeric',
+			day: 'numeric',
+			year: '2-digit',
+		});
+		if (dayDiff === 0) label = `Today · ${label}`;
+		if (dayDiff === 1) label = `Tomorrow · ${label}`;
+		if (dayDiff === -1) label = `Yesterday · ${label}`;
+
+		return { ...entry, Content, label };
+	})
+);
 ---
 
-<BaseLayout title="Now" description="What I'm working on now.">
+<BaseLayout title="Now" description="A running timeline of what I'm building.">
 	<div class="max-w-4xl mx-auto px-6 py-20">
-		<h1 class="text-3xl font-bold mb-10 tracking-tighter">Status</h1>
-		
-		<div class="prose max-w-none text-charcoal/90">
-			<div class="grid gap-8 md:grid-cols-2">
-				<section class="bg-paper p-8 border border-gray-200/60 shadow-[2px_2px_0_rgba(0,0,0,0.02)]">
-					<h2 class="text-xs font-bold uppercase tracking-[0.3em] text-charcoal/40 mb-6 pb-2 border-b border-gray-100">Building</h2>
-					<ul class="space-y-3 font-medium">
-						<li class="flex items-center gap-3"><span class="text-charcoal/20">/</span> Offline-first tools</li>
-					</ul>
-				</section>
-				
-				<section class="bg-paper p-8 border border-gray-200/60 shadow-[2px_2px_0_rgba(0,0,0,0.02)]">
-					<h2 class="text-xs font-bold uppercase tracking-[0.3em] text-charcoal/40 mb-6 pb-2 border-b border-gray-100">Learning</h2>
-					<ul class="space-y-3 font-medium">
-						<li class="flex items-center gap-3"><span class="text-charcoal/20">/</span> Astro & SSG</li>
-						<li class="flex items-center gap-3"><span class="text-charcoal/20">/</span> Editorial design</li>
-					</ul>
-				</section>
-			</div>
-			
-			<p class="text-[10px] font-bold uppercase mt-16 tracking-widest text-charcoal/30">
-				{new Date().toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '.')}
-			</p>
+		<div class="mb-10">
+			<h1 class="text-3xl font-bold tracking-tighter">Now</h1>
+			<p class="mt-2 text-sm text-charcoal/70">Drop-down timeline journal. One entry per day.</p>
 		</div>
+
+		{timeline.length === 0 ? (
+			<p class="text-charcoal/70">No entries yet. Add one in <code>src/content/now/</code>.</p>
+		) : (
+			<div class="space-y-4">
+				{timeline.map((entry, index) => {
+					const { Content } = entry;
+					return (
+						<details class="now-entry" open={index === 0}>
+							<summary class="now-entry__summary">
+								<span class="now-entry__date">{entry.label}</span>
+								<span class="now-entry__title">{entry.data.title}</span>
+								{entry.data.summary && <span class="now-entry__blurb">{entry.data.summary}</span>}
+							</summary>
+							<div class="now-entry__content prose prose-invert max-w-none">
+								<Content />
+								{entry.data.links?.length ? (
+									<ul class="mt-6 space-y-1">
+										{entry.data.links.map((link) => (
+											<li><a href={link.url}>{link.label}</a></li>
+										))}
+									</ul>
+								) : null}
+							</div>
+						</details>
+					);
+				})}
+			</div>
+		)}
 	</div>
 </BaseLayout>
+
+<style>
+	.now-entry {
+		border: 1px solid rgba(255, 255, 255, 0.18);
+		background: #000;
+	}
+
+	.now-entry__summary {
+		list-style: none;
+		cursor: pointer;
+		padding: 1rem 1.1rem;
+		display: grid;
+		gap: 0.28rem;
+		border-left: 2px solid rgba(255, 255, 255, 0.5);
+	}
+
+	.now-entry__summary::-webkit-details-marker {
+		display: none;
+	}
+
+	.now-entry__date {
+		font-size: 0.68rem;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		opacity: 0.75;
+	}
+
+	.now-entry__title {
+		font-size: 1.05rem;
+		font-weight: 700;
+	}
+
+	.now-entry__blurb {
+		font-size: 0.86rem;
+		opacity: 0.75;
+	}
+
+	.now-entry__content {
+		padding: 0.35rem 1.1rem 1.1rem;
+	}
+</style>

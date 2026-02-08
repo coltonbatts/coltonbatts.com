@@ -66,7 +66,25 @@ const paintingsCollection = defineCollection({
 	}),
 });
 
+const nowCollection = defineCollection({
+	type: 'content',
+	schema: z.object({
+		title: z.string(),
+		date: z.coerce.date(),
+		summary: z.string().optional(),
+		links: z
+			.array(
+				z.object({
+					label: z.string(),
+					url: z.string().url(),
+				})
+			)
+			.optional(),
+	}),
+});
+
 export const collections = {
 	tools: toolsCollection,
 	paintings: paintingsCollection,
+	now: nowCollection,
 };
