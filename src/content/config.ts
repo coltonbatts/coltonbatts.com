@@ -69,13 +69,13 @@ const paintingsCollection = defineCollection({
 const nowCollection = defineCollection({
 	type: 'content',
 	schema: z.object({
-		title: z.string(),
+		title: z.string().optional(),
 		date: z.coerce.date(),
 		summary: z.string().optional(),
 		links: z
 			.array(
 				z.object({
-					label: z.string(),
+					label: z.string().optional(),
 					url: z.string().url(),
 				})
 			)
