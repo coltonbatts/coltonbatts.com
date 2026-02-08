@@ -41,6 +41,7 @@ export default {
 					'monospace',
 				],
 				sans: [
+					'"Geist Pixel"',
 					'"Inter"',
 					'system-ui',
 					'-apple-system',
@@ -54,6 +55,17 @@ export default {
 			 * system. Standard sizes preserved via Tailwind defaults.
 			 * --------------------------------------------------- */
 			fontSize: {
+				/* Standard Scale (Readable) */
+				'xs': ['0.8125rem', { lineHeight: '1.5' }],   /* 13px */
+				'sm': ['0.875rem', { lineHeight: '1.5' }],    /* 14px */
+				'base': ['1rem', { lineHeight: '1.6' }],      /* 16px */
+				'lg': ['1.125rem', { lineHeight: '1.6' }],    /* 18px */
+				'xl': ['1.25rem', { lineHeight: '1.6' }],     /* 20px */
+				'2xl': ['1.5rem', { lineHeight: '1.4' }],     /* 24px */
+				'3xl': ['1.875rem', { lineHeight: '1.3' }],   /* 30px */
+				'4xl': ['2.25rem', { lineHeight: '1.2' }],    /* 36px */
+				
+				/* Display Scale */
 				'display-sm': ['2rem', { lineHeight: '1.1', letterSpacing: '-0.03em', fontWeight: '900' }],
 				'display': ['2.75rem', { lineHeight: '1.05', letterSpacing: '-0.04em', fontWeight: '900' }],
 				'display-lg': ['3.5rem', { lineHeight: '1.0', letterSpacing: '-0.04em', fontWeight: '900' }],
@@ -84,12 +96,11 @@ export default {
 			 * feel like physical depth — letterpress, not glass.
 			 * --------------------------------------------------- */
 			boxShadow: {
-				'stamp-sm': '2px 2px 0px rgba(255, 255, 255, 1)',
-				'stamp': '3px 3px 0px rgba(255, 255, 255, 1)',
-				'stamp-md': '4px 4px 0px rgba(255, 255, 255, 1)',
-				'stamp-lg': '6px 6px 0px rgba(255, 255, 255, 1)',
-				'stamp-hover': '8px 8px 0px rgba(255, 255, 255, 1)',
-				'stamp-raw': '4px 4px 0px rgba(255, 255, 255, 1)',
+				'stamp-sm': '1px 1px 0px currentColor',
+				'stamp': '2px 2px 0px currentColor',
+				'stamp-md': '3px 3px 0px currentColor',
+				'stamp-lg': '5px 5px 0px currentColor',
+				'stamp-hover': '4px 4px 0px currentColor',
 				'none': 'none',
 			},
 

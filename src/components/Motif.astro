@@ -1,0 +1,26 @@
+---
+interface Props {
+  name: 'corner' | 'seal' | 'divider';
+  class?: string;
+}
+
+const { name, class: className } = Astro.props;
+---
+
+<div class:list={["motif-wrapper", className]} aria-hidden="true">
+  <img src={`/motifs/${name}.svg`} alt="" loading="lazy" />
+</div>
+
+<style>
+  .motif-wrapper {
+    display: inline-flex;
+    pointer-events: none;
+    user-select: none;
+  }
+  
+  img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+</style>

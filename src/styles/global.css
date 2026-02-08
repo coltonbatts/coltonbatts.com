@@ -159,7 +159,7 @@
 
 	h1,
 	h2 {
-		font-family: 'Geist Pixel Circle', sans-serif;
+		font-family: 'Geist Pixel', sans-serif;
 		text-transform: uppercase;
 	}
 
@@ -434,13 +434,14 @@
 	.section-block {
 		background-color: #000000 !important;
 		padding: 2rem;
+		@apply shadow-stamp;
 		transition: transform 0.2s cubic-bezier(0.2, 0, 0, 1),
 			box-shadow 0.2s cubic-bezier(0.2, 0, 0, 1);
 	}
 
 	.section-block:hover {
 		transform: translate(-2px, -2px);
-		box-shadow: var(--shadow-stamp-hover);
+		@apply shadow-stamp-hover;
 	}
 
 	/* Non-interactive blocks shouldn't shift on hover */
@@ -450,7 +451,7 @@
 
 	.section-block--static:hover {
 		transform: none;
-		box-shadow: var(--shadow-stamp);
+		@apply shadow-stamp;
 	}
 
 	/* -----------------------------------------------------------
@@ -1238,7 +1239,7 @@
 
 	.painting-card__frame {
 		border: var(--border-weight) solid var(--border-color);
-		box-shadow: var(--shadow-stamp);
+		@apply shadow-stamp;
 		background: #000000;
 		transition: transform 0.2s cubic-bezier(0.2, 0, 0, 1),
 			box-shadow 0.2s cubic-bezier(0.2, 0, 0, 1);
@@ -1255,7 +1256,7 @@
 	}
 
 	.painting-card--featured .painting-card__frame {
-		box-shadow: var(--shadow-stamp-lg);
+		@apply shadow-stamp-lg;
 	}
 
 	.painting-card__image {
@@ -1268,7 +1269,7 @@
 	/* Hover: lift the frame */
 	.painting-card:hover .painting-card__frame {
 		transform: translate(-2px, -2px);
-		box-shadow: var(--shadow-stamp-hover);
+		@apply shadow-stamp-hover;
 	}
 
 	/* Gallery label — the museum wall text */
@@ -1567,7 +1568,23 @@
  * UTILITY LAYER
  * ============================================================= */
 
+@keyframes boot-sequence {
+	0% {
+		opacity: 0;
+		filter: blur(2px);
+	}
+
+	100% {
+		opacity: 1;
+		filter: blur(0);
+	}
+}
+
 @layer utilities {
+	.shadow-esoteric {
+		box-shadow: 0 0 0 1px var(--charcoal), 4px 4px 0 var(--charcoal);
+	}
+
 	.reveal {
 		@apply opacity-0 translate-y-4 transition duration-700 ease-out;
 		will-change: transform, opacity;
@@ -1606,6 +1623,10 @@
 	.divider-muted {
 		border-bottom: 1px solid #000000;
 	}
+
+	.animate-boot {
+		animation: boot-sequence 0.3s steps(5) forwards;
+	}
 }
 
 /* =============================================================
@@ -1613,6 +1634,9 @@
  * ============================================================= */
 
 @media (prefers-reduced-motion: reduce) {
+	.animate-boot {
+		animation: none !important;
+	}
 
 	*,
 	*::before,
