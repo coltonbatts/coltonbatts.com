@@ -102,7 +102,7 @@
 	--shadow-stamp-hover: 12px 12px 0px rgba(255, 255, 255, 1);
 	--motion-strength: 0.66;
 	--motion-hero-progress: 0;
-	--motion-specimen-progress: 0;
+	--motion-display-progress: 0;
 }
 
 /* =============================================================
@@ -301,7 +301,7 @@
 		display: inline-block;
 	}
 
-	.toolmaker-specimen {
+	.toolmaker-display {
 		position: relative;
 		display: inline-block;
 		font-size: clamp(1.95rem, 5.8vw, 4.35rem);
@@ -311,7 +311,7 @@
 		isolation: isolate;
 	}
 
-	.toolmaker-specimen::before {
+	.toolmaker-display::before {
 		content: '';
 		position: absolute;
 		inset: -0.08em -0.04em;
@@ -327,7 +327,7 @@
 		z-index: -1;
 	}
 
-	.toolmaker-specimen__main {
+	.toolmaker-display__main {
 		font-family: 'Geist Pixel Circle', sans-serif;
 		text-rendering: optimizeSpeed;
 		-webkit-font-smoothing: none;
@@ -1017,8 +1017,8 @@
 		height: 4px;
 		background: linear-gradient(90deg, transparent 0%, #ffffff 50%, transparent 100%);
 		transform-origin: center;
-		transform: scaleX(calc(0.2 + (var(--motion-specimen-progress) * 0.8)));
-		opacity: calc(0.25 + (var(--motion-specimen-progress) * 0.6));
+		transform: scaleX(calc(0.2 + (var(--motion-display-progress) * 0.8)));
+		opacity: calc(0.25 + (var(--motion-display-progress) * 0.6));
 		pointer-events: none;
 	}
 

@@ -3,7 +3,7 @@ import type { MotionRecipe } from '../motion/recipes';
 export const riveRecipes: Record<string, MotionRecipe> = {
 	homepageMotionHero: {
 		id: 'homepage-motion-hero',
-		description: 'Homepage motion specimen driven by scroll depth and hover intent.',
+		description: 'Homepage motion display driven by scroll depth and hover intent.',
 		stateMachine: 'Button',
 		autoplay: true,
 		mode: 'play-when-visible',

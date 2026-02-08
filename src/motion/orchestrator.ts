@@ -249,13 +249,13 @@ class RiveOrchestrator {
 					root.style.setProperty('--motion-hero-progress', p.toFixed(4));
 				}
 
-				const specimen = document.getElementById('home-motion-moment');
-				if (specimen) {
-					const rect = specimen.getBoundingClientRect();
+				const display = document.getElementById('home-motion-moment');
+				if (display) {
+					const rect = display.getBoundingClientRect();
 					const viewport = Math.max(window.innerHeight, 1);
 					const total = rect.height + viewport;
 					const p = clamp((viewport - rect.top) / Math.max(total, 1));
-					root.style.setProperty('--motion-specimen-progress', p.toFixed(4));
+					root.style.setProperty('--motion-display-progress', p.toFixed(4));
 				}
 
 				this.updateHud();

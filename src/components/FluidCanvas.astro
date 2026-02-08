@@ -15,14 +15,14 @@ interface Props {
 const { class: className = '' } = Astro.props;
 ---
 
-<div class:list={['fluid-specimen', className]}>
-	<div class="fluid-specimen__frame">
-		<canvas class="fluid-specimen__canvas" data-fluid-canvas></canvas>
-		<div class="fluid-specimen__fallback" data-fluid-fallback>
+<div class:list={['fluid-display', className]}>
+	<div class="fluid-display__frame">
+		<canvas class="fluid-display__canvas" data-fluid-canvas></canvas>
+		<div class="fluid-display__fallback" data-fluid-fallback>
 			<span>[ interactive fluid · requires WebGL 2 ]</span>
 		</div>
 	</div>
-	<p class="fluid-specimen__caption">
+	<p class="fluid-display__caption">
 		interactive ink · cursor-reactive navier-stokes
 	</p>
 </div>
@@ -65,7 +65,7 @@ const { class: className = '' } = Astro.props;
 			{ threshold: 0.05 },
 		);
 
-		observer.observe(canvas.closest('.fluid-specimen')!);
+		observer.observe(canvas.closest('.fluid-display')!);
 	}
 
 	function cleanup() {
@@ -81,13 +81,13 @@ const { class: className = '' } = Astro.props;
 </script>
 
 <style>
-	.fluid-specimen {
+	.fluid-display {
 		display: flex;
 		flex-direction: column;
 		gap: 0.5rem;
 	}
 
-	.fluid-specimen__frame {
+	.fluid-display__frame {
 		position: relative;
 		aspect-ratio: 16 / 9;
 		border: 2px solid var(--charcoal, #ffffff);
@@ -97,7 +97,7 @@ const { class: className = '' } = Astro.props;
 		transform: translate(-1px, -1px);
 	}
 
-	.fluid-specimen__canvas {
+	.fluid-display__canvas {
 		position: absolute;
 		inset: 0;
 		width: 100%;
@@ -105,7 +105,7 @@ const { class: className = '' } = Astro.props;
 		cursor: crosshair;
 	}
 
-	.fluid-specimen__fallback {
+	.fluid-display__fallback {
 		position: absolute;
 		inset: 0;
 		display: flex;
@@ -113,7 +113,7 @@ const { class: className = '' } = Astro.props;
 		justify-content: center;
 	}
 
-	.fluid-specimen__fallback span {
+	.fluid-display__fallback span {
 		font-family: 'IBM Plex Mono', ui-monospace, monospace;
 		font-size: 0.6875rem;
 		text-transform: uppercase;
@@ -121,7 +121,7 @@ const { class: className = '' } = Astro.props;
 		color: var(--charcoal, #ffffff);
 	}
 
-	.fluid-specimen__caption {
+	.fluid-display__caption {
 		font-family: 'IBM Plex Mono', ui-monospace, monospace;
 		font-size: 0.6875rem;
 		letter-spacing: 0.02em;
