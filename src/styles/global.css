@@ -274,36 +274,32 @@
 		0%,
 		24% {
 			font-family: 'Geist Pixel Circle', sans-serif;
-			text-shadow: 6px 6px 0px rgba(255, 255, 255, 0.28);
 			letter-spacing: -0.045em;
 		}
 
 		25%,
 		49% {
-			font-family: 'Geist Pixel Grid', sans-serif;
-			text-shadow: 7px 5px 0px rgba(255, 255, 255, 0.24);
+			font-family: 'Geist Pixel Triangle', sans-serif;
 			letter-spacing: -0.045em;
 		}
 
 		50%,
 		74% {
-			font-family: 'Geist Pixel Line', sans-serif;
-			text-shadow: 5px 7px 0px rgba(255, 255, 255, 0.24);
+			font-family: 'Geist Pixel Grid', sans-serif;
 			letter-spacing: -0.045em;
 		}
 
 		75%,
 		100% {
 			font-family: 'Geist Pixel', sans-serif;
-			text-shadow: 6px 6px 0px rgba(255, 255, 255, 0.3);
 			letter-spacing: -0.045em;
 		}
 	}
 
 	.animate-glitch {
-		animation: geist-glitch 9s steps(1, end) infinite;
+		animation: geist-glitch 12s steps(1, end) infinite;
 		display: inline-block;
-		will-change: font-family, text-shadow;
+		will-change: font-family;
 	}
 
 	.toolmaker-specimen {
@@ -323,12 +319,12 @@
 		inset: -0.08em -0.04em;
 		background-image: repeating-linear-gradient(
 			to right,
-			rgba(255, 255, 255, 0.12) 0,
-			rgba(255, 255, 255, 0.12) 1px,
+			rgba(255, 255, 255, 0.14) 0,
+			rgba(255, 255, 255, 0.14) 1px,
 			transparent 1px,
 			transparent 14px
 		);
-		opacity: 0.35;
+		opacity: 0.25;
 		pointer-events: none;
 		z-index: -1;
 	}
@@ -341,14 +337,14 @@
 	}
 
 	.toolmaker-specimen__echo {
-		color: rgba(255, 255, 255, 0.26);
-		transform: translate(6px, 6px);
-		filter: blur(0.4px);
+		color: #6f6f6f;
+		transform: translate(5px, 5px);
+		filter: none;
 	}
 
 	.toolmaker-specimen__main {
-		color: var(--raw);
-		text-shadow: 6px 6px 0px rgba(255, 255, 255, 0.2);
+		color: #ffffff;
+		text-shadow: none;
 	}
 
 }
