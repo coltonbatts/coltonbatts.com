@@ -272,67 +272,50 @@
 	@keyframes geist-glitch {
 
 		0%,
-		10% {
+		20% {
 			font-family: 'Geist Pixel', sans-serif;
-			text-shadow: 4px 4px 0px rgba(255, 255, 255, 0.4);
+			text-shadow: 4px 4px 0px rgba(255, 255, 255, 0.35);
 			letter-spacing: -0.04em;
-			transform: scale(1);
 			opacity: 1;
 		}
 
-		11%,
-		25% {
-			font-family: 'Geist Pixel Circle', sans-serif;
-			text-shadow: -3px 2px 0px rgba(255, 255, 255, 0.6);
-			letter-spacing: 0.02em;
-			transform: skewX(-2deg);
-		}
-
-		26%,
+		21%,
 		40% {
-			font-family: 'Geist Pixel Triangle', sans-serif;
-			text-shadow: 6px -2px 0px rgba(255, 255, 255, 0.3);
-			letter-spacing: -0.06em;
-			transform: scale(1.02);
+			font-family: 'Geist Pixel Circle', sans-serif;
+			text-shadow: 6px 3px 0px rgba(255, 255, 255, 0.4);
+			letter-spacing: -0.04em;
+			opacity: 1;
 		}
 
 		41%,
-		55% {
-			font-family: 'Geist Pixel Grid', sans-serif;
-			text-shadow: 2px 5px 0px rgba(255, 255, 255, 0.5);
-			letter-spacing: 0em;
-			opacity: 0.8;
-		}
-
-		56%,
-		70% {
-			font-family: 'Geist Pixel Line', sans-serif;
-			text-shadow: -4px -4px 0px rgba(255, 255, 255, 0.4);
-			letter-spacing: 0.04em;
-			transform: skewX(2deg);
-		}
-
-		71%,
-		85% {
-			font-family: 'Geist Pixel', sans-serif;
-			text-shadow: 0px 8px 0px rgba(255, 255, 255, 0.2);
+		60% {
+			font-family: 'Geist Pixel Triangle', sans-serif;
+			text-shadow: 3px 6px 0px rgba(255, 255, 255, 0.32);
 			letter-spacing: -0.04em;
-			opacity: 0.9;
+			opacity: 1;
 		}
 
-		86%,
+		61%,
+		80% {
+			font-family: 'Geist Pixel Grid', sans-serif;
+			text-shadow: 7px 2px 0px rgba(255, 255, 255, 0.4);
+			letter-spacing: -0.04em;
+			opacity: 1;
+		}
+
+		81%,
 		100% {
-			font-family: 'Geist Pixel', sans-serif;
-			text-shadow: 0px 0px 0px rgba(255, 255, 255, 0);
-			letter-spacing: -0.05em;
-			transform: scale(1);
+			font-family: 'Geist Pixel Line', sans-serif;
+			text-shadow: 2px 7px 0px rgba(255, 255, 255, 0.35);
+			letter-spacing: -0.04em;
+			opacity: 1;
 		}
 	}
 
 	.animate-glitch {
-		animation: geist-glitch 0.4s steps(1) infinite;
+		animation: geist-glitch 3.2s steps(1, end) infinite;
 		display: inline-block;
-		will-change: transform, opacity, font-family, text-shadow;
+		will-change: opacity, font-family, text-shadow;
 	}
 
 }
