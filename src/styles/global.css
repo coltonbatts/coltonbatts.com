@@ -323,12 +323,21 @@
 		}
 	}
 
+	.hero-topline {
+		display: block;
+		font-family: 'Geist Pixel Circle', sans-serif;
+		font-size: clamp(1.35rem, 5.8vw, 4.5rem);
+		line-height: 0.98;
+		letter-spacing: 0.01em;
+		white-space: nowrap;
+	}
+
 	.toolmaker-display {
 		position: relative;
 		display: inline-flex;
 		align-items: flex-end;
 		gap: 0.16em;
-		font-size: clamp(2.25rem, 6.6vw, 5.15rem);
+		font-size: clamp(2.05rem, 6.2vw, 5rem);
 		line-height: 1;
 		letter-spacing: 0.005em;
 		padding: 0.02em 0.03em;
@@ -544,6 +553,33 @@
 
 	.trusted-logo-image--google-shopping {
 		height: 2.2rem;
+	}
+
+	@media (max-width: 768px) {
+		.trusted-by-strip {
+			max-width: 100%;
+			padding-top: 0.8rem;
+		}
+
+		.trusted-logo-wrap {
+			min-height: 2.6rem;
+		}
+
+		.trusted-logo-image--nuuly {
+			height: 1.1rem;
+		}
+
+		.trusted-logo-image--kate-spade {
+			height: 2.2rem;
+		}
+
+		.trusted-logo-image--under-armour {
+			height: 2rem;
+		}
+
+		.trusted-logo-image--google-shopping {
+			height: 1.6rem;
+		}
 	}
 
 	.btn-instrument:hover {
