@@ -297,19 +297,18 @@
 	}
 
 	.animate-glitch {
-		animation: geist-glitch 12s steps(1, end) infinite;
+		animation: geist-glitch 14s steps(1, end) infinite;
 		display: inline-block;
 		will-change: font-family;
 	}
 
 	.toolmaker-specimen {
 		position: relative;
-		display: inline-grid;
-		place-items: center;
-		font-size: clamp(3.4rem, 10.8vw, 8.4rem);
-		line-height: 0.9;
-		letter-spacing: -0.05em;
-		padding: 0.04em 0.08em;
+		display: inline-block;
+		font-size: clamp(2.35rem, 7.6vw, 5.8rem);
+		line-height: 0.95;
+		letter-spacing: -0.04em;
+		padding: 0.02em 0.04em;
 		isolation: isolate;
 	}
 
@@ -329,20 +328,11 @@
 		z-index: -1;
 	}
 
-	.toolmaker-specimen__echo,
 	.toolmaker-specimen__main {
-		grid-area: 1 / 1;
 		font-family: 'Geist Pixel Circle', sans-serif;
-		text-rendering: geometricPrecision;
-	}
-
-	.toolmaker-specimen__echo {
-		color: #6f6f6f;
-		transform: translate(5px, 5px);
-		filter: none;
-	}
-
-	.toolmaker-specimen__main {
+		text-rendering: optimizeSpeed;
+		-webkit-font-smoothing: none;
+		-moz-osx-font-smoothing: auto;
 		color: #ffffff;
 		text-shadow: none;
 	}
