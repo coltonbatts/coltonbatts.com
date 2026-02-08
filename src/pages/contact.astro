@@ -3,20 +3,118 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
 <BaseLayout title="Contact" description="Get in touch.">
-	<div class="max-w-4xl mx-auto px-6 py-20">
-		<h1 class="text-3xl font-bold mb-10 tracking-tighter">Contact</h1>
-		
-		<div class="prose max-w-none text-charcoal/90">
-			<p class="text-lg leading-snug font-medium mb-12">
-				For projects, collaboration, or general inquiries.
-			</p>
-			
-			<div class="bg-paper p-8 border border-gray-200/60 shadow-[2px_2px_0_rgba(0,0,0,0.02)] inline-block">
-				<h2 class="text-xs font-bold uppercase tracking-[0.3em] text-charcoal/40 mb-4 pb-2 border-b border-gray-100">Email</h2>
-				<a href="mailto:hello@coltonbatts.com" class="text-xl font-bold text-charcoal underline underline-offset-8 decoration-gray-300 hover:decoration-charcoal transition-all">
-					hello@coltonbatts.com
-				</a>
+	<div class="max-w-5xl mx-auto px-6 py-20">
+		<div class="contact-shell">
+			<div class="contact-shell__header">
+				<p class="contact-kicker">Direct line</p>
+				<h1 class="contact-title">Contact</h1>
+				<p class="contact-subtitle">Best way to reach me is email. Keep it simple.</p>
+			</div>
+
+			<div class="contact-terminal" role="region" aria-label="Contact details">
+				<div class="contact-terminal__bar">
+					<span class="contact-dot" aria-hidden="true"></span>
+					<span class="contact-dot" aria-hidden="true"></span>
+					<span class="contact-dot" aria-hidden="true"></span>
+					<span class="contact-terminal__label">message://colton</span>
+				</div>
+
+				<div class="contact-terminal__body">
+					<p class="contact-line">for projects / collaboration / product + design work</p>
+					<a href="mailto:colton.batts@gmail.com" class="contact-email">colton.batts@gmail.com</a>
+					<p class="contact-meta">response window: usually same day</p>
+				</div>
 			</div>
 		</div>
 	</div>
 </BaseLayout>
+
+<style>
+	.contact-shell {
+		display: grid;
+		gap: 1.25rem;
+	}
+
+	.contact-shell__header {
+		max-width: 38rem;
+	}
+
+	.contact-kicker {
+		font-family: 'Geist Mono', monospace;
+		font-size: 0.72rem;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+		opacity: 0.72;
+		margin-bottom: 0.6rem;
+	}
+
+	.contact-title {
+		font-size: clamp(2rem, 5vw, 3.25rem);
+		line-height: 0.96;
+		margin: 0;
+	}
+
+	.contact-subtitle {
+		margin-top: 0.8rem;
+		opacity: 0.78;
+	}
+
+	.contact-terminal {
+		border: 1px solid rgba(255, 255, 255, 0.25);
+		background: #000;
+		max-width: 46rem;
+	}
+
+	.contact-terminal__bar {
+		display: flex;
+		align-items: center;
+		gap: 0.45rem;
+		padding: 0.62rem 0.8rem;
+		border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+	}
+
+	.contact-dot {
+		width: 7px;
+		height: 7px;
+		border-radius: 999px;
+		border: 1px solid rgba(255, 255, 255, 0.45);
+	}
+
+	.contact-terminal__label {
+		margin-left: 0.5rem;
+		font-family: 'Geist Mono', monospace;
+		font-size: 0.72rem;
+		letter-spacing: 0.09em;
+		opacity: 0.7;
+	}
+
+	.contact-terminal__body {
+		padding: 1.2rem 1rem 1.35rem;
+		display: grid;
+		gap: 0.8rem;
+	}
+
+	.contact-line,
+	.contact-meta {
+		font-family: 'Geist Mono', monospace;
+		font-size: 0.82rem;
+		opacity: 0.76;
+		margin: 0;
+	}
+
+	.contact-email {
+		display: inline-block;
+		font-family: 'Geist Pixel Circle', sans-serif;
+		font-size: clamp(1.25rem, 4.2vw, 2.2rem);
+		letter-spacing: -0.02em;
+		line-height: 1;
+		color: #fff;
+		text-decoration: none;
+		border-bottom: 1px solid rgba(255, 255, 255, 0.35);
+		padding-bottom: 0.24rem;
+	}
+
+	.contact-email:hover {
+		opacity: 0.82;
+	}
+</style>
