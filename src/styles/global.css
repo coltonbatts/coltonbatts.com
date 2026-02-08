@@ -375,7 +375,7 @@
 		content: '';
 		width: 0.56em;
 		height: 0.92em;
-		border: 2px solid rgba(255, 255, 255, 0.95);
+		background: #ffffff;
 		margin-bottom: 0.06em;
 		animation: toolmaker-caret 1.05s steps(1, end) infinite;
 	}
