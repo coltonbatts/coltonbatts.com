@@ -17,6 +17,7 @@ const clientVideos = paintings
 
 const tools = await getCollection('tools');
 const featuredTools = tools.slice(0, 2);
+const pixelThumbSlugs = new Set(['colorwizard', 'magpie']);
 const isGalleryMode = artManifest.mode === 'gallery';
 
 function resolveToolSlot(slot: (typeof artManifest.tools)[string] | undefined) {
@@ -184,7 +185,11 @@ const trustedByLogos = [
 					href={`/tools/${tool.slug}`}
 					class="block tool-card group"
 				>
-					{tool.data.heroImage ? (
+					{pixelThumbSlugs.has(tool.slug) ? (
+						<div class="tool-thumb-pixel">
+							<div class="tool-thumb-pixel__name">{tool.data.name}</div>
+						</div>
+					) : tool.data.heroImage ? (
 						<img
 							src={tool.data.heroImage}
 							alt={tool.data.name}

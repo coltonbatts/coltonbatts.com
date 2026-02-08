@@ -3,6 +3,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
 
 const tools = await getCollection('tools');
+const pixelThumbSlugs = new Set(['colorwizard', 'magpie']);
 tools.sort((a, b) => {
 	const statusOrder = { active: 0, beta: 1, archived: 2 };
 	return statusOrder[a.data.status] - statusOrder[b.data.status];
@@ -22,7 +23,11 @@ tools.sort((a, b) => {
 					href={`/tools/${tool.slug}`}
 					class="block tool-card group"
 				>
-					{tool.data.heroImage ? (
+					{pixelThumbSlugs.has(tool.slug) ? (
+						<div class="tool-thumb-pixel">
+							<div class="tool-thumb-pixel__name">{tool.data.name}</div>
+						</div>
+					) : tool.data.heroImage ? (
 						<img
 							src={tool.data.heroImage}
 							alt={`${tool.data.name} nameplate`}
