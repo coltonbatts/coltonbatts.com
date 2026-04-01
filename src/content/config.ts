@@ -16,6 +16,9 @@ const toolsCollection = defineCollection({
 			label: z.string(),
 			url: z.string().url(),
 		})),
+		// When set, the tool card links go directly to the external URL
+		// and /tools/colorwizard becomes a redirect page.
+		externalUrl: z.string().url().optional(),
 		heroImage: z.string().optional(),
 		bullets: z.array(z.string()),
 

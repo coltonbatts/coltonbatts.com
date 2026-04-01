@@ -5,15 +5,17 @@ import { getCollection } from 'astro:content';
 
 export async function getStaticPaths() {
 	const tools = await getCollection('tools');
+	// Filter out tools with externalUrl — they redirect instead of rendering
+	const renderableTools = tools.filter(t => !t.data.externalUrl);
 	const statusOrder = { active: 0, beta: 1, archived: 2 };
-	tools.sort((a, b) => statusOrder[a.data.status] - statusOrder[b.data.status]);
+	renderableTools.sort((a, b) => statusOrder[a.data.status] - statusOrder[b.data.status]);
 
-	return tools.map((tool, index) => ({
+	return renderableTools.map((tool, index) => ({
 		params: { slug: tool.slug },
 		props: {
 			tool,
-			prev: index > 0 ? tools[index - 1] : null,
-			next: index < tools.length - 1 ? tools[index + 1] : null,
+			prev: index > 0 ? renderableTools[index - 1] : null,
+			next: index < renderableTools.length - 1 ? renderableTools[index + 1] : null,
 		},
 	}));
 }
@@ -23,6 +25,7 @@ const { Content } = await tool.render();
 const {
 	name, oneLiner, status, platform, version, lastUpdated,
 	techStack, repoUrl, ownershipType, hardware, links, bullets, heroImage,
+	externalUrl,
 } = tool.data;
 ---
 

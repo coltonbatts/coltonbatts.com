@@ -18,9 +18,12 @@ tools.sort((a, b) => {
 		</div>
 
 		<div class="grid gap-6 md:grid-cols-2">
-			{tools.map((tool) => (
+			{tools.map((tool) => {
+				const toolHref = tool.data.externalUrl || `/tools/${tool.slug}`;
+				return (
 				<a
-					href={`/tools/${tool.slug}`}
+					href={toolHref}
+					{...(tool.data.externalUrl ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
 					class="block tool-card group"
 				>
 					{pixelThumbSlugs.has(tool.slug) ? (
@@ -57,7 +60,7 @@ tools.sort((a, b) => {
 						</div>
 					)}
 				</a>
-			))}
+				);})}
 		</div>
 	</section>
 </BaseLayout>
