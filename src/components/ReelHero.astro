@@ -1,0 +1,228 @@
+---
+/**
+ * ReelHero.astro -- Full-bleed reel hero section
+ *
+ * Shows an auto-playing muted video loop when a reel is configured.
+ * Falls back to a clean placeholder when disabled or no video path.
+ */
+
+interface Props {
+  enabled: boolean;
+  videoPath: string;
+  posterPath?: string;
+  label?: string;
+  title?: string;
+}
+
+const { enabled, videoPath, posterPath, label = 'Demo Reel', title = 'Colton Batts -- Reel' } = Astro.props;
+const showVideo = enabled && videoPath && videoPath.length > 0;
+const videoSrc = videoPath || '';
+const posterSrc = posterPath || '';
+---
+
+<style>
+  .reel-section {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    background: #0a0a0a;
+    aspect-ratio: 16 / 9;
+  }
+
+  .reel-section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, transparent 0%, transparent 50%, rgba(0, 0, 0, 0.6) 100%);
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  .reel-video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1;
+  }
+
+  .reel-poster {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+    background: #111;
+  }
+
+  .reel-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 1.5rem 2rem;
+    pointer-events: none;
+  }
+
+  .reel-overlay__label {
+    font-family: 'Geist Mono', monospace;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: rgba(255, 255, 255, 0.5);
+    margin-bottom: 0.25rem;
+  }
+
+  .reel-overlay__title {
+    font-family: sans-serif;
+    font-size: clamp(1.25rem, 3vw, 2rem);
+    font-weight: 800;
+    color: white;
+    line-height: 1.1;
+  }
+
+  .reel-controls {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    z-index: 4;
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .reel-control-btn {
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: rgba(255, 255, 255, 0.8);
+    font-family: 'Geist Mono', monospace;
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 0.35rem 0.6rem;
+    cursor: pointer;
+    pointer-events: all;
+    transition: background 0.2s ease;
+    border-radius: 2px;
+  }
+
+  .reel-control-btn:hover {
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+  }
+
+  /* Placeholder state */
+  .reel-placeholder {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0a0a0a 100%);
+  }
+
+  .reel-placeholder__play-icon {
+    width: 48px;
+    height: 48px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+  }
+
+  .reel-placeholder__play-triangle {
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 8px 0 8px 14px;
+    border-color: transparent transparent transparent rgba(255, 255, 255, 0.3);
+    margin-left: 3px;
+  }
+
+  .reel-placeholder__text {
+    font-family: 'Geist Mono', monospace;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: rgba(255, 255, 255, 0.4);
+  }
+
+  @media (max-width: 768px) {
+    .reel-section {
+      aspect-ratio: 4 / 3;
+    }
+
+    .reel-overlay {
+      padding: 1rem 1.25rem;
+    }
+  }
+</style>
+
+{showVideo ? (
+  <section class="reel-section" aria-label="Demo reel">
+    <video
+      class="reel-video"
+      autoplay
+      muted
+      loop
+      playsinline
+      preload="metadata"
+      poster={posterSrc || undefined}
+    >
+      <source src={videoSrc} type="video/mp4" />
+    </video>
+    <div class="reel-overlay">
+      <span class="reel-overlay__label">{label}</span>
+      {title && <span class="reel-overlay__title">{title}</span>}
+    </div>
+    <div class="reel-controls">
+      <button class="reel-control-btn" data-reel-mute-toggle>Mute</button>
+      <button class="reel-control-btn" data-reel-replay>Replay</button>
+    </div>
+  </section>
+) : (
+  <section class="reel-section" aria-label="Demo reel coming soon">
+    <div class="reel-placeholder">
+      <div class="reel-placeholder__play-icon">
+        <div class="reel-placeholder__play-triangle"></div>
+      </div>
+      <span class="reel-placeholder__text">Reel Coming Soon</span>
+    </div>
+  </section>
+)}
+
+<script>
+  const muteBtn = document.querySelector('[data-reel-mute-toggle]');
+  if (muteBtn) {
+    muteBtn.addEventListener('click', function() {
+      const v = document.querySelector('.reel-video');
+      if (!v) return;
+      v.muted = !v.muted;
+      this.textContent = v.muted ? 'Unmute' : 'Mute';
+    });
+  }
+
+  const replayBtn = document.querySelector('[data-reel-replay]');
+  if (replayBtn) {
+    replayBtn.addEventListener('click', function() {
+      const v = document.querySelector('.reel-video');
+      if (v) v.currentTime = 0;
+    });
+  }
+
+  const v = document.querySelector('.reel-video');
+  if (v) {
+    v.play().catch(function() {
+      v.muted = true;
+      v.play();
+    });
+  }
+</script>

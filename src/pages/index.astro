@@ -7,8 +7,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import ArtSlot from '../components/ArtSlot.astro';
 import CyberHero from '../components/CyberHero.astro';
 import PaintingCard from '../components/PaintingCard.astro';
+import ReelHero from '../components/ReelHero.astro';
 import { artManifest } from '../content/art-manifest';
 import { getCollection } from 'astro:content';
+import { reel } from '../config';
 
 const paintings = await getCollection('paintings');
 const clientVideos = paintings
@@ -94,6 +96,17 @@ const trustedByLogos = [
 				</div>
 			</div>
 		</div>
+	</section>
+
+	<!-- Demo Reel -->
+	<section data-motion-chapter>
+		<ReelHero
+			enabled={reel.enabled}
+			videoPath={reel.path}
+			posterPath={reel.poster}
+			label={reel.label}
+			title={reel.title}
+		/>
 	</section>
 
 	<section class="max-w-5xl mx-auto px-6 py-16 md:py-22" data-motion-chapter>
