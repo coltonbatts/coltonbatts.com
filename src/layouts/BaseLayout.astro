@@ -1,6 +1,5 @@
 ---
 import { navItems, site } from '../config';
-import Wordmark from '../components/Wordmark.astro';
 import RivePlayer from '../components/interactive/RivePlayer.astro';
 import { resolveRiveRecipe } from '../content/rive-recipes';
 import '../styles/global.css';
@@ -26,11 +25,7 @@ const routeRecipe = resolveRiveRecipe('routePunctuation');
 		<link rel="apple-touch-icon" href="/favicon-custom.png" />
 		<meta name="generator" content={Astro.generator} />
 
-		<link rel="preload" href="/fonts/GeistPixel-Square.woff2" as="font" type="font/woff2" crossorigin />
-		<link rel="preload" href="/fonts/GeistPixel-Circle.woff2" as="font" type="font/woff2" crossorigin />
-		<link rel="preload" href="/fonts/GeistPixel-Triangle.woff2" as="font" type="font/woff2" crossorigin />
-		<link rel="preload" href="/fonts/GeistPixel-Grid.woff2" as="font" type="font/woff2" crossorigin />
-		<link rel="preload" href="/fonts/GeistPixel-Line.woff2" as="font" type="font/woff2" crossorigin />
+		<link rel="preload" href="/fonts/Inter-Regular.woff2" as="font" type="font/woff2" crossorigin />
 		<link rel="preload" href="/fonts/Inter-Black.woff2" as="font" type="font/woff2" crossorigin />
 		<link rel="preload" href="/fonts/IBMPlexMono-Bold.woff2" as="font" type="font/woff2" crossorigin />
 
@@ -53,65 +48,35 @@ const routeRecipe = resolveRiveRecipe('routePunctuation');
 
 	<body class="antialiased min-h-screen flex flex-col">
 
-		<header class="">
-			<nav class="max-w-5xl mx-auto px-6 py-5">
-				<div class="flex items-center justify-between">
+		<header class="site-header">
+			<nav class="site-nav" aria-label="Primary navigation">
+				<a href="/" class="site-logo" aria-label="Colton Batts home">
+					<span>CB</span>
+				</a>
 
-					<a href="/" class="block" aria-label="Home">
-						<Wordmark />
-					</a>
+				<p class="site-nav__date" aria-label="Studio date">
+					<span>Independent Studio</span>
+					<span>{new Date().toISOString().split('T')[0].replace(/-/g, '.')}</span>
+				</p>
 
-					<button
-						id="mobile-menu-toggle"
-						class="md:hidden flex flex-col gap-1.5 p-2 border-2 border-charcoal hover:bg-charcoal hover:text-manual transition-colors group"
-						aria-label="Toggle Menu"
-						aria-expanded="false"
-					>
-						<span class="w-5 h-0.5 bg-charcoal group-hover:bg-manual transition-colors"></span>
-						<span class="w-5 h-0.5 bg-charcoal group-hover:bg-manual transition-colors"></span>
-						<span class="w-5 h-0.5 bg-charcoal group-hover:bg-manual transition-colors"></span>
-					</button>
-
-					<ul
-						id="nav-menu"
-						class="hidden md:flex gap-8 font-mono text-label uppercase tracking-instrument text-charcoal"
-					>
-						{navItems.map((item) => (
-							<li>
-								<a
-									href={item.href}
-									class:list={[
-										'hover:text-charcoal transition-colors relative py-1',
-										{
-											'text-charcoal': currentPath === item.href || (item.href !== '/' && currentPath.startsWith(item.href)),
-										},
-									]}
-								>
-									{item.label}
-									{(currentPath === item.href || (item.href !== '/' && currentPath.startsWith(item.href))) && (
-										<span class="absolute -bottom-[1.4rem] left-0 w-full h-[2px] bg-raw"></span>
-									)}
-								</a>
-							</li>
-						))}
-					</ul>
-				</div>
-
-				<div
-					id="mobile-menu"
-					class="hidden md:hidden pt-6 pb-2 mt-5 border-t-2 border-charcoal"
+				<button
+					id="mobile-menu-toggle"
+					class="site-menu-toggle"
+					aria-label="Toggle Menu"
+					aria-expanded="false"
+					aria-controls="mobile-menu"
 				>
-					<ul class="flex flex-col gap-4 font-mono text-label uppercase tracking-instrument text-charcoal">
+					<span></span>
+					<span></span>
+				</button>
+
+				<div id="mobile-menu" class="site-menu" hidden>
+					<ul>
 						{navItems.map((item) => (
 							<li>
 								<a
 									href={item.href}
-									class:list={[
-										'hover:text-charcoal transition-colors block py-1',
-										{
-											'text-charcoal border-l-2 border-raw pl-3': currentPath === item.href || (item.href !== '/' && currentPath.startsWith(item.href)),
-										},
-									]}
+									aria-current={(currentPath === item.href || (item.href !== '/' && currentPath.startsWith(item.href))) ? 'page' : undefined}
 								>
 									{item.label}
 								</a>
@@ -141,14 +106,26 @@ const routeRecipe = resolveRiveRecipe('routePunctuation');
 			<div slot="fallback" class="route-punctuation-fallback" aria-hidden="true"></div>
 		</RivePlayer>
 
-		<footer class="mt-20">
-			<div class="max-w-5xl mx-auto px-6 py-10 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-				<p class="font-mono text-meta uppercase text-charcoal">
-					&copy; {new Date().getFullYear()} Colton Batts
-				</p>
-				<p class="font-mono text-meta uppercase text-charcoal">
-					{new Date().toISOString().split('T')[0].replace(/-/g, '.')}
-				</p>
+		<footer class="site-footer">
+			<div class="site-footer__grid">
+				<p class="site-footer__mark">CB</p>
+				<div>
+					<p class="studio-kicker">Studio</p>
+					<p>Colton Batts<br />Graphic Design / Motion / Production Systems</p>
+				</div>
+				<div>
+					<p class="studio-kicker">Navigate</p>
+					<ul>
+						{navItems.map((item) => (
+							<li><a href={item.href}>{item.label}</a></li>
+						))}
+					</ul>
+				</div>
+				<div>
+					<p class="studio-kicker">Contact</p>
+					<a href="mailto:colton.batts@gmail.com">colton.batts@gmail.com</a>
+					<p>&copy; {new Date().getFullYear()}</p>
+				</div>
 			</div>
 		</footer>
 		<!-- Mobile menu — standalone, no dependencies, runs immediately -->
@@ -159,16 +136,19 @@ const routeRecipe = resolveRiveRecipe('routePunctuation');
 				if (!toggle || !menu) return;
 
 				toggle.addEventListener('click', function () {
-					var isOpen = !menu.classList.contains('hidden');
-					menu.classList.toggle('hidden');
+					var isOpen = !menu.hasAttribute('hidden');
+					if (isOpen) {
+						menu.setAttribute('hidden', '');
+					} else {
+						menu.removeAttribute('hidden');
+					}
 					toggle.classList.toggle('is-open');
 					toggle.setAttribute('aria-expanded', String(!isOpen));
 				});
 
-				// Close menu when a nav link is tapped
 				menu.addEventListener('click', function (e) {
 					if (e.target.tagName === 'A') {
-						menu.classList.add('hidden');
+						menu.setAttribute('hidden', '');
 						toggle.classList.remove('is-open');
 						toggle.setAttribute('aria-expanded', 'false');
 					}
