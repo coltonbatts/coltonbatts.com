@@ -4,29 +4,10 @@
  */
 
 import BaseLayout from '../layouts/BaseLayout.astro';
-import ArtSlot from '../components/ArtSlot.astro';
-import CyberHero from '../components/CyberHero.astro';
-import PaintingCard from '../components/PaintingCard.astro';
-import ReelHero from '../components/ReelHero.astro';
-import { artManifest } from '../content/art-manifest';
 import { getCollection } from 'astro:content';
-import { reel } from '../config';
 
-const paintings = await getCollection('paintings');
-const clientVideos = paintings
-	.filter(p => p.data.vimeoId)
-	.sort((a, b) => a.data.order - b.data.order);
-
-const tools = await getCollection('tools');
-const featuredTools = tools.slice(0, 2);
-const pixelThumbSlugs = new Set(['colorwizard', 'magpie']);
-const isGalleryMode = artManifest.mode === 'gallery';
-
-function resolveToolSlot(slot: (typeof artManifest.tools)[string] | undefined) {
-	if (!slot) return undefined;
-	if (isGalleryMode) return slot;
-	return { ...slot, enabled: slot.enabled === true };
-}
+const paintings = (await getCollection('paintings')).sort((a, b) => a.data.order - b.data.order);
+const tools = (await getCollection('tools')).slice(0, 2);
 
 const trustedByLogos = [
 	{ key: 'nuuly', name: 'Nuuly', src: '/brands/nuuly.png' },
@@ -34,275 +15,278 @@ const trustedByLogos = [
 	{ key: 'under-armour', name: 'Under Armour', src: '/brands/under-armour.png' },
 	{ key: 'google-shopping', name: 'Google Shopping', src: '/brands/google-shopping.png' }
 ];
+
+const projectRoles: Record<string, string> = {
+	'shop-with-google': 'Lead Video Editor',
+	nuuly: 'Video Editor / Motion Designer',
+	'under-armour': 'Video Editor',
+	'kate-spade': 'Video Editor'
+};
+
+const heroCollage = [
+	{
+		src: '/art/hero/hero-01.png',
+		alt: 'Printed campaign image treatment with figures and red editorial texture',
+		className: 'editorial-collage__image editorial-collage__image--lead'
+	},
+	{
+		src: '/art/hero/coltonbatts_woman_performing_modern_dance._in_the_style_of_expe_a80a583a-3c5c-44f2-b6a9-c71c18d2e1eb.png',
+		alt: 'Movement study cropped as a red duotone editorial image',
+		className: 'editorial-collage__image editorial-collage__image--tall'
+	},
+	{
+		src: '/art/motion/motion-poster.png',
+		alt: 'Motion poster artwork treated like a printed studio proof',
+		className: 'editorial-collage__image editorial-collage__image--wide'
+	}
+];
+
+const projectFallbackImages: Record<string, string> = {
+	'under-armour': '/art/hero/coltonbatts_peaople_reaching_for_nike_jordan_shoes_that_are_a_80a3e748-7622-4221-972d-f94f53599962_2.png',
+	'kate-spade': '/art/hero/coltonbatts_woman_performing_modern_dance._in_the_style_of_expe_a80a583a-3c5c-44f2-b6a9-c71c18d2e1eb.png'
+};
 ---
 
-<BaseLayout title="Home" description="Toolmaker. Building offline-first tools.">
-
-	<!-- Font preloader: prevents flicker during hero animation -->
-	<div class="sr-only" aria-hidden="true" style="opacity: 0; pointer-events: none; position: absolute;">
-		<span style="font-family: 'Geist Pixel';">Square</span>
-		<span style="font-family: 'Geist Pixel Circle';">Circle</span>
-		<span style="font-family: 'Geist Pixel Triangle';">Triangle</span>
-		<span style="font-family: 'Geist Pixel Grid';">Grid</span>
-		<span style="font-family: 'Geist Pixel Line';">Line</span>
-	</div>
-
-	<section class="hero-section" data-motion-chapter>
-		<div class="max-w-5xl mx-auto px-6 pt-10 pb-8 md:pt-14 md:pb-10">
-
-			<div class="flex justify-center md:justify-end mb-4">
-				<p class="section-label section-label--right">Colton Batts &mdash; Fort Worth, TX</p>
+<BaseLayout
+	title="Graphic Design Systems"
+	description="Motion-led campaigns, editorial systems, launch assets, and production-ready digital tools by Colton Batts."
+>
+	<section class="studio-hero hero-section" data-motion-chapter>
+		<div class="studio-hero__copy">
+			<div class="studio-hero__meta" aria-label="Studio metadata">
+				<p class="studio-kicker">Colton Batts / Senior Graphic + Motion Designer</p>
+				<p class="studio-kicker">Campaign / Motion / Editorial Systems</p>
 			</div>
-
-			<div class="relative max-w-4xl mx-auto py-6 md:py-10 mb-6 md:mb-8">
-				<div class="text-center overflow-visible">
-					<h1 class="mb-3">
-						<span class="hero-topline">Production-first designer.</span>
-						<div class="toolmaker-display mt-2 md:mt-3">
-							<span class="toolmaker-display__main">Toolmaker</span>
-						</div>
-					</h1>
-				</div>
+			<h1>I enjoy graphic design systems.</h1>
+			<p>Motion-led campaigns, editorial systems, launch assets, and production-ready digital tools.</p>
+			<div class="studio-hero__actions" aria-label="Primary actions">
+				<a href="#work" class="btn-instrument">View Work</a>
+				<a href="mailto:colton.batts@gmail.com" class="btn-instrument btn-instrument--raw">Email</a>
 			</div>
-
-			<p class="text-base md:text-lg leading-relaxed max-w-2xl text-charcoal mb-6 mx-auto text-center pt-1">
-				10+ years delivering high-volume content for global brands.
-				Now building offline-first software that you actually own.
-			</p>
-
-			<div class="flex flex-wrap gap-4 items-center justify-center mb-6">
-				<a href="/resume/Colton_Batts_Resume.pdf" class="btn-instrument">
-					Resume
-				</a>
-				<a href="mailto:colton.batts@gmail.com" class="btn-instrument--raw btn-instrument">
-					Email
-				</a>
-			</div>
-
-			<div class="trusted-by-strip" aria-label="Select clients">
-				<p class="section-label mb-4 border-0 pb-0 text-charcoal block text-center">Select Clients</p>
-				<div class="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-5 md:gap-y-0 items-center">
-					{trustedByLogos.map((logo) => (
-						<div class="trusted-logo-wrap">
-							<img
-								src={logo.src}
-								alt={logo.name}
-								loading="lazy"
-								decoding="async"
-								class={`trusted-logo-image trusted-logo-image--${logo.key}`}
-							/>
-						</div>
-					))}
-				</div>
+			<div class="studio-hero__scene editorial-collage" aria-label="Editorial portfolio image collage">
+				<div class="editorial-collage__rule editorial-collage__rule--one" aria-hidden="true"></div>
+				<div class="editorial-collage__rule editorial-collage__rule--two" aria-hidden="true"></div>
+				{heroCollage.map((image) => (
+					<figure class={image.className}>
+						<img src={image.src} alt={image.alt} loading="eager" decoding="async" />
+					</figure>
+				))}
+				<p class="editorial-collage__caption">Selected image systems / campaign motion / studio tools</p>
+				<span class="editorial-collage__folio" aria-hidden="true">CB-01</span>
 			</div>
 		</div>
 	</section>
 
-	<!-- Demo Reel -->
-	<section data-motion-chapter>
-		<ReelHero
-			enabled={reel.enabled}
-			videoPath={reel.path}
-			posterPath={reel.poster}
-			label={reel.label}
-			title={reel.title}
-		/>
+	<section class="studio-marquee" aria-label="Selected disciplines" data-motion-chapter>
+		<div class="studio-marquee__row">
+			<span>Motion Systems</span>
+			<span>Campaign Editorial</span>
+			<span>Launch Assets</span>
+			<span>Production Tools</span>
+			<span aria-hidden="true">Motion Systems</span>
+			<span aria-hidden="true">Campaign Editorial</span>
+			<span aria-hidden="true">Launch Assets</span>
+			<span aria-hidden="true">Production Tools</span>
+		</div>
 	</section>
 
-	<section class="max-w-5xl mx-auto px-6 py-16 md:py-22" data-motion-chapter>
-		<div class="flex flex-col md:flex-row md:items-end justify-between mb-10">
-			<div class="flex-1">
-				<p class="section-label section-label--right mb-0 border-0 pb-0">Client Work</p>
-				<h2 class="mt-3">Recent Projects</h2>
-			</div>
-			<a href="/portfolio" class="hidden md:block font-mono text-label uppercase tracking-instrument text-raw hover:text-raw-dark transition-colors">
-				All Projects &rarr;
-			</a>
-		</div>
-
-		<div class="grid gap-8">
-			{clientVideos.map((project) => (
-				<PaintingCard
-					title={project.data.title}
-					medium={project.data.medium}
-					dimensions={project.data.dimensions}
-					year={project.data.year}
-					image={project.data.image}
-					slug={project.slug}
-					featured={project.data.featured}
-					available={project.data.available}
-					series={project.data.series}
-					vimeoId={project.data.vimeoId}
-				/>
+	<section class="studio-proof" aria-label="Select clients" data-motion-chapter>
+		<p class="studio-kicker">Client Proof</p>
+		<div class="studio-proof__logos">
+			{trustedByLogos.map((logo) => (
+				<div class="trusted-logo-wrap studio-proof__logo">
+					<img
+						src={logo.src}
+						alt={logo.name}
+						loading="lazy"
+						decoding="async"
+						class={`trusted-logo-image trusted-logo-image--${logo.key}`}
+					/>
+				</div>
 			))}
 		</div>
-
-		<div class="mt-8 md:hidden">
-			<a href="/portfolio" class="btn-instrument w-full text-center">
-				All Projects &rarr;
-			</a>
-		</div>
 	</section>
 
-	<section class="" data-motion-chapter>
-		<div class="max-w-5xl mx-auto">
-			<ArtSlot slot={artManifest.hero} />
-		</div>
-	</section>
-
-	<section class="bg-manual text-charcoal" data-motion-chapter>
-		<div class="max-w-5xl mx-auto px-6 py-16 md:py-22">
-			<div class="grid md:grid-cols-12 gap-8 md:gap-12">
-
-				<div class="md:col-span-5 md:text-right">
-					<p class="font-mono text-label uppercase tracking-instrument text-charcoal mb-4">
-						Philosophy
-					</p>
-					<h2 class="text-display-sm text-charcoal">Own-Forever<br />Software.</h2>
-				</div>
-
-				<div class="md:col-span-7 md:pt-2">
-					<p class="text-lg md:text-xl leading-relaxed text-charcoal mb-6">
-						Tools that work offline, respect your privacy, and don't require subscriptions.
-						No logins, no ads, no tracking.
-					</p>
-					<p class="text-base leading-relaxed text-charcoal mb-8">
-						Everything is designed to be owned, not rented. Your data stays on your machine.
-						The code is readable. If the internet goes down, the tool still works.
-					</p>
-					<div class="pt-6">
-						<a href="/tools" class="btn-instrument border-charcoal/40 text-charcoal hover:bg-charcoal hover:text-manual">
-							View Tools
-						</a>
-					</div>
-				</div>
-			</div>
-		</div>
-	</section>
-
-	<section class="max-w-5xl mx-auto px-6 py-16 md:py-22" data-motion-chapter>
-
-		<div class="flex flex-col md:flex-row md:items-end justify-between mb-10">
-			<div class="flex-1">
-				<p class="section-label section-label--right mb-0 border-0 pb-0">Software</p>
-				<h2 class="mt-3">Tools</h2>
-			</div>
-			<a href="/tools" class="hidden md:block font-mono text-label uppercase tracking-instrument text-raw hover:text-raw-dark transition-colors">
-				All Tools &rarr;
-			</a>
+	<section id="work" class="studio-section studio-work" data-motion-chapter>
+		<div class="studio-section__header">
+			<p class="studio-kicker">Featured Work</p>
+			<h2>Campaigns, launch systems, and motion assets for teams that ship.</h2>
 		</div>
 
-		<div class="grid gap-6 md:grid-cols-2">
-			{featuredTools.map((tool) => {
-				const toolHref = tool.data.externalUrl || `/tools/${tool.slug}`;
-				return (
+		<div class="studio-work__list">
+			{paintings.map((project, index) => (
 				<a
-					href={toolHref}
-					{...(tool.data.externalUrl ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-					class="block tool-card group"
+					href={`/portfolio/${project.slug}`}
+					class="studio-project"
+					data-reveal
+					style={`--project-index:${index};`}
 				>
-					{pixelThumbSlugs.has(tool.slug) ? (
-						<div class="tool-thumb-pixel">
-							<div class="tool-thumb-pixel__name">{tool.data.name}</div>
-						</div>
-					) : tool.data.heroImage ? (
-						<img
-							src={tool.data.heroImage}
-							alt={tool.data.name}
-							loading="lazy"
-							decoding="async"
-							class="w-full h-auto block"
-						/>
-					) : (
-						<ArtSlot
-							slot={resolveToolSlot(artManifest.tools[tool.slug])}
-						/>
-					)}
+					<div class="studio-project__index">
+						<span>{String(index + 1).padStart(2, '0')}</span>
+						<em>{project.data.series}</em>
+					</div>
+					<div class="studio-project__media">
+						{project.data.vimeoId ? (
+							<div class="studio-project__video">
+								<iframe
+									data-src={`https://player.vimeo.com/video/${project.data.vimeoId}?background=1&autoplay=0&loop=1&muted=1&dnt=1`}
+									allow="autoplay; fullscreen"
+									loading="lazy"
+									title={`${project.data.title} motion sample`}
+								></iframe>
+							</div>
+						) : projectFallbackImages[project.slug] ? (
+							<img
+								src={projectFallbackImages[project.slug]}
+								alt={`${project.data.title} editorial image treatment`}
+								loading="lazy"
+								decoding="async"
+							/>
+						) : (
+							<div class="studio-project__plate" aria-label={`${project.data.title} production plate`}>
+								<span>{String(index + 1).padStart(2, '0')}</span>
+								<strong>{project.data.title}</strong>
+								<em>{project.data.series}</em>
+							</div>
+						)}
+					</div>
+					<div class="studio-project__info">
+						<p class="studio-kicker">Case Study / {String(index + 1).padStart(2, '0')}</p>
+						<h3>{project.data.title}</h3>
+						<dl>
+							<div>
+								<dt>Client</dt>
+								<dd>{project.data.title}</dd>
+							</div>
+							<div>
+								<dt>Role</dt>
+								<dd>{projectRoles[project.slug] || project.data.medium}</dd>
+							</div>
+							<div>
+								<dt>Year</dt>
+								<dd>{project.data.year}</dd>
+							</div>
+							<div>
+								<dt>Medium</dt>
+								<dd>{project.data.dimensions}</dd>
+							</div>
+						</dl>
+					</div>
 				</a>
-				);})}
-		</div>
-
-		<div class="mt-8 md:hidden">
-			<a href="/tools" class="btn-instrument w-full text-center">
-				All Tools &rarr;
-			</a>
+			))}
 		</div>
 	</section>
 
-	<section id="home-motion-moment" class="" data-motion-chapter>
-		<div class="max-w-5xl mx-auto px-6 py-10">
-			<div class="flex flex-col md:flex-row md:items-end justify-between mb-6">
-				<div class="flex-1">
-					<p class="section-label section-label--right mb-0 border-0 pb-0">Interactive</p>
-					<h2 class="mt-3">Motion</h2>
-				</div>
-				<a href="/lab" class="hidden md:block font-mono text-label uppercase tracking-instrument text-raw hover:text-raw-dark transition-colors">
-					Lab &rarr;
-				</a>
-			</div>
-			<CyberHero />
+	<section class="studio-section studio-capabilities" data-motion-chapter>
+		<div class="studio-capabilities__item" data-reveal>
+			<p class="studio-kicker">01</p>
+			<h2>Brand Campaigns</h2>
+			<p>Launch graphics, social systems, retail assets, and high-volume production packages.</p>
+		</div>
+		<div class="studio-capabilities__item" data-reveal>
+			<p class="studio-kicker">02</p>
+			<h2>Motion Design</h2>
+			<p>Kinetic type, editorial rhythm, social cutdowns, animated identity moments, and video systems.</p>
+		</div>
+		<div class="studio-capabilities__item" data-reveal>
+			<p class="studio-kicker">03</p>
+			<h2>Digital Tools</h2>
+			<p>Production-minded interfaces and software experiments built with the same visual discipline.</p>
 		</div>
 	</section>
 
-	<section class="max-w-5xl mx-auto px-6 py-16 md:py-22" data-motion-chapter>
-		<div class="grid md:grid-cols-12 gap-8 md:gap-12">
+	<section class="studio-point" data-motion-chapter>
+		<p class="studio-kicker">Point of View</p>
+		<h2>Systems that survive deadlines.</h2>
+		<p>
+			Design and motion work best when they share one production language: durable assets,
+			clear handoffs, disciplined hierarchy, and files built for real teams.
+		</p>
+	</section>
 
-			<div class="md:col-span-5 md:text-right">
-				<p class="section-label section-label--right">Production</p>
-				<h2 class="mb-6">Editorial &<br />Motion Design</h2>
-				<p class="text-charcoal leading-relaxed mb-8">
-					Before building software, I spent a decade in high-volume video production
-					and editorial design for national brands. That production discipline
-					informs everything I build.
-				</p>
-				<div class="flex flex-wrap gap-4 justify-end">
-					<a href="/resume" class="btn-instrument">
-						Full Resume
-					</a>
-					<a href="/portfolio" class="btn-instrument--raw btn-instrument">
-						Portfolio
-					</a>
-				</div>
-			</div>
-
-			<div class="md:col-span-7 grid gap-4">
-				<div class="section-block section-block--static">
-					<p class="section-label">Capture This &middot; 2021&ndash;Present</p>
-					<h4 class="font-sans font-bold mb-2">Lead Video Editor</h4>
-					<p class="text-sm text-charcoal leading-relaxed">
-						30+ assets for Google &ldquo;Shop With Google&rdquo; campaigns. Under Armour
-						training series. Kate Spade social. 24-hour rough-cut turnarounds.
-					</p>
-				</div>
-				<div class="section-block section-block--static">
-					<p class="section-label">Freedom Powersports &middot; 2015&ndash;2021</p>
-					<h4 class="font-sans font-bold mb-2">Multimedia Designer & Video Lead</h4>
-					<p class="text-sm text-charcoal leading-relaxed">
-						Large-format signage, building wraps, event systems.
-						6 years as primary editor for corporate and promotional media.
-					</p>
-				</div>
-			</div>
+	<section class="studio-section studio-lab" data-motion-chapter>
+		<div class="studio-section__header">
+			<p class="studio-kicker">Motion / Lab</p>
+			<h2>Interactive studies as production evidence.</h2>
+		</div>
+		<div class="studio-lab__grid">
+			{tools.map((tool, index) => (
+				<a href={`/tools/${tool.slug}`} class="studio-lab__item" data-reveal style={`--project-index:${index};`}>
+					<div class="studio-lab__media">
+						{tool.data.heroImage ? (
+							<img src={tool.data.heroImage} alt={`${tool.data.name} interface preview`} loading="lazy" decoding="async" />
+						) : (
+							<div>{tool.data.name}</div>
+						)}
+					</div>
+					<div class="studio-lab__info">
+						<p class="studio-kicker">{tool.data.status} / {tool.data.platform}</p>
+						<h3>{tool.data.name}</h3>
+						<p>{tool.data.oneLiner}</p>
+					</div>
+				</a>
+			))}
 		</div>
 	</section>
 
-	<section class="bg-manual text-charcoal" data-motion-chapter>
-		<div class="max-w-5xl mx-auto px-6 py-16 md:py-22 flex flex-col md:flex-row md:items-center md:justify-between gap-8">
-			<div>
-				<p class="font-mono text-label uppercase tracking-instrument text-charcoal mb-3">
-					Get in touch
-				</p>
-				<h2 class="text-display-sm text-charcoal">Let's build something.</h2>
-			</div>
-			<div class="flex flex-wrap gap-4">
-				<a href="mailto:colton.batts@gmail.com" class="btn-instrument border-charcoal text-charcoal hover:bg-charcoal hover:text-manual">
-					Email
-				</a>
-				<a href="/contact" class="btn-instrument border-raw text-raw hover:bg-raw hover:text-manual">
-					Contact
-				</a>
-			</div>
-		</div>
+	<section class="studio-contact" data-motion-chapter>
+		<p class="studio-kicker">Contact</p>
+		<h2>Campaign system, motion package, launch asset sprint, or production tool.</h2>
+		<a href="mailto:colton.batts@gmail.com" class="btn-instrument">Email Colton</a>
 	</section>
 
+	<script>
+		function initStudioReveals() {
+			const elements = Array.from(document.querySelectorAll<HTMLElement>('[data-reveal]'));
+			if (!elements.length) return;
+
+			const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+			if (reduced) {
+				elements.forEach((element) => {
+					element.classList.add('reveal', 'reveal--visible', 'reveal--instant');
+				});
+				return;
+			}
+
+			const observer = new IntersectionObserver((entries) => {
+				entries.forEach((entry) => {
+					if (!entry.isIntersecting) return;
+					entry.target.classList.add('reveal--visible');
+					observer.unobserve(entry.target);
+				});
+			}, { threshold: 0.18, rootMargin: '0px 0px -12% 0px' });
+
+			elements.forEach((element, index) => {
+				if (element.dataset.studioRevealReady === 'true') return;
+				element.dataset.studioRevealReady = 'true';
+				element.classList.add('reveal');
+				element.style.transitionDelay = `${Math.min(index % 4, 3) * 70}ms`;
+				observer.observe(element);
+			});
+		}
+
+		function initStudioVideos() {
+			const players = document.querySelectorAll<HTMLIFrameElement>('.studio-project__video iframe');
+			if (!players.length) return;
+
+			const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+			if (reduced) return;
+
+			const observer = new IntersectionObserver((entries) => {
+				entries.forEach((entry) => {
+					const iframe = entry.target as HTMLIFrameElement;
+					if (entry.isIntersecting && iframe.dataset.src && !iframe.src) {
+						iframe.src = iframe.dataset.src.replace('autoplay=0', 'autoplay=1');
+					}
+				});
+			}, { threshold: 0.22, rootMargin: '160px 0px' });
+
+			players.forEach((player) => observer.observe(player));
+		}
+
+		initStudioReveals();
+		initStudioVideos();
+		document.addEventListener('astro:page-load', initStudioReveals);
+		document.addEventListener('astro:page-load', initStudioVideos);
+	</script>
 </BaseLayout>
