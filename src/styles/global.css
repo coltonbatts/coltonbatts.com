@@ -2908,6 +2908,7 @@ body {
 	font-family: var(--studio-body);
 }
 
+/* Superseded by EDITORIAL PORTFOLIO FINAL LAYER body::before */
 body::before {
 	content: '';
 	display: block;
@@ -3883,14 +3884,32 @@ body {
 	overflow-x: clip;
 	font-family: var(--editorial-body);
 	background-color: var(--editorial-paper) !important;
+	color: var(--editorial-red) !important;
+}
+
+/*
+ * Fixed parchment layer — replaces background-attachment: fixed on body,
+ * which scrolls incorrectly on iOS Safari and most mobile browsers.
+ */
+body::before {
+	content: "";
+	position: fixed;
+	inset: 0;
+	z-index: -2;
+	display: block;
+	pointer-events: none;
+	opacity: 1;
+	mix-blend-mode: normal;
+	background-color: var(--editorial-paper);
 	background-image:
 		linear-gradient(rgba(241, 230, 210, 0.5), rgba(241, 230, 210, 0.5)),
-		url("/portfolio-element-bg.jpg") !important;
-	background-repeat: no-repeat !important;
-	background-size: max(100vw, 92rem) auto !important;
-	background-position: center 24% !important;
-	background-attachment: fixed !important;
-	color: var(--editorial-red) !important;
+		url("/portfolio-element-bg.jpg");
+	background-repeat: no-repeat;
+	background-size: max(100vw, 92rem) auto;
+	background-position: center 24%;
+	transform: translateZ(0);
+	-webkit-backface-visibility: hidden;
+	backface-visibility: hidden;
 }
 
 body::after {
@@ -4674,12 +4693,6 @@ h6 {
 }
 
 @media (max-width: 980px) {
-	body {
-		background-size: auto 124svh !important;
-		background-position: center top !important;
-		background-attachment: scroll !important;
-	}
-
 	.site-nav {
 		width: min(100% - 2rem, 98rem);
 	}
