@@ -61,28 +61,15 @@ const recipePayload = recipe ? JSON.stringify(recipe) : undefined;
 	{debug && <pre class="rive-player__debug" data-rive-debug-panel aria-hidden="true"></pre>}
 </div>
 
-<script type="module">
+<script>
 	import { initRiveCanvas, cleanupRiveCanvas } from '../../animations/rive';
 
-	const target = document.currentScript?.previousElementSibling;
-
-	const init = () => {
-		if (!(target instanceof HTMLElement)) return;
-		void initRiveCanvas(target);
+	// initRiveCanvas is idempotent (guards on data-rive-init), so initializing
+	// every player on each page-load is safe.
+	const eachPlayer = (fn: (el: HTMLElement) => void) => {
+		document.querySelectorAll<HTMLElement>('[data-rive-player]').forEach(fn);
 	};
 
-	const cleanup = () => {
-		if (!(target instanceof HTMLElement)) return;
-		cleanupRiveCanvas(target);
-	};
-
-	if (document.readyState === 'loading') {
-		document.addEventListener('DOMContentLoaded', init, { once: true });
-	} else {
-		init();
-	}
-
-	document.addEventListener('astro:page-load', init);
-	document.addEventListener('astro:before-swap', cleanup);
-	document.addEventListener('astro:before-preparation', cleanup);
+	document.addEventListener('astro:page-load', () => eachPlayer((el) => void initRiveCanvas(el)));
+	document.addEventListener('astro:before-preparation', () => eachPlayer(cleanupRiveCanvas));
 </script>

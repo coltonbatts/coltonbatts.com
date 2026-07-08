@@ -111,7 +111,6 @@ const {
 		players.forEach((player) => observer.observe(player));
 	}
 
-	// Run on initial load and on Astro page transitions
-	initScrollPlayers();
+	// astro:page-load fires on initial load and after every router swap
 	document.addEventListener('astro:page-load', initScrollPlayers);
 </script>

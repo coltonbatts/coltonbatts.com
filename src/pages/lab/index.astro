@@ -140,7 +140,8 @@ const previewRecipe = resolveRiveRecipe('labCardPreview');
 	</div>
 
 	<script type="module">
-		(() => {
+		// Re-run after every router swap; bails on non-lab pages
+		document.addEventListener('astro:page-load', () => {
 			const root = document.getElementById('lab-motion-grid');
 			if (!(root instanceof HTMLElement)) {
 				return;
@@ -200,7 +201,7 @@ const previewRecipe = resolveRiveRecipe('labCardPreview');
 
 			document.addEventListener('astro:before-preparation', () => {
 				observer.disconnect();
-			});
-		})();
+			}, { once: true });
+		});
 	</script>
 </BaseLayout>

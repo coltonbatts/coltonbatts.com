@@ -1,4 +1,5 @@
 ---
+import { ClientRouter } from 'astro:transitions';
 import { navItems, site } from '../config';
 import '../styles/global.css';
 
@@ -41,6 +42,7 @@ const currentPath = Astro.url.pathname;
 		<meta property="twitter:image" content={new URL('/card.jpg', Astro.url)} />
 
 		<title>{fullTitle}</title>
+		<ClientRouter />
 	</head>
 
 	<body class="antialiased min-h-screen flex flex-col">
@@ -110,14 +112,14 @@ const currentPath = Astro.url.pathname;
 				</div>
 			</div>
 		</footer>
-		<!-- Mobile menu — standalone, no dependencies, runs immediately -->
+		<!-- Mobile menu — delegated to document so it survives view-transition swaps -->
 		<script is:inline>
-			(function () {
+			document.addEventListener('click', function (e) {
 				var toggle = document.getElementById('mobile-menu-toggle');
 				var menu = document.getElementById('mobile-menu');
 				if (!toggle || !menu) return;
 
-				toggle.addEventListener('click', function () {
+				if (toggle.contains(e.target)) {
 					var isOpen = !menu.hasAttribute('hidden');
 					if (isOpen) {
 						menu.setAttribute('hidden', '');
@@ -126,53 +128,54 @@ const currentPath = Astro.url.pathname;
 					}
 					toggle.classList.toggle('is-open');
 					toggle.setAttribute('aria-expanded', String(!isOpen));
-				});
-
-				menu.addEventListener('click', function (e) {
-					if (e.target.tagName === 'A') {
-						menu.setAttribute('hidden', '');
-						toggle.classList.remove('is-open');
-						toggle.setAttribute('aria-expanded', 'false');
-					}
-				});
-			})();
+				} else if (menu.contains(e.target) && e.target.tagName === 'A') {
+					menu.setAttribute('hidden', '');
+					toggle.classList.remove('is-open');
+					toggle.setAttribute('aria-expanded', 'false');
+				}
+			});
 		</script>
 
-		<!-- Scroll reveals — IntersectionObserver only, no animation loop -->
+		<!-- Scroll reveals — IntersectionObserver only, re-run after each router swap -->
 		<script>
-			const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+			function initReveals() {
+				const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-			const chapters = document.querySelectorAll<HTMLElement>('[data-motion-chapter]');
-			if (reduced) {
-				chapters.forEach((el) => el.classList.add('motion-chapter-in'));
-			} else if (chapters.length) {
-				const chapterObserver = new IntersectionObserver((entries) => {
-					entries.forEach((entry) => {
-						if (!entry.isIntersecting) return;
-						entry.target.classList.add('motion-chapter-in');
-						chapterObserver.unobserve(entry.target);
+				const chapters = document.querySelectorAll<HTMLElement>('[data-motion-chapter]');
+				if (reduced) {
+					chapters.forEach((el) => el.classList.add('motion-chapter-in'));
+				} else if (chapters.length) {
+					const chapterObserver = new IntersectionObserver((entries) => {
+						entries.forEach((entry) => {
+							if (!entry.isIntersecting) return;
+							entry.target.classList.add('motion-chapter-in');
+							chapterObserver.unobserve(entry.target);
+						});
+					}, { threshold: 0.2, rootMargin: '0px 0px -12% 0px' });
+					chapters.forEach((el) => chapterObserver.observe(el));
+				}
+
+				const reveals = document.querySelectorAll<HTMLElement>('[data-reveal]');
+				if (reduced) {
+					reveals.forEach((el) => el.classList.add('reveal', 'reveal--visible', 'reveal--instant'));
+				} else if (reveals.length) {
+					const revealObserver = new IntersectionObserver((entries) => {
+						entries.forEach((entry) => {
+							if (!entry.isIntersecting) return;
+							entry.target.classList.add('reveal--visible');
+							revealObserver.unobserve(entry.target);
+						});
+					}, { threshold: 0.18, rootMargin: '0px 0px -12% 0px' });
+					reveals.forEach((el, index) => {
+						el.classList.add('reveal');
+						el.style.transitionDelay = `${Math.min(index % 4, 3) * 70}ms`;
+						revealObserver.observe(el);
 					});
-				}, { threshold: 0.2, rootMargin: '0px 0px -12% 0px' });
-				chapters.forEach((el) => chapterObserver.observe(el));
+				}
 			}
 
-			const reveals = document.querySelectorAll<HTMLElement>('[data-reveal]');
-			if (reduced) {
-				reveals.forEach((el) => el.classList.add('reveal', 'reveal--visible', 'reveal--instant'));
-			} else if (reveals.length) {
-				const revealObserver = new IntersectionObserver((entries) => {
-					entries.forEach((entry) => {
-						if (!entry.isIntersecting) return;
-						entry.target.classList.add('reveal--visible');
-						revealObserver.unobserve(entry.target);
-					});
-				}, { threshold: 0.18, rootMargin: '0px 0px -12% 0px' });
-				reveals.forEach((el, index) => {
-					el.classList.add('reveal');
-					el.style.transitionDelay = `${Math.min(index % 4, 3) * 70}ms`;
-					revealObserver.observe(el);
-				});
-			}
+			// astro:page-load fires on initial load and after every ClientRouter swap
+			document.addEventListener('astro:page-load', initReveals);
 		</script>
 	</body>
 </html>

@@ -122,6 +122,20 @@ if (fs.existsSync(fullPath)) {
 	</div>
 
 	<script type="module">
+		let riveInstance = null;
+
+		// Cleanup on Astro navigation (registered once, module scripts don't re-run)
+		document.addEventListener('astro:before-preparation', () => {
+			if (riveInstance) {
+				riveInstance.cleanup();
+				riveInstance = null;
+			}
+		});
+
+		// Re-run setup after every router swap; bail on non-lab pages
+		document.addEventListener('astro:page-load', setupRiveLab);
+
+		function setupRiveLab() {
 		const viewport = document.getElementById('rive-viewport');
 		const controlsEl = document.getElementById('rive-controls');
 		const statusEl = document.getElementById('rive-status');
@@ -129,9 +143,7 @@ if (fs.existsSync(fullPath)) {
 		const smSelect = document.getElementById('sm-select');
 		const copyBtn = document.getElementById('copy-snippet');
 
-		if (!viewport || !controlsEl || !snippetEl) {
-			throw new Error('Missing required DOM elements');
-		}
+		if (!viewport || !controlsEl || !snippetEl) return;
 
 		const src = viewport.dataset.src;
 		const fileName = viewport.dataset.file;
@@ -142,7 +154,6 @@ if (fs.existsSync(fullPath)) {
 
 		// Track current input values for snippet generation
 		let currentInputs = {};
-		let riveInstance = null;
 
 		// Create a persistent canvas
 		const canvas = document.createElement('canvas');
@@ -346,15 +357,8 @@ if (fs.existsSync(fullPath)) {
 			});
 		}
 
-		// Cleanup on Astro navigation
-		document.addEventListener('astro:before-preparation', () => {
-			if (riveInstance) {
-				riveInstance.cleanup();
-				riveInstance = null;
-			}
-		});
-
 		// Go
 		init(smName);
+		}
 	</script>
 </BaseLayout>

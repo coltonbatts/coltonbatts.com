@@ -265,18 +265,22 @@ const projectFallbackImages: Record<string, ImageMetadata> = {
 	</section>
 
 	<script>
-		const players = document.querySelectorAll<HTMLIFrameElement>('.studio-project__video iframe');
-		const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-		if (players.length && !reduced) {
-			const observer = new IntersectionObserver((entries) => {
-				entries.forEach((entry) => {
-					const iframe = entry.target as HTMLIFrameElement;
-					if (entry.isIntersecting && iframe.dataset.src && !iframe.src) {
-						iframe.src = iframe.dataset.src.replace('autoplay=0', 'autoplay=1');
-					}
-				});
-			}, { threshold: 0.22, rootMargin: '160px 0px' });
-			players.forEach((player) => observer.observe(player));
+		function initHomeVideos() {
+			const players = document.querySelectorAll<HTMLIFrameElement>('.studio-project__video iframe');
+			const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+			if (players.length && !reduced) {
+				const observer = new IntersectionObserver((entries) => {
+					entries.forEach((entry) => {
+						const iframe = entry.target as HTMLIFrameElement;
+						if (entry.isIntersecting && iframe.dataset.src && !iframe.src) {
+							iframe.src = iframe.dataset.src.replace('autoplay=0', 'autoplay=1');
+						}
+					});
+				}, { threshold: 0.22, rootMargin: '160px 0px' });
+				players.forEach((player) => observer.observe(player));
+			}
 		}
+
+		document.addEventListener('astro:page-load', initHomeVideos);
 	</script>
 </BaseLayout>
