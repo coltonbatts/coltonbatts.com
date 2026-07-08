@@ -5,15 +5,25 @@
 
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+import heroLead from '../assets/hero/hero-01.png';
+import heroMovement from '../assets/hero/movement-study.png';
+import underArmourFallback from '../assets/hero/under-armour-fallback.png';
+import logoNuuly from '../assets/brands/nuuly.png';
+import logoKateSpade from '../assets/brands/kate-spade.png';
+import logoUnderArmour from '../assets/brands/under-armour.png';
+import logoGoogleShopping from '../assets/brands/google-shopping.png';
 
 const paintings = (await getCollection('paintings')).sort((a, b) => a.data.order - b.data.order);
 const tools = (await getCollection('tools')).slice(0, 2);
 
 const trustedByLogos = [
-	{ key: 'nuuly', name: 'Nuuly', src: '/brands/nuuly.png' },
-	{ key: 'kate-spade', name: 'Kate Spade', src: '/brands/kate-spade.png' },
-	{ key: 'under-armour', name: 'Under Armour', src: '/brands/under-armour.png' },
-	{ key: 'google-shopping', name: 'Google Shopping', src: '/brands/google-shopping.png' }
+	{ key: 'nuuly', name: 'Nuuly', src: logoNuuly },
+	{ key: 'kate-spade', name: 'Kate Spade', src: logoKateSpade },
+	{ key: 'under-armour', name: 'Under Armour', src: logoUnderArmour },
+	{ key: 'google-shopping', name: 'Google Shopping', src: logoGoogleShopping }
 ];
 
 const projectRoles: Record<string, string> = {
@@ -25,25 +35,26 @@ const projectRoles: Record<string, string> = {
 
 const heroCollage = [
 	{
-		src: '/art/hero/hero-01.png',
+		src: heroLead,
 		alt: 'Printed campaign image treatment with figures and red editorial texture',
 		className: 'editorial-collage__image editorial-collage__image--lead'
 	},
 	{
-		src: '/art/hero/coltonbatts_woman_performing_modern_dance._in_the_style_of_expe_a80a583a-3c5c-44f2-b6a9-c71c18d2e1eb.png',
+		src: heroMovement,
 		alt: 'Movement study cropped as a red duotone editorial image',
 		className: 'editorial-collage__image editorial-collage__image--tall'
 	},
 	{
-		src: '/art/motion/motion-poster.png',
+		// motion-poster.png was a byte-identical copy of hero-01.png
+		src: heroLead,
 		alt: 'Motion poster artwork treated like a printed studio proof',
 		className: 'editorial-collage__image editorial-collage__image--wide'
 	}
 ];
 
-const projectFallbackImages: Record<string, string> = {
-	'under-armour': '/art/hero/coltonbatts_peaople_reaching_for_nike_jordan_shoes_that_are_a_80a3e748-7622-4221-972d-f94f53599962_2.png',
-	'kate-spade': '/art/hero/coltonbatts_woman_performing_modern_dance._in_the_style_of_expe_a80a583a-3c5c-44f2-b6a9-c71c18d2e1eb.png'
+const projectFallbackImages: Record<string, ImageMetadata> = {
+	'under-armour': underArmourFallback,
+	'kate-spade': heroMovement
 };
 ---
 
@@ -66,9 +77,16 @@ const projectFallbackImages: Record<string, string> = {
 			<div class="studio-hero__scene editorial-collage" aria-label="Editorial portfolio image collage">
 				<div class="editorial-collage__rule editorial-collage__rule--one" aria-hidden="true"></div>
 				<div class="editorial-collage__rule editorial-collage__rule--two" aria-hidden="true"></div>
-				{heroCollage.map((image) => (
+				{heroCollage.map((image, index) => (
 					<figure class={image.className}>
-						<img src={image.src} alt={image.alt} loading="eager" decoding="async" />
+						<Image
+							src={image.src}
+							alt={image.alt}
+							widths={[480, 800, 1200]}
+							sizes="(max-width: 768px) 90vw, 40vw"
+							loading={index === 0 ? 'eager' : 'lazy'}
+							decoding="async"
+						/>
 					</figure>
 				))}
 				<p class="editorial-collage__caption">Selected image systems / campaign motion / studio tools</p>
@@ -95,9 +113,11 @@ const projectFallbackImages: Record<string, string> = {
 		<div class="studio-proof__logos">
 			{trustedByLogos.map((logo) => (
 				<div class="trusted-logo-wrap studio-proof__logo">
-					<img
+					<Image
 						src={logo.src}
 						alt={logo.name}
+						widths={[200, 400]}
+						sizes="200px"
 						loading="lazy"
 						decoding="async"
 						class={`trusted-logo-image trusted-logo-image--${logo.key}`}
@@ -136,9 +156,11 @@ const projectFallbackImages: Record<string, string> = {
 								></iframe>
 							</div>
 						) : projectFallbackImages[project.slug] ? (
-							<img
+							<Image
 								src={projectFallbackImages[project.slug]}
 								alt={`${project.data.title} editorial image treatment`}
+								widths={[480, 800, 1200]}
+								sizes="(max-width: 768px) 90vw, 60vw"
 								loading="lazy"
 								decoding="async"
 							/>
@@ -214,7 +236,14 @@ const projectFallbackImages: Record<string, string> = {
 				<a href={`/tools/${tool.slug}`} class="studio-lab__item" data-reveal style={`--project-index:${index};`}>
 					<div class="studio-lab__media">
 						{tool.data.heroImage ? (
-							<img src={tool.data.heroImage} alt={`${tool.data.name} interface preview`} loading="lazy" decoding="async" />
+							<Image
+								src={tool.data.heroImage}
+								alt={`${tool.data.name} interface preview`}
+								widths={[480, 800]}
+								sizes="(max-width: 768px) 90vw, 45vw"
+								loading="lazy"
+								decoding="async"
+							/>
 						) : (
 							<div>{tool.data.name}</div>
 						)}
@@ -236,42 +265,9 @@ const projectFallbackImages: Record<string, string> = {
 	</section>
 
 	<script>
-		function initStudioReveals() {
-			const elements = Array.from(document.querySelectorAll<HTMLElement>('[data-reveal]'));
-			if (!elements.length) return;
-
-			const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-			if (reduced) {
-				elements.forEach((element) => {
-					element.classList.add('reveal', 'reveal--visible', 'reveal--instant');
-				});
-				return;
-			}
-
-			const observer = new IntersectionObserver((entries) => {
-				entries.forEach((entry) => {
-					if (!entry.isIntersecting) return;
-					entry.target.classList.add('reveal--visible');
-					observer.unobserve(entry.target);
-				});
-			}, { threshold: 0.18, rootMargin: '0px 0px -12% 0px' });
-
-			elements.forEach((element, index) => {
-				if (element.dataset.studioRevealReady === 'true') return;
-				element.dataset.studioRevealReady = 'true';
-				element.classList.add('reveal');
-				element.style.transitionDelay = `${Math.min(index % 4, 3) * 70}ms`;
-				observer.observe(element);
-			});
-		}
-
-		function initStudioVideos() {
-			const players = document.querySelectorAll<HTMLIFrameElement>('.studio-project__video iframe');
-			if (!players.length) return;
-
-			const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-			if (reduced) return;
-
+		const players = document.querySelectorAll<HTMLIFrameElement>('.studio-project__video iframe');
+		const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+		if (players.length && !reduced) {
 			const observer = new IntersectionObserver((entries) => {
 				entries.forEach((entry) => {
 					const iframe = entry.target as HTMLIFrameElement;
@@ -280,13 +276,7 @@ const projectFallbackImages: Record<string, string> = {
 					}
 				});
 			}, { threshold: 0.22, rootMargin: '160px 0px' });
-
 			players.forEach((player) => observer.observe(player));
 		}
-
-		initStudioReveals();
-		initStudioVideos();
-		document.addEventListener('astro:page-load', initStudioReveals);
-		document.addEventListener('astro:page-load', initStudioVideos);
 	</script>
 </BaseLayout>

@@ -1,7 +1,5 @@
 ---
 import { navItems, site } from '../config';
-import RivePlayer from '../components/interactive/RivePlayer.astro';
-import { resolveRiveRecipe } from '../content/rive-recipes';
 import '../styles/global.css';
 
 interface Props {
@@ -12,11 +10,10 @@ interface Props {
 const { title = site.title, description = site.description } = Astro.props;
 const fullTitle = title === site.title ? title : `${title} | ${site.title}`;
 const currentPath = Astro.url.pathname;
-const routeRecipe = resolveRiveRecipe('routePunctuation');
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" data-motion-intensity="editorial">
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="description" content={description} />
@@ -34,14 +31,14 @@ const routeRecipe = resolveRiveRecipe('routePunctuation');
 		<meta property="og:url" content={Astro.url} />
 		<meta property="og:title" content={fullTitle} />
 		<meta property="og:description" content={description} />
-		<meta property="og:image" content={new URL('/card.png', Astro.url)} />
+		<meta property="og:image" content={new URL('/card.jpg', Astro.url)} />
 
 		<!-- Twitter -->
 		<meta property="twitter:card" content="summary_large_image" />
 		<meta property="twitter:url" content={Astro.url} />
 		<meta property="twitter:title" content={fullTitle} />
 		<meta property="twitter:description" content={description} />
-		<meta property="twitter:image" content={new URL('/card.png', Astro.url)} />
+		<meta property="twitter:image" content={new URL('/card.jpg', Astro.url)} />
 
 		<title>{fullTitle}</title>
 	</head>
@@ -90,21 +87,6 @@ const routeRecipe = resolveRiveRecipe('routePunctuation');
 		<main class="flex-1">
 			<slot />
 		</main>
-
-		<div id="motion-intro-curtain" aria-hidden="true">
-			<span></span>
-			<span></span>
-		</div>
-		<div id="route-kinetic-punctuation" aria-hidden="true"></div>
-		<RivePlayer
-			id="route-punctuation-player"
-			class="route-punctuation-rive"
-			src="/rive/ui/button.riv"
-			recipe={routeRecipe}
-			respectReducedMotion={false}
-		>
-			<div slot="fallback" class="route-punctuation-fallback" aria-hidden="true"></div>
-		</RivePlayer>
 
 		<footer class="site-footer">
 			<div class="site-footer__grid">
@@ -156,34 +138,41 @@ const routeRecipe = resolveRiveRecipe('routePunctuation');
 			})();
 		</script>
 
-		<!-- Animations — module bundle, loaded async -->
-		<script type="module">
-			import { initLotties, cleanupLotties } from '../animations/lottie';
-			import { initReveal, cleanupReveal } from '../animations/reveal';
-			import { initMotionOS, notifyRouteTransitionEnd, notifyRouteTransitionStart } from '../motion/orchestrator';
+		<!-- Scroll reveals — IntersectionObserver only, no animation loop -->
+		<script>
+			const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-			const initMotion = () => {
-				initMotionOS();
-				initLotties();
-				initReveal();
-				notifyRouteTransitionEnd();
-			};
-
-			const cleanupMotion = () => {
-				notifyRouteTransitionStart();
-				cleanupLotties();
-				cleanupReveal();
-			};
-
-			if (document.readyState === 'loading') {
-				document.addEventListener('DOMContentLoaded', initMotion, { once: true });
-			} else {
-				initMotion();
+			const chapters = document.querySelectorAll<HTMLElement>('[data-motion-chapter]');
+			if (reduced) {
+				chapters.forEach((el) => el.classList.add('motion-chapter-in'));
+			} else if (chapters.length) {
+				const chapterObserver = new IntersectionObserver((entries) => {
+					entries.forEach((entry) => {
+						if (!entry.isIntersecting) return;
+						entry.target.classList.add('motion-chapter-in');
+						chapterObserver.unobserve(entry.target);
+					});
+				}, { threshold: 0.2, rootMargin: '0px 0px -12% 0px' });
+				chapters.forEach((el) => chapterObserver.observe(el));
 			}
 
-			document.addEventListener('astro:page-load', initMotion);
-			document.addEventListener('astro:before-swap', cleanupMotion);
-			document.addEventListener('astro:before-preparation', cleanupMotion);
+			const reveals = document.querySelectorAll<HTMLElement>('[data-reveal]');
+			if (reduced) {
+				reveals.forEach((el) => el.classList.add('reveal', 'reveal--visible', 'reveal--instant'));
+			} else if (reveals.length) {
+				const revealObserver = new IntersectionObserver((entries) => {
+					entries.forEach((entry) => {
+						if (!entry.isIntersecting) return;
+						entry.target.classList.add('reveal--visible');
+						revealObserver.unobserve(entry.target);
+					});
+				}, { threshold: 0.18, rootMargin: '0px 0px -12% 0px' });
+				reveals.forEach((el, index) => {
+					el.classList.add('reveal');
+					el.style.transitionDelay = `${Math.min(index % 4, 3) * 70}ms`;
+					revealObserver.observe(el);
+				});
+			}
 		</script>
 	</body>
 </html>

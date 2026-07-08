@@ -3,7 +3,6 @@ title: "Shop with Google"
 medium: "Lead Video Editor"
 dimensions: "30+ Campaign Assets"
 year: 2023
-image: "/art/paintings/shop-with-google.png"
 featured: true
 series: "Commercial Production"
 available: false

@@ -1,6 +1,6 @@
 export const site = {
 	title: 'Colton Batts',
-	description: 'Toolmaker. Building offline-first tools.',
+	description: 'Graphic design, motion, and production systems.',
 	url: 'https://coltonbatts.com',
 };
 

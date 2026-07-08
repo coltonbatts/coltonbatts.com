@@ -3,7 +3,6 @@ title: "Nuuly"
 medium: "Video Editor & Motion Designer"
 dimensions: "Social & Digital Content"
 year: 2023
-image: "/art/paintings/nuuly.png"
 featured: true
 series: "Fashion & Lifestyle"
 available: false

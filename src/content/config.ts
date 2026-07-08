@@ -7,7 +7,7 @@ import { defineCollection, z } from 'astro:content';
 
 const toolsCollection = defineCollection({
 	type: 'content',
-	schema: z.object({
+	schema: ({ image }) => z.object({
 		name: z.string(),
 		oneLiner: z.string(),
 		status: z.enum(['active', 'beta', 'archived']),
@@ -19,7 +19,7 @@ const toolsCollection = defineCollection({
 		// When set, the tool card links go directly to the external URL
 		// and /tools/colorwizard becomes a redirect page.
 		externalUrl: z.string().url().optional(),
-		heroImage: z.string().optional(),
+		heroImage: image().optional(),
 		bullets: z.array(z.string()),
 
 		/* Deep-dive fields — optional for backward compat */
@@ -45,7 +45,7 @@ const toolsCollection = defineCollection({
  *   medium      — Role (e.g. "Lead Video Editor")
  *   dimensions  — Scope (e.g. "30+ Campaign Assets")
  *   year        — Year of engagement
- *   image       — Path to the image in /public/art/paintings/
+ *   image       — (unused — retained for schema compat)
  *   featured    — Whether to highlight in the gallery layout
  *   series      — Category for grouping
  *   available   — (unused — retained for schema compat)
@@ -60,7 +60,7 @@ const paintingsCollection = defineCollection({
 		medium: z.string(),
 		dimensions: z.string(),
 		year: z.number(),
-		image: z.string(),
+		image: z.string().optional(),
 		featured: z.boolean().default(false),
 		series: z.string().optional(),
 		available: z.boolean().default(false),

@@ -3,7 +3,6 @@ title: "Kate Spade"
 medium: "Video Editor"
 dimensions: "Social Content"
 year: 2023
-image: "/art/paintings/kate-spade.png"
 featured: true
 series: "Fashion & Lifestyle"
 available: false

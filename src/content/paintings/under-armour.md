@@ -3,7 +3,6 @@ title: "Under Armour"
 medium: "Video Editor"
 dimensions: "Training Series & Brand Content"
 year: 2022
-image: "/art/paintings/under-armour.png"
 featured: true
 series: "Commercial Production"
 available: false
