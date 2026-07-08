@@ -1,13 +1,13 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { getCollection } from 'astro:content';
+import { getCollection, render } from 'astro:content';
 
 export async function getStaticPaths() {
 	const paintings = await getCollection('paintings');
 	paintings.sort((a, b) => a.data.order - b.data.order);
 
 	return paintings.map((painting, index) => ({
-		params: { slug: painting.slug },
+		params: { slug: painting.id },
 		props: {
 			painting,
 			prev: index > 0 ? paintings[index - 1] : null,
@@ -17,7 +17,7 @@ export async function getStaticPaths() {
 }
 
 const { painting, prev, next } = Astro.props;
-const { Content } = await painting.render();
+const { Content } = await render(painting);
 const { title, medium, dimensions, year, image, series, available, vimeoId } = painting.data;
 ---
 
@@ -115,7 +115,7 @@ const { title, medium, dimensions, year, image, series, available, vimeoId } = p
 			<div class="flex items-center justify-between">
 				{prev ? (
 					<a
-						href={`/portfolio/${prev.slug}`}
+						href={`/portfolio/${prev.id}`}
 						class="font-mono text-label uppercase tracking-instrument text-charcoal/40 hover:text-charcoal transition-colors"
 					>
 						&larr; {prev.data.title}
@@ -125,7 +125,7 @@ const { title, medium, dimensions, year, image, series, available, vimeoId } = p
 				)}
 				{next ? (
 					<a
-						href={`/portfolio/${next.slug}`}
+						href={`/portfolio/${next.id}`}
 						class="font-mono text-label uppercase tracking-instrument text-charcoal/40 hover:text-charcoal transition-colors text-right"
 					>
 						{next.data.title} &rarr;

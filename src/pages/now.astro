@@ -1,6 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { getCollection } from 'astro:content';
+import { getCollection, render } from 'astro:content';
 
 const entries = await getCollection('now');
 
@@ -10,7 +10,7 @@ const sortedEntries = entries.sort((a, b) =>
 
 const timeline = await Promise.all(
 	sortedEntries.map(async (entry) => {
-		const { Content } = await entry.render();
+		const { Content } = await render(entry);
 		const raw = entry.data.date;
 		const date = raw instanceof Date ? raw : new Date(raw);
 

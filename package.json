@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@rive-app/canvas": "^2.34.3",
-    "astro": "^5.17.1"
+    "astro": "^7.0.7"
   },
   "devDependencies": {
     "@astrojs/tailwind": "^6.0.2",

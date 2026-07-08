@@ -136,7 +136,7 @@ const projectFallbackImages: Record<string, ImageMetadata> = {
 		<div class="studio-work__list">
 			{paintings.map((project, index) => (
 				<a
-					href={`/portfolio/${project.slug}`}
+					href={`/portfolio/${project.id}`}
 					class="studio-project"
 					data-reveal
 					style={`--project-index:${index};`}
@@ -155,9 +155,9 @@ const projectFallbackImages: Record<string, ImageMetadata> = {
 									title={`${project.data.title} motion sample`}
 								></iframe>
 							</div>
-						) : projectFallbackImages[project.slug] ? (
+						) : projectFallbackImages[project.id] ? (
 							<Image
-								src={projectFallbackImages[project.slug]}
+								src={projectFallbackImages[project.id]}
 								alt={`${project.data.title} editorial image treatment`}
 								widths={[480, 800, 1200]}
 								sizes="(max-width: 768px) 90vw, 60vw"
@@ -182,7 +182,7 @@ const projectFallbackImages: Record<string, ImageMetadata> = {
 							</div>
 							<div>
 								<dt>Role</dt>
-								<dd>{projectRoles[project.slug] || project.data.medium}</dd>
+								<dd>{projectRoles[project.id] || project.data.medium}</dd>
 							</div>
 							<div>
 								<dt>Year</dt>
@@ -233,7 +233,7 @@ const projectFallbackImages: Record<string, ImageMetadata> = {
 		</div>
 		<div class="studio-lab__grid">
 			{tools.map((tool, index) => (
-				<a href={`/tools/${tool.slug}`} class="studio-lab__item" data-reveal style={`--project-index:${index};`}>
+				<a href={`/tools/${tool.id}`} class="studio-lab__item" data-reveal style={`--project-index:${index};`}>
 					<div class="studio-lab__media">
 						{tool.data.heroImage ? (
 							<Image

@@ -1,7 +1,7 @@
 ---
 
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { getCollection } from 'astro:content';
+import { getCollection, render } from 'astro:content';
 
 export async function getStaticPaths() {
 	const tools = await getCollection('tools');
@@ -11,7 +11,7 @@ export async function getStaticPaths() {
 	renderableTools.sort((a, b) => statusOrder[a.data.status] - statusOrder[b.data.status]);
 
 	return renderableTools.map((tool, index) => ({
-		params: { slug: tool.slug },
+		params: { slug: tool.id },
 		props: {
 			tool,
 			prev: index > 0 ? renderableTools[index - 1] : null,
@@ -21,7 +21,7 @@ export async function getStaticPaths() {
 }
 
 const { tool, prev, next } = Astro.props;
-const { Content } = await tool.render();
+const { Content } = await render(tool);
 const {
 	name, oneLiner, status, platform, version, lastUpdated,
 	techStack, repoUrl, ownershipType, hardware, links, bullets, heroImage,
@@ -212,7 +212,7 @@ const {
 			<div class="flex items-center justify-between">
 				{prev ? (
 					<a
-						href={`/tools/${prev.slug}`}
+						href={`/tools/${prev.id}`}
 						class="font-mono text-label uppercase tracking-instrument text-charcoal/40 hover:text-charcoal transition-colors"
 					>
 						&larr; {prev.data.name}
@@ -222,7 +222,7 @@ const {
 				)}
 				{next ? (
 					<a
-						href={`/tools/${next.slug}`}
+						href={`/tools/${next.id}`}
 						class="font-mono text-label uppercase tracking-instrument text-charcoal/40 hover:text-charcoal transition-colors text-right"
 					>
 						{next.data.name} &rarr;

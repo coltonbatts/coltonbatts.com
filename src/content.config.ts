@@ -1,4 +1,5 @@
 import { defineCollection, z } from 'astro:content';
+import { glob } from 'astro/loaders';
 
 /* -----------------------------------------------------------
  * TOOLS COLLECTION
@@ -6,7 +7,7 @@ import { defineCollection, z } from 'astro:content';
  * ----------------------------------------------------------- */
 
 const toolsCollection = defineCollection({
-	type: 'content',
+	loader: glob({ pattern: '**/[^_]*.md', base: './src/content/tools' }),
 	schema: ({ image }) => z.object({
 		name: z.string(),
 		oneLiner: z.string(),
@@ -54,7 +55,7 @@ const toolsCollection = defineCollection({
  * ----------------------------------------------------------- */
 
 const paintingsCollection = defineCollection({
-	type: 'content',
+	loader: glob({ pattern: '**/[^_]*.md', base: './src/content/paintings' }),
 	schema: z.object({
 		title: z.string(),
 		medium: z.string(),
@@ -70,7 +71,7 @@ const paintingsCollection = defineCollection({
 });
 
 const nowCollection = defineCollection({
-	type: 'content',
+	loader: glob({ pattern: '**/[^_]*.md', base: './src/content/now' }),
 	schema: z.object({
 		title: z.string().optional(),
 		date: z.coerce.date(),
