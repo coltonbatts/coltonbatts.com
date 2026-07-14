@@ -1,8 +1,4 @@
 ---
-/**
- * index.astro — Homepage
- */
-
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
 import { Image } from 'astro:assets';
@@ -12,7 +8,7 @@ import heroLead from '../assets/hero/hero-01.png';
 import heroMovement from '../assets/hero/movement-study.png';
 import underArmourFallback from '../assets/hero/under-armour-fallback.png';
 
-const paintings = (await getCollection('paintings')).sort((a, b) => a.data.order - b.data.order);
+const projects = (await getCollection('paintings')).sort((a, b) => a.data.order - b.data.order);
 const tools = (await getCollection('tools')).slice(0, 2);
 
 const projectRoles: Record<string, string> = {
@@ -32,118 +28,128 @@ const projectFallbackImages: Record<string, ImageMetadata> = {
 	title="Filmmaker, Designer & Creative Technologist"
 	description="Selected films, design systems, and independent digital tools by Colton Batts."
 >
-	<section class="exhibition-hero" data-motion-chapter>
-		<div class="exhibition-hero__masthead">
-			<p class="studio-kicker">Portfolio / Volume I</p>
-			<p class="exhibition-hero__intro">Independent practice across moving image, graphic systems, and software—built with care in Chicago.</p>
-			<h1>Colton<br />Batts</h1>
-			<p class="exhibition-hero__roles"><span>Filmmaker</span><span>Designer</span><span>Creative Technologist</span></p>
+	<section class="monograph-hero" data-motion-chapter>
+		<div class="monograph-hero__meta">
+			<p class="studio-kicker">Independent practice / Chicago</p>
+			<p class="studio-kicker">Film · Design · Technology / 2016—2026</p>
 		</div>
-		<figure class="exhibition-hero__image" data-parallax>
-			<Image src={heroLead} alt="Figures walking through a dark landscape, rendered in deep olive and rust" widths={[960, 1440, 1920]} sizes="100vw" loading="eager" decoding="async" />
-			<figcaption><span>Fig. 01</span><span>Movement / memory / repetition</span><span>Studio image, 2026</span></figcaption>
+
+		<h1><span>Colton</span><span>Batts</span></h1>
+
+		<div class="monograph-hero__statement">
+			<p>Images with consequence.<br />Systems with a point of view.</p>
+			<div class="edition-seal" aria-hidden="true"><span>CB</span><small>VOL. 01</small></div>
+		</div>
+
+		<figure class="reliquary-image" data-parallax>
+			<span class="reliquary-image__corner reliquary-image__corner--tl" aria-hidden="true"></span>
+			<span class="reliquary-image__corner reliquary-image__corner--tr" aria-hidden="true"></span>
+			<span class="reliquary-image__corner reliquary-image__corner--bl" aria-hidden="true"></span>
+			<span class="reliquary-image__corner reliquary-image__corner--br" aria-hidden="true"></span>
+			<Image
+				src={heroLead}
+				alt="Figures walking through a dark landscape, rendered in deep black and vermilion"
+				widths={[960, 1440, 1920]}
+				sizes="100vw"
+				loading="eager"
+				decoding="async"
+			/>
+			<figcaption><span>Study No. 01</span><span>Movement / memory / repetition</span><span>Chicago, 2026</span></figcaption>
 		</figure>
+
+		<div class="practice-ribbon" aria-label="Creative disciplines">
+			<span>Film</span><span>Design</span><span>Code</span>
+		</div>
 	</section>
 
-	<section id="work" class="work-index" data-motion-chapter>
-		<header class="section-heading">
-			<p class="studio-kicker">Selected Works / 2022—2026</p>
-			<h2>Work for screens,<br /><em>systems for people.</em></h2>
-			<p>Commercial films, editorial campaigns, and designed tools. Each project begins with the same question: what is essential?</p>
-		</header>
+	<section id="work" class="edition-intro" data-motion-chapter>
+		<p class="studio-kicker">Selected work / Four studies</p>
+		<h2>Selected<br /><em>work</em></h2>
+		<p>Commercial film, motion systems, and visual identities made to remain legible long after the launch.</p>
+	</section>
 
-		<div class="work-index__list">
-			{paintings.map((project, index) => (
-				<a
-					href={`/portfolio/${project.id}`}
-					class="work-entry"
-					data-reveal
-					style={`--project-index:${index};`}
-				>
-					<div class="work-entry__media">
-						{project.data.vimeoId ? (
-							<div class="work-entry__video">
-								<iframe
-									data-src={`https://player.vimeo.com/video/${project.data.vimeoId}?background=1&autoplay=0&loop=1&muted=1&dnt=1`}
-									allow="autoplay; fullscreen"
-									loading="lazy"
-									title={`${project.data.title} motion sample`}
-								></iframe>
-							</div>
-						) : projectFallbackImages[project.id] ? (
-							<Image
-								src={projectFallbackImages[project.id]}
-								alt={`${project.data.title} editorial image treatment`}
-								widths={[480, 800, 1200]}
-								sizes="(max-width: 768px) 90vw, 60vw"
+	<section class="project-editions" aria-label="Selected projects">
+		{projects.map((project, index) => (
+			<a href={`/portfolio/${project.id}`} class="project-edition" data-reveal>
+				<header class="project-edition__head">
+					<p class="project-edition__number">{String(index + 1).padStart(2, '0')}</p>
+					<h3>{project.data.title}</h3>
+					<p>{projectRoles[project.id] || project.data.medium}<br />{project.data.dimensions} · {project.data.year}</p>
+					<span aria-hidden="true">↘</span>
+				</header>
+
+				<div class="project-edition__media">
+					{project.data.vimeoId ? (
+						<div class="project-edition__video">
+							<iframe
+								data-src={`https://player.vimeo.com/video/${project.data.vimeoId}?background=1&autoplay=0&loop=1&muted=1&dnt=1`}
+								allow="autoplay; fullscreen"
 								loading="lazy"
-								decoding="async"
-							/>
-						) : (
-							<div class="work-entry__plate" aria-label={`${project.data.title} production plate`}>
-								<span>Archive / {String(index + 1).padStart(2, '0')}</span>
-								<strong>{project.data.title}</strong>
-							</div>
-						)}
-					</div>
-					<div class="work-entry__info">
-						<p class="work-entry__number">{String(index + 1).padStart(2, '0')}</p>
-						<h3>{project.data.title}</h3>
-						<p>{projectRoles[project.id] || project.data.medium}<br />{project.data.dimensions} / {project.data.year}</p>
-						<span class="work-entry__link">View case study ↗</span>
-					</div>
-				</a>
-			))}
-		</div>
+								title={`${project.data.title} motion sample`}
+							></iframe>
+						</div>
+					) : projectFallbackImages[project.id] ? (
+						<Image
+							src={projectFallbackImages[project.id]}
+							alt={`${project.data.title} editorial image treatment`}
+							widths={[720, 1200, 1600]}
+							sizes="100vw"
+							loading="lazy"
+							decoding="async"
+						/>
+					) : (
+						<div class="project-edition__plate">
+							<span>Archive / {String(index + 1).padStart(2, '0')}</span>
+							<strong>{project.data.title}</strong>
+						</div>
+					)}
+				</div>
+			</a>
+		))}
 	</section>
 
-	<section class="practice-statement" data-motion-chapter>
-		<div class="practice-statement__aside">
-			<p class="studio-kicker">Practice / No. 03</p>
-			<Image src={heroMovement} alt="Figure in a white shirt with a red beam crossing their eyes" widths={[400, 720]} sizes="(max-width: 768px) 80vw, 28vw" loading="lazy" decoding="async" />
+	<section class="dark-relic" data-motion-chapter>
+		<div class="dark-relic__copy">
+			<p class="studio-kicker">The practice / 03 disciplines</p>
+			<h2>Image.<br />Sequence.<br /><em>System.</em></h2>
+			<p>I move between filmmaking, graphic design, and software because the most interesting work rarely stays inside one medium.</p>
 		</div>
-		<div class="practice-statement__text">
-			<p class="studio-kicker">A point of view</p>
-			<h2>Craft is not a finish.<br /><em>It is the method.</em></h2>
-			<p>I work between filmmaking, graphic design, and creative technology—building visual languages that hold up under real conditions. Clear enough for a team. Distinct enough to be remembered.</p>
-		</div>
-	</section>
 
-	<section class="capability-index" data-motion-chapter>
-		<header>
-			<p class="studio-kicker">Disciplines</p>
-			<h2>One practice.<br />Three lenses.</h2>
-		</header>
-		<ol>
+		<figure class="dark-relic__portrait">
+			<div class="dark-relic__frame" aria-hidden="true"></div>
+			<Image
+				src={heroMovement}
+				alt="Figure in a white shirt with a vermilion beam crossing their eyes"
+				widths={[480, 720, 960]}
+				sizes="(max-width: 700px) 90vw, 42vw"
+				loading="lazy"
+				decoding="async"
+			/>
+			<figcaption>Everything is material / everything is edited</figcaption>
+		</figure>
+
+		<ol class="discipline-ledger">
 			<li><span>01</span><h3>Film & Motion</h3><p>Editorial, campaign film, kinetic type, and motion systems.</p></li>
-			<li><span>02</span><h3>Design Systems</h3><p>Art direction, identity, launch graphics, and production frameworks.</p></li>
-			<li><span>03</span><h3>Creative Technology</h3><p>Purpose-built software and interfaces for people who make things.</p></li>
+			<li><span>02</span><h3>Design</h3><p>Art direction, identity, launch graphics, and production frameworks.</p></li>
+			<li><span>03</span><h3>Technology</h3><p>Purpose-built software and interfaces for people who make things.</p></li>
 		</ol>
 	</section>
 
-	<section class="studio-lab" data-motion-chapter>
-		<div class="section-heading section-heading--compact">
-			<p class="studio-kicker">Independent Tools / Field Notes</p>
-			<h2>Tools made<br /><em>for the studio.</em></h2>
-		</div>
-		<div class="studio-lab__grid">
+	<section class="tool-editions" data-motion-chapter>
+		<header class="tool-editions__intro">
+			<p class="studio-kicker">Independent software / Field instruments</p>
+			<h2>Tools for<br /><em>the work.</em></h2>
+		</header>
+
+		<div class="tool-editions__list">
 			{tools.map((tool, index) => (
-				<a href={tool.data.externalUrl || `/tools/${tool.id}`} class="studio-lab__item" data-reveal style={`--project-index:${index};`}>
-					<div class="studio-lab__media">
+				<a href={tool.data.externalUrl || `/tools/${tool.id}`} class="tool-edition" data-reveal>
+					<div class="tool-edition__media">
 						{tool.data.heroImage ? (
-							<Image
-								src={tool.data.heroImage}
-								alt={`${tool.data.name} interface preview`}
-								widths={[480, 800]}
-								sizes="(max-width: 768px) 90vw, 45vw"
-								loading="lazy"
-								decoding="async"
-							/>
-						) : (
-							<div>{tool.data.name}</div>
-						)}
+							<Image src={tool.data.heroImage} alt={`${tool.data.name} interface`} widths={[560, 900]} sizes="(max-width: 700px) 100vw, 45vw" loading="lazy" decoding="async" />
+						) : <div>{tool.data.name}</div>}
 					</div>
-					<div class="studio-lab__info">
+					<div class="tool-edition__text">
 						<p class="studio-kicker">{String(index + 1).padStart(2, '0')} / {tool.data.status} / {tool.data.platform}</p>
 						<h3>{tool.data.name}</h3>
 						<p>{tool.data.oneLiner}</p>
@@ -153,32 +159,31 @@ const projectFallbackImages: Record<string, ImageMetadata> = {
 		</div>
 	</section>
 
-	<section class="client-index" data-motion-chapter>
-		<p class="studio-kicker">Selected Clients</p>
-		<p><span>Google</span><span>Nuuly</span><span>Under Armour</span><span>Kate Spade</span></p>
+	<section class="client-ledger" data-motion-chapter>
+		<p class="studio-kicker">Selected clients / 2022—2026</p>
+		<div><span>Google <sup>01</sup></span><span>Nuuly <sup>02</sup></span><span>Under Armour <sup>03</sup></span><span>Kate Spade <sup>04</sup></span></div>
 	</section>
 
-	<section class="studio-contact" data-motion-chapter>
-		<p class="studio-kicker">Open for selected projects / 2026</p>
-		<h2>Have something<br /><em>worth making?</em></h2>
+	<section class="closing-poster" data-motion-chapter>
+		<p class="studio-kicker">New business / Selected collaborations</p>
+		<h2>Make something<br /><em>worth keeping.</em></h2>
 		<a href="mailto:colton.batts@gmail.com">Start a conversation <span>↗</span></a>
 	</section>
 
 	<script>
 		function initHomeVideos() {
-			const players = document.querySelectorAll<HTMLIFrameElement>('.work-entry__video iframe');
+			const players = document.querySelectorAll<HTMLIFrameElement>('.project-edition__video iframe');
 			const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-			if (players.length && !reduced) {
-				const observer = new IntersectionObserver((entries) => {
-					entries.forEach((entry) => {
-						const iframe = entry.target as HTMLIFrameElement;
-						if (entry.isIntersecting && iframe.dataset.src && !iframe.src) {
-							iframe.src = iframe.dataset.src.replace('autoplay=0', 'autoplay=1');
-						}
-					});
-				}, { threshold: 0.22, rootMargin: '160px 0px' });
-				players.forEach((player) => observer.observe(player));
-			}
+			if (!players.length || reduced) return;
+			const observer = new IntersectionObserver((entries) => {
+				entries.forEach((entry) => {
+					const iframe = entry.target as HTMLIFrameElement;
+					if (entry.isIntersecting && iframe.dataset.src && !iframe.src) {
+						iframe.src = iframe.dataset.src.replace('autoplay=0', 'autoplay=1');
+					}
+				});
+			}, { threshold: 0.22, rootMargin: '160px 0px' });
+			players.forEach((player) => observer.observe(player));
 		}
 
 		document.addEventListener('astro:page-load', initHomeVideos);
