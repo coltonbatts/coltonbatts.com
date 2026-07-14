@@ -2,6 +2,7 @@
 import { ClientRouter } from 'astro:transitions';
 import { navItems, site } from '../config';
 import '../styles/global.css';
+import '../styles/editorial.css';
 
 interface Props {
 	title?: string;
@@ -46,16 +47,18 @@ const currentPath = Astro.url.pathname;
 	</head>
 
 	<body class="antialiased min-h-screen flex flex-col">
+		<a class="skip-link" href="#main-content">Skip to content</a>
 
 		<header class="site-header">
 			<nav class="site-nav" aria-label="Primary navigation">
-				<a href="/" class="site-logo" aria-label="Colton Batts home">
-					<span>CB</span>
+				<a href="/" class="site-logo" aria-label="Colton Batts — home">
+					<span class="site-logo__name">Colton Batts</span>
+					<span class="site-logo__role">Studio / Chicago</span>
 				</a>
 
 				<p class="site-nav__date" aria-label="Studio date">
-					<span>Independent Studio</span>
-					<span>{new Date().toISOString().split('T')[0].replace(/-/g, '.')}</span>
+					<span>Film · Design · Technology</span>
+					<span>Est. 2016</span>
 				</p>
 
 				<button
@@ -69,15 +72,15 @@ const currentPath = Astro.url.pathname;
 					<span></span>
 				</button>
 
-				<div id="mobile-menu" class="site-menu" hidden>
+				<div id="mobile-menu" class="site-menu">
 					<ul>
-						{navItems.map((item) => (
+						{navItems.map((item, index) => (
 							<li>
 								<a
 									href={item.href}
 									aria-current={(currentPath === item.href || (item.href !== '/' && currentPath.startsWith(item.href))) ? 'page' : undefined}
 								>
-									{item.label}
+									<span>{String(index + 1).padStart(2, '0')}</span>{item.label}
 								</a>
 							</li>
 						))}
@@ -86,19 +89,18 @@ const currentPath = Astro.url.pathname;
 			</nav>
 		</header>
 
-		<main class="flex-1">
+		<main id="main-content" class="flex-1">
 			<slot />
 		</main>
 
 		<footer class="site-footer">
 			<div class="site-footer__grid">
-				<p class="site-footer__mark">CB</p>
-				<div>
-					<p class="studio-kicker">Studio</p>
-					<p>Colton Batts<br />Graphic Design / Motion / Production Systems</p>
+				<div class="site-footer__intro">
+					<p class="studio-kicker">Colophon / 2026</p>
+					<p class="site-footer__mark">Make it clear.<br /><em>Make it last.</em></p>
 				</div>
 				<div>
-					<p class="studio-kicker">Navigate</p>
+					<p class="studio-kicker">Index</p>
 					<ul>
 						{navItems.map((item) => (
 							<li><a href={item.href}>{item.label}</a></li>
@@ -106,9 +108,9 @@ const currentPath = Astro.url.pathname;
 					</ul>
 				</div>
 				<div>
-					<p class="studio-kicker">Contact</p>
-					<a href="mailto:colton.batts@gmail.com">colton.batts@gmail.com</a>
-					<p>&copy; {new Date().getFullYear()}</p>
+					<p class="studio-kicker">Correspondence</p>
+					<a class="site-footer__email" href="mailto:colton.batts@gmail.com">colton.batts@gmail.com</a>
+					<p>Available for select collaborations<br />&copy; {new Date().getFullYear()} Colton Batts</p>
 				</div>
 			</div>
 		</footer>
@@ -120,16 +122,12 @@ const currentPath = Astro.url.pathname;
 				if (!toggle || !menu) return;
 
 				if (toggle.contains(e.target)) {
-					var isOpen = !menu.hasAttribute('hidden');
-					if (isOpen) {
-						menu.setAttribute('hidden', '');
-					} else {
-						menu.removeAttribute('hidden');
-					}
-					toggle.classList.toggle('is-open');
+					var isOpen = toggle.getAttribute('aria-expanded') === 'true';
+					toggle.classList.toggle('is-open', !isOpen);
+					menu.classList.toggle('is-open', !isOpen);
 					toggle.setAttribute('aria-expanded', String(!isOpen));
 				} else if (menu.contains(e.target) && e.target.tagName === 'A') {
-					menu.setAttribute('hidden', '');
+					menu.classList.remove('is-open');
 					toggle.classList.remove('is-open');
 					toggle.setAttribute('aria-expanded', 'false');
 				}
@@ -174,8 +172,27 @@ const currentPath = Astro.url.pathname;
 				}
 			}
 
+			function initParallax() {
+				const target = document.querySelector<HTMLElement>('[data-parallax]');
+				if (!target || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+				let frame = 0;
+				const update = () => {
+					const rect = target.getBoundingClientRect();
+					const progress = Math.max(-1, Math.min(1, (window.innerHeight - rect.top) / (window.innerHeight + rect.height)));
+					target.style.setProperty('--parallax-y', `${(progress * -40).toFixed(1)}px`);
+					frame = 0;
+				};
+				const onScroll = () => { if (!frame) frame = requestAnimationFrame(update); };
+				update();
+				window.addEventListener('scroll', onScroll, { passive: true });
+				document.addEventListener('astro:before-preparation', () => window.removeEventListener('scroll', onScroll), { once: true });
+			}
+
 			// astro:page-load fires on initial load and after every ClientRouter swap
-			document.addEventListener('astro:page-load', initReveals);
+			document.addEventListener('astro:page-load', () => {
+				initReveals();
+				initParallax();
+			});
 		</script>
 	</body>
 </html>

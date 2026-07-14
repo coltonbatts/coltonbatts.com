@@ -4,7 +4,6 @@ import { getCollection } from 'astro:content';
 import { Image } from 'astro:assets';
 
 const tools = await getCollection('tools');
-const pixelThumbSlugs = new Set(['colorwizard', 'magpie']);
 tools.sort((a, b) => {
 	const statusOrder = { active: 0, beta: 1, archived: 2 };
 	return statusOrder[a.data.status] - statusOrder[b.data.status];
@@ -12,58 +11,43 @@ tools.sort((a, b) => {
 ---
 
 <BaseLayout title="Tools" description="Offline-first tools you actually own.">
-	<section class="max-w-5xl mx-auto px-6 py-12 md:py-22">
+	<section class="page-hero page-hero--olive" data-motion-chapter>
+		<p class="studio-kicker">Independent software / {String(tools.length).padStart(2, '0')} releases</p>
+		<h1>Useful<br /><em>objects.</em></h1>
+		<p>Small, serious tools for artists and craftspeople. Local-first, intentionally designed, and made to be owned.</p>
+	</section>
 
-		<div class="mb-10">
-			<h1>Tools</h1>
-		</div>
-
-		<div class="grid gap-6 md:grid-cols-2">
-			{tools.map((tool) => {
+	<section class="tool-archive">
+		{tools.map((tool, index) => {
 				const toolHref = tool.data.externalUrl || `/tools/${tool.id}`;
 				return (
 				<a
 					href={toolHref}
 					{...(tool.data.externalUrl ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-					class="block tool-card group"
+					class="tool-entry"
 				>
-					{pixelThumbSlugs.has(tool.id) ? (
-						<div class="tool-thumb-pixel">
-							<div class="tool-thumb-pixel__name">{tool.data.name}</div>
-						</div>
-					) : tool.data.heroImage ? (
+					<div class="tool-entry__meta">
+						<span>{String(index + 1).padStart(2, '0')}</span>
+						<span>{tool.data.status} / {tool.data.platform}</span>
+					</div>
+					{tool.data.heroImage ? (
 						<Image
 							src={tool.data.heroImage}
-							alt={`${tool.data.name} nameplate`}
-							widths={[480, 800]}
-							sizes="(max-width: 768px) 90vw, 45vw"
+							alt={`${tool.data.name} interface`}
+							widths={[720, 1200, 1600]}
+							sizes="(max-width: 768px) 100vw, 70vw"
 							loading="lazy"
 							decoding="async"
-							class="w-full h-auto block"
 						/>
 					) : (
-						<div class="p-6 md:p-8">
-							<div class="flex items-center gap-3 mb-4">
-								<span class:list={[
-									'status-badge',
-									{
-										'status-badge--active': tool.data.status === 'active',
-										'status-badge--beta': tool.data.status === 'beta',
-										'status-badge--archived': tool.data.status === 'archived',
-									},
-								]}>
-									{tool.data.status}
-								</span>
-								<span class="font-mono text-meta uppercase text-charcoal/40">
-									{tool.data.platform}
-								</span>
-							</div>
-							<h3 class="mb-3 group-hover:text-raw transition-colors">{tool.data.name}</h3>
-							<p class="text-charcoal/65 leading-relaxed">{tool.data.oneLiner}</p>
-						</div>
+						<div class="tool-entry__plate">{tool.data.name}</div>
 					)}
+					<div class="tool-entry__info">
+						<h2>{tool.data.name}</h2>
+						<p>{tool.data.oneLiner}</p>
+						<span>View project ↗</span>
+					</div>
 				</a>
 				);})}
-		</div>
 	</section>
 </BaseLayout>

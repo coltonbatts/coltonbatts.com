@@ -11,20 +11,9 @@ import type { ImageMetadata } from 'astro';
 import heroLead from '../assets/hero/hero-01.png';
 import heroMovement from '../assets/hero/movement-study.png';
 import underArmourFallback from '../assets/hero/under-armour-fallback.png';
-import logoNuuly from '../assets/brands/nuuly.png';
-import logoKateSpade from '../assets/brands/kate-spade.png';
-import logoUnderArmour from '../assets/brands/under-armour.png';
-import logoGoogleShopping from '../assets/brands/google-shopping.png';
 
 const paintings = (await getCollection('paintings')).sort((a, b) => a.data.order - b.data.order);
 const tools = (await getCollection('tools')).slice(0, 2);
-
-const trustedByLogos = [
-	{ key: 'nuuly', name: 'Nuuly', src: logoNuuly },
-	{ key: 'kate-spade', name: 'Kate Spade', src: logoKateSpade },
-	{ key: 'under-armour', name: 'Under Armour', src: logoUnderArmour },
-	{ key: 'google-shopping', name: 'Google Shopping', src: logoGoogleShopping }
-];
 
 const projectRoles: Record<string, string> = {
 	'shop-with-google': 'Lead Video Editor',
@@ -33,25 +22,6 @@ const projectRoles: Record<string, string> = {
 	'kate-spade': 'Video Editor'
 };
 
-const heroCollage = [
-	{
-		src: heroLead,
-		alt: 'Printed campaign image treatment with figures and red editorial texture',
-		className: 'editorial-collage__image editorial-collage__image--lead'
-	},
-	{
-		src: heroMovement,
-		alt: 'Movement study cropped as a red duotone editorial image',
-		className: 'editorial-collage__image editorial-collage__image--tall'
-	},
-	{
-		// motion-poster.png was a byte-identical copy of hero-01.png
-		src: heroLead,
-		alt: 'Motion poster artwork treated like a printed studio proof',
-		className: 'editorial-collage__image editorial-collage__image--wide'
-	}
-];
-
 const projectFallbackImages: Record<string, ImageMetadata> = {
 	'under-armour': underArmourFallback,
 	'kate-spade': heroMovement
@@ -59,95 +29,40 @@ const projectFallbackImages: Record<string, ImageMetadata> = {
 ---
 
 <BaseLayout
-	title="Graphic Design Systems"
-	description="Motion-led campaigns, editorial systems, launch assets, and production-ready digital tools by Colton Batts."
+	title="Filmmaker, Designer & Creative Technologist"
+	description="Selected films, design systems, and independent digital tools by Colton Batts."
 >
-	<section class="studio-hero hero-section" data-motion-chapter>
-		<div class="studio-hero__copy">
-			<div class="studio-hero__meta" aria-label="Studio metadata">
-				<p class="studio-kicker">Colton Batts / Senior Graphic + Motion Designer</p>
-				<p class="studio-kicker">Campaign / Motion / Editorial Systems</p>
-			</div>
-			<h1>I enjoy graphic design systems.</h1>
-			<p>Motion-led campaigns, editorial systems, launch assets, and production-ready digital tools.</p>
-			<div class="studio-hero__actions" aria-label="Primary actions">
-				<a href="#work" class="btn-instrument">View Work</a>
-				<a href="mailto:colton.batts@gmail.com" class="btn-instrument btn-instrument--raw">Email</a>
-			</div>
-			<div class="studio-hero__scene editorial-collage" aria-label="Editorial portfolio image collage">
-				<div class="editorial-collage__rule editorial-collage__rule--one" aria-hidden="true"></div>
-				<div class="editorial-collage__rule editorial-collage__rule--two" aria-hidden="true"></div>
-				{heroCollage.map((image, index) => (
-					<figure class={image.className}>
-						<Image
-							src={image.src}
-							alt={image.alt}
-							widths={[480, 800, 1200]}
-							sizes="(max-width: 768px) 90vw, 40vw"
-							loading={index === 0 ? 'eager' : 'lazy'}
-							decoding="async"
-						/>
-					</figure>
-				))}
-				<p class="editorial-collage__caption">Selected image systems / campaign motion / studio tools</p>
-				<span class="editorial-collage__folio" aria-hidden="true">CB-01</span>
-			</div>
+	<section class="exhibition-hero" data-motion-chapter>
+		<div class="exhibition-hero__masthead">
+			<p class="studio-kicker">Portfolio / Volume I</p>
+			<p class="exhibition-hero__intro">Independent practice across moving image, graphic systems, and software—built with care in Chicago.</p>
+			<h1>Colton<br />Batts</h1>
+			<p class="exhibition-hero__roles"><span>Filmmaker</span><span>Designer</span><span>Creative Technologist</span></p>
 		</div>
+		<figure class="exhibition-hero__image" data-parallax>
+			<Image src={heroLead} alt="Figures walking through a dark landscape, rendered in deep olive and rust" widths={[960, 1440, 1920]} sizes="100vw" loading="eager" decoding="async" />
+			<figcaption><span>Fig. 01</span><span>Movement / memory / repetition</span><span>Studio image, 2026</span></figcaption>
+		</figure>
 	</section>
 
-	<section class="studio-marquee" aria-label="Selected disciplines" data-motion-chapter>
-		<div class="studio-marquee__row">
-			<span>Motion Systems</span>
-			<span>Campaign Editorial</span>
-			<span>Launch Assets</span>
-			<span>Production Tools</span>
-			<span aria-hidden="true">Motion Systems</span>
-			<span aria-hidden="true">Campaign Editorial</span>
-			<span aria-hidden="true">Launch Assets</span>
-			<span aria-hidden="true">Production Tools</span>
-		</div>
-	</section>
+	<section id="work" class="work-index" data-motion-chapter>
+		<header class="section-heading">
+			<p class="studio-kicker">Selected Works / 2022—2026</p>
+			<h2>Work for screens,<br /><em>systems for people.</em></h2>
+			<p>Commercial films, editorial campaigns, and designed tools. Each project begins with the same question: what is essential?</p>
+		</header>
 
-	<section class="studio-proof" aria-label="Select clients" data-motion-chapter>
-		<p class="studio-kicker">Client Proof</p>
-		<div class="studio-proof__logos">
-			{trustedByLogos.map((logo) => (
-				<div class="trusted-logo-wrap studio-proof__logo">
-					<Image
-						src={logo.src}
-						alt={logo.name}
-						widths={[200, 400]}
-						sizes="200px"
-						loading="lazy"
-						decoding="async"
-						class={`trusted-logo-image trusted-logo-image--${logo.key}`}
-					/>
-				</div>
-			))}
-		</div>
-	</section>
-
-	<section id="work" class="studio-section studio-work" data-motion-chapter>
-		<div class="studio-section__header">
-			<p class="studio-kicker">Featured Work</p>
-			<h2>Campaigns, launch systems, and motion assets for teams that ship.</h2>
-		</div>
-
-		<div class="studio-work__list">
+		<div class="work-index__list">
 			{paintings.map((project, index) => (
 				<a
 					href={`/portfolio/${project.id}`}
-					class="studio-project"
+					class="work-entry"
 					data-reveal
 					style={`--project-index:${index};`}
 				>
-					<div class="studio-project__index">
-						<span>{String(index + 1).padStart(2, '0')}</span>
-						<em>{project.data.series}</em>
-					</div>
-					<div class="studio-project__media">
+					<div class="work-entry__media">
 						{project.data.vimeoId ? (
-							<div class="studio-project__video">
+							<div class="work-entry__video">
 								<iframe
 									data-src={`https://player.vimeo.com/video/${project.data.vimeoId}?background=1&autoplay=0&loop=1&muted=1&dnt=1`}
 									allow="autoplay; fullscreen"
@@ -165,75 +80,55 @@ const projectFallbackImages: Record<string, ImageMetadata> = {
 								decoding="async"
 							/>
 						) : (
-							<div class="studio-project__plate" aria-label={`${project.data.title} production plate`}>
-								<span>{String(index + 1).padStart(2, '0')}</span>
+							<div class="work-entry__plate" aria-label={`${project.data.title} production plate`}>
+								<span>Archive / {String(index + 1).padStart(2, '0')}</span>
 								<strong>{project.data.title}</strong>
-								<em>{project.data.series}</em>
 							</div>
 						)}
 					</div>
-					<div class="studio-project__info">
-						<p class="studio-kicker">Case Study / {String(index + 1).padStart(2, '0')}</p>
+					<div class="work-entry__info">
+						<p class="work-entry__number">{String(index + 1).padStart(2, '0')}</p>
 						<h3>{project.data.title}</h3>
-						<dl>
-							<div>
-								<dt>Client</dt>
-								<dd>{project.data.title}</dd>
-							</div>
-							<div>
-								<dt>Role</dt>
-								<dd>{projectRoles[project.id] || project.data.medium}</dd>
-							</div>
-							<div>
-								<dt>Year</dt>
-								<dd>{project.data.year}</dd>
-							</div>
-							<div>
-								<dt>Medium</dt>
-								<dd>{project.data.dimensions}</dd>
-							</div>
-						</dl>
+						<p>{projectRoles[project.id] || project.data.medium}<br />{project.data.dimensions} / {project.data.year}</p>
+						<span class="work-entry__link">View case study ↗</span>
 					</div>
 				</a>
 			))}
 		</div>
 	</section>
 
-	<section class="studio-section studio-capabilities" data-motion-chapter>
-		<div class="studio-capabilities__item" data-reveal>
-			<p class="studio-kicker">01</p>
-			<h2>Brand Campaigns</h2>
-			<p>Launch graphics, social systems, retail assets, and high-volume production packages.</p>
+	<section class="practice-statement" data-motion-chapter>
+		<div class="practice-statement__aside">
+			<p class="studio-kicker">Practice / No. 03</p>
+			<Image src={heroMovement} alt="Figure in a white shirt with a red beam crossing their eyes" widths={[400, 720]} sizes="(max-width: 768px) 80vw, 28vw" loading="lazy" decoding="async" />
 		</div>
-		<div class="studio-capabilities__item" data-reveal>
-			<p class="studio-kicker">02</p>
-			<h2>Motion Design</h2>
-			<p>Kinetic type, editorial rhythm, social cutdowns, animated identity moments, and video systems.</p>
-		</div>
-		<div class="studio-capabilities__item" data-reveal>
-			<p class="studio-kicker">03</p>
-			<h2>Digital Tools</h2>
-			<p>Production-minded interfaces and software experiments built with the same visual discipline.</p>
+		<div class="practice-statement__text">
+			<p class="studio-kicker">A point of view</p>
+			<h2>Craft is not a finish.<br /><em>It is the method.</em></h2>
+			<p>I work between filmmaking, graphic design, and creative technology—building visual languages that hold up under real conditions. Clear enough for a team. Distinct enough to be remembered.</p>
 		</div>
 	</section>
 
-	<section class="studio-point" data-motion-chapter>
-		<p class="studio-kicker">Point of View</p>
-		<h2>Systems that survive deadlines.</h2>
-		<p>
-			Design and motion work best when they share one production language: durable assets,
-			clear handoffs, disciplined hierarchy, and files built for real teams.
-		</p>
+	<section class="capability-index" data-motion-chapter>
+		<header>
+			<p class="studio-kicker">Disciplines</p>
+			<h2>One practice.<br />Three lenses.</h2>
+		</header>
+		<ol>
+			<li><span>01</span><h3>Film & Motion</h3><p>Editorial, campaign film, kinetic type, and motion systems.</p></li>
+			<li><span>02</span><h3>Design Systems</h3><p>Art direction, identity, launch graphics, and production frameworks.</p></li>
+			<li><span>03</span><h3>Creative Technology</h3><p>Purpose-built software and interfaces for people who make things.</p></li>
+		</ol>
 	</section>
 
-	<section class="studio-section studio-lab" data-motion-chapter>
-		<div class="studio-section__header">
-			<p class="studio-kicker">Motion / Lab</p>
-			<h2>Interactive studies as production evidence.</h2>
+	<section class="studio-lab" data-motion-chapter>
+		<div class="section-heading section-heading--compact">
+			<p class="studio-kicker">Independent Tools / Field Notes</p>
+			<h2>Tools made<br /><em>for the studio.</em></h2>
 		</div>
 		<div class="studio-lab__grid">
 			{tools.map((tool, index) => (
-				<a href={`/tools/${tool.id}`} class="studio-lab__item" data-reveal style={`--project-index:${index};`}>
+				<a href={tool.data.externalUrl || `/tools/${tool.id}`} class="studio-lab__item" data-reveal style={`--project-index:${index};`}>
 					<div class="studio-lab__media">
 						{tool.data.heroImage ? (
 							<Image
@@ -249,7 +144,7 @@ const projectFallbackImages: Record<string, ImageMetadata> = {
 						)}
 					</div>
 					<div class="studio-lab__info">
-						<p class="studio-kicker">{tool.data.status} / {tool.data.platform}</p>
+						<p class="studio-kicker">{String(index + 1).padStart(2, '0')} / {tool.data.status} / {tool.data.platform}</p>
 						<h3>{tool.data.name}</h3>
 						<p>{tool.data.oneLiner}</p>
 					</div>
@@ -258,15 +153,20 @@ const projectFallbackImages: Record<string, ImageMetadata> = {
 		</div>
 	</section>
 
+	<section class="client-index" data-motion-chapter>
+		<p class="studio-kicker">Selected Clients</p>
+		<p><span>Google</span><span>Nuuly</span><span>Under Armour</span><span>Kate Spade</span></p>
+	</section>
+
 	<section class="studio-contact" data-motion-chapter>
-		<p class="studio-kicker">Contact</p>
-		<h2>Campaign system, motion package, launch asset sprint, or production tool.</h2>
-		<a href="mailto:colton.batts@gmail.com" class="btn-instrument">Email Colton</a>
+		<p class="studio-kicker">Open for selected projects / 2026</p>
+		<h2>Have something<br /><em>worth making?</em></h2>
+		<a href="mailto:colton.batts@gmail.com">Start a conversation <span>↗</span></a>
 	</section>
 
 	<script>
 		function initHomeVideos() {
-			const players = document.querySelectorAll<HTMLIFrameElement>('.studio-project__video iframe');
+			const players = document.querySelectorAll<HTMLIFrameElement>('.work-entry__video iframe');
 			const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 			if (players.length && !reduced) {
 				const observer = new IntersectionObserver((entries) => {
