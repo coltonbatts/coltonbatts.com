@@ -18,9 +18,11 @@ const projectRoles: Record<string, string> = {
 	'kate-spade': 'Video Editor'
 };
 
+// Kate Spade intentionally has no fallback image: movement-study.png is
+// reserved for the dark-relic portrait, so the card renders as the
+// typographic archive plate until the project gets its own vimeoId.
 const projectFallbackImages: Record<string, ImageMetadata> = {
-	'under-armour': underArmourFallback,
-	'kate-spade': heroMovement
+	'under-armour': underArmourFallback
 };
 ---
 

@@ -75,22 +75,96 @@ body {
   line-height: 1.45;
 }
 
+/*
+ * Paper system — three fixed plates over every surface.
+ * body::before is the fiber tooth (seamless mirrored felt-paper tile,
+ * multiply): reads on bone and vermilion but dies on carbon.
+ * body::after is the press grain (SVG fractal noise, soft-light):
+ * carries the midtones. html::after is the same grain on screen at
+ * low opacity: soft-light and multiply both flatline near black, so
+ * this is what keeps the tooth alive on the carbon sections.
+ */
 body::before {
   position: fixed;
   inset: 0;
   z-index: 100;
   pointer-events: none;
   content: '';
-  background-image: url('/paper-texture.jpg');
+  background-image: url('/paper-tile.jpg');
   background-repeat: repeat;
-  background-size: 800px auto;
-  opacity: .045;
+  background-size: 640px auto;
+  opacity: .18;
   mix-blend-mode: multiply;
 }
 
-body::after { display: none !important; }
+body::after {
+  display: block !important;
+  position: fixed;
+  inset: 0;
+  z-index: 101;
+  pointer-events: none;
+  content: '';
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 260px 260px;
+  opacity: .5;
+  mix-blend-mode: soft-light;
+}
+
+html::after {
+  position: fixed;
+  inset: 0;
+  z-index: 102;
+  pointer-events: none;
+  content: '';
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-position: 130px 90px;
+  background-size: 260px 260px;
+  opacity: .06;
+  mix-blend-mode: screen;
+}
 
 ::selection { background: var(--vermilion); color: var(--paper); }
+
+/*
+ * Letterpress — display type pressed into the stock.
+ * Light stock (vermilion ink on bone): a pale lip below the glyph and a
+ * whisper of darkening at the top edge read as impression. Reversed
+ * plates (paper ink on carbon/vermilion): a soft dark under-shadow sets
+ * the letterform into the surface instead of floating on it.
+ * Em-based offsets so the effect scales with the type.
+ */
+.monograph-hero h1,
+.monograph-hero__statement > p,
+.edition-intro h2,
+.project-edition__head h3,
+.practice-ribbon span,
+.tool-editions__intro h2,
+.tool-edition__text h3,
+.client-ledger span,
+.site-footer__mark,
+.page-hero h1,
+.painting-card__title,
+.tool-entry__info h2 {
+  text-shadow:
+    0 .016em 0 rgba(252, 247, 238, .5),
+    0 -.006em .012em rgba(66, 12, 8, .16);
+}
+
+.project-edition:nth-child(2) .project-edition__head h3,
+.project-edition:nth-child(3) .project-edition__head h3,
+.project-edition__plate strong,
+.dark-relic__copy h2,
+.discipline-ledger h3,
+.closing-poster h2,
+.archive-cta h2,
+.contact-page h1,
+.page-hero--olive h1 {
+  text-shadow:
+    0 .018em .028em rgba(8, 6, 4, .45),
+    0 0 .01em rgba(8, 6, 4, .2);
+}
 
 a { color: inherit; }
 
@@ -360,7 +434,42 @@ em {
 .project-edition__head > p:nth-of-type(2) { grid-column: 10 / span 2; margin: .5rem 0 0; font: 650 .58rem/1.55 var(--mono); letter-spacing: .06em; text-transform: uppercase; }
 .project-edition__head > span { grid-column: 12; justify-self: end; font-size: 2rem; line-height: 1; transition: transform .35s cubic-bezier(.2,.7,.2,1); }
 .project-edition:hover .project-edition__head > span { transform: translate(.4rem, .4rem); }
-.project-edition__media { overflow: hidden; border: 1px solid currentColor; background: var(--carbon); }
+.project-edition__media { position: relative; overflow: hidden; border: 1px solid currentColor; background: var(--carbon); }
+
+/*
+ * Plate marks — the same registration language as the hero reliquary:
+ * an inset hairline plus corner ticks over every media plate, so the
+ * project and tool frames read as printed plates, not embedded rectangles.
+ */
+.project-edition__media::before,
+.tool-edition__media::before {
+  content: '';
+  position: absolute;
+  inset: .55rem;
+  z-index: 2;
+  pointer-events: none;
+  border: 1px solid currentColor;
+  opacity: .4;
+}
+.project-edition__media::after,
+.tool-edition__media::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background:
+    linear-gradient(currentColor 0 0) left .3rem top .3rem / .8rem 1px,
+    linear-gradient(currentColor 0 0) left .3rem top .3rem / 1px .8rem,
+    linear-gradient(currentColor 0 0) right .3rem top .3rem / .8rem 1px,
+    linear-gradient(currentColor 0 0) right .3rem top .3rem / 1px .8rem,
+    linear-gradient(currentColor 0 0) left .3rem bottom .3rem / .8rem 1px,
+    linear-gradient(currentColor 0 0) left .3rem bottom .3rem / 1px .8rem,
+    linear-gradient(currentColor 0 0) right .3rem bottom .3rem / .8rem 1px,
+    linear-gradient(currentColor 0 0) right .3rem bottom .3rem / 1px .8rem;
+  background-repeat: no-repeat;
+  opacity: .75;
+}
 .project-edition__media > img, .project-edition__video, .project-edition__video iframe { display: block; width: 100%; height: 100%; border: 0; }
 .project-edition__media > img { aspect-ratio: 16 / 9; object-fit: cover; filter: saturate(.72) contrast(1.05); transition: filter .6s linear, transform .8s cubic-bezier(.2,.7,.2,1); }
 .project-edition__video { aspect-ratio: 16 / 9; }
@@ -403,7 +512,7 @@ em {
 .tool-editions__list { display: grid; grid-template-columns: 1fr 1fr; gap: var(--gutter); align-items: start; }
 .tool-edition { display: block; color: var(--vermilion); text-decoration: none; }
 .tool-edition:nth-child(2) { margin-top: clamp(6rem, 12vw, 12rem); }
-.tool-edition__media { aspect-ratio: 4 / 3; overflow: hidden; border: 1px solid var(--vermilion); background: var(--carbon); }
+.tool-edition__media { position: relative; aspect-ratio: 4 / 3; overflow: hidden; border: 1px solid var(--vermilion); background: var(--carbon); }
 .tool-edition__media img { display: block; width: 100%; height: 100%; object-fit: cover; filter: grayscale(1) contrast(1.08); transition: filter .5s linear, transform .7s cubic-bezier(.2,.7,.2,1); }
 .tool-edition:hover .tool-edition__media img { filter: grayscale(0); transform: scale(1.012); }
 .tool-edition__text { display: grid; grid-template-columns: 1fr 2fr; gap: 1rem; padding-top: 1rem; border-top: 1px solid var(--vermilion); }
@@ -413,8 +522,8 @@ em {
 
 .client-ledger { border-top: 1px solid var(--vermilion); border-bottom: 1px solid var(--vermilion); padding: 1rem 0 0; color: var(--vermilion); overflow: hidden; }
 .client-ledger > .studio-kicker { padding: 0 var(--gutter) 1rem; }
-.client-ledger > div { display: grid; grid-template-columns: repeat(4, minmax(17rem, 1fr)); width: 100%; border-top: 1px solid var(--vermilion); }
-.client-ledger span { padding: .3rem 1.2rem 1rem; border-right: 1px solid var(--vermilion); font: 400 clamp(2.8rem, 5vw, 6rem)/1 var(--display); white-space: nowrap; }
+.client-ledger > div { display: grid; grid-template-columns: repeat(4, minmax(14rem, 1fr)); width: 100%; border-top: 1px solid var(--vermilion); }
+.client-ledger span { min-width: 0; padding: .3rem 1.2rem 1rem; border-right: 1px solid var(--vermilion); font: 400 clamp(2.4rem, 3.3vw, 4.5rem)/1 var(--display); white-space: nowrap; }
 .client-ledger sup { font: 650 .5rem/1 var(--mono); }
 
 .closing-poster {
@@ -535,6 +644,11 @@ main > .max-w-4xl, main > .max-w-5xl, main section > .max-w-5xl, main div > .max
   .project-edition__head > p:nth-of-type(2) { grid-column: 9 / span 3; }
   .dark-relic__copy { grid-column: 1 / span 7; }
   .dark-relic__portrait { grid-column: 8 / -1; }
+
+  /* Below ~940px four ledger columns can't hold the long names — drop
+     to two before anything clips. */
+  .client-ledger > div { grid-template-columns: 1fr 1fr; }
+  .client-ledger span { font-size: clamp(2.4rem, 6vw, 5rem); }
 }
 
 @media (max-width: 700px) {
