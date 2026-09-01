@@ -1,59 +1,193 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+import heroLead from '../assets/hero/hero-01.png';
+import heroMovement from '../assets/hero/movement-study.png';
+import underArmourFallback from '../assets/hero/under-armour-fallback.png';
 
 const projects = (await getCollection('paintings')).sort((a, b) => a.data.order - b.data.order);
+const tools = (await getCollection('tools')).slice(0, 2);
+
+const projectRoles: Record<string, string> = {
+	'shop-with-google': 'Lead Video Editor',
+	nuuly: 'Video Editor / Motion Designer',
+	'under-armour': 'Video Editor',
+	'kate-spade': 'Video Editor'
+};
+
+// Kate Spade intentionally has no fallback image: movement-study.png is
+// reserved for the dark-relic portrait, so the card renders as the
+// typographic archive plate until the project gets its own vimeoId.
+const projectFallbackImages: Record<string, ImageMetadata> = {
+	'under-armour': underArmourFallback
+};
 ---
 
 <BaseLayout
-	title="Film & Motion"
-	description="Colton Batts — film and motion. Fort Worth."
-	cover
+	title="Filmmaker, Designer & Creative Technologist"
+	description="Selected films, design systems, and independent digital tools by Colton Batts."
 >
-	<section class="book-cover" aria-label="Cover">
-		<div class="book-cover__board" aria-hidden="true"></div>
-		<div class="book-cover__wear" aria-hidden="true"></div>
+	<section class="monograph-hero" data-motion-chapter>
+		<div class="monograph-hero__meta">
+			<p class="studio-kicker">Independent practice / Fort Worth, Texas</p>
+			<p class="studio-kicker">Film · Design · Technology / 2016—2026</p>
+		</div>
 
-		<div class="book-cover__face">
-			<p class="book-cover__place">Fort Worth</p>
-			<h1 class="book-cover__title">
-				<span>Colton</span>
-				<span>Batts</span>
-			</h1>
-			<hr class="book-cover__rule" />
-			<p class="book-cover__line">Images with consequence.</p>
+		<h1><span>Colton</span><span>Batts</span></h1>
 
-			<nav class="book-cover__spine" aria-label="Enter">
-				<a href="#interior">Work</a>
-				<a href="/contact">Contact</a>
-			</nav>
+		<div class="monograph-hero__statement">
+			<p>Images with consequence.<br />Systems with a point of view.</p>
+			<div class="edition-seal" aria-hidden="true"><span>CB</span><small>VOL. 01</small></div>
+		</div>
+
+		<figure class="reliquary-image" data-parallax>
+			<span class="reliquary-image__corner reliquary-image__corner--tl" aria-hidden="true"></span>
+			<span class="reliquary-image__corner reliquary-image__corner--tr" aria-hidden="true"></span>
+			<span class="reliquary-image__corner reliquary-image__corner--bl" aria-hidden="true"></span>
+			<span class="reliquary-image__corner reliquary-image__corner--br" aria-hidden="true"></span>
+			<Image
+				src={heroLead}
+				alt="Figures walking through a dark landscape, rendered in deep black and vermilion"
+				widths={[960, 1440, 1920]}
+				sizes="100vw"
+				loading="eager"
+				decoding="async"
+			/>
+			<figcaption><span>Study No. 01</span><span>Movement / memory / repetition</span><span>Fort Worth, Texas / 2026</span></figcaption>
+		</figure>
+
+		<div class="practice-ribbon" aria-label="Creative disciplines">
+			<span>Film</span><span>Design</span><span>Code</span>
 		</div>
 	</section>
 
-	<section id="interior" class="book-interior">
-		<header class="book-interior__head">
-			<p>Work</p>
+	<section id="work" class="edition-intro" data-motion-chapter>
+		<p class="studio-kicker">Selected work / Four studies</p>
+		<h2>Selected<br /><em>work</em></h2>
+		<p>Commercial film, motion systems, and visual identities made to remain legible long after the launch.</p>
+	</section>
+
+	<section class="project-editions" aria-label="Selected projects">
+		{projects.map((project, index) => (
+			<a href={`/portfolio/${project.id}`} class="project-edition" data-reveal>
+				<header class="project-edition__head">
+					<p class="project-edition__number">{String(index + 1).padStart(2, '0')}</p>
+					<h3>{project.data.title}</h3>
+					<p>{projectRoles[project.id] || project.data.medium}<br />{project.data.dimensions} · {project.data.year}</p>
+					<span aria-hidden="true">↘</span>
+				</header>
+
+				<div class="project-edition__media">
+					{project.data.vimeoId ? (
+						<div class="project-edition__video">
+							<iframe
+								data-src={`https://player.vimeo.com/video/${project.data.vimeoId}?background=1&autoplay=0&loop=1&muted=1&dnt=1`}
+								allow="autoplay; fullscreen"
+								loading="lazy"
+								title={`${project.data.title} motion sample`}
+							></iframe>
+						</div>
+					) : projectFallbackImages[project.id] ? (
+						<Image
+							src={projectFallbackImages[project.id]}
+							alt={`${project.data.title} editorial image treatment`}
+							widths={[720, 1200, 1600]}
+							sizes="100vw"
+							loading="lazy"
+							decoding="async"
+						/>
+					) : (
+						<div class="project-edition__plate">
+							<span>Archive / {String(index + 1).padStart(2, '0')}</span>
+							<strong>{project.data.title}</strong>
+						</div>
+					)}
+				</div>
+			</a>
+		))}
+	</section>
+
+	<section class="dark-relic" data-motion-chapter>
+		<div class="dark-relic__copy">
+			<p class="studio-kicker">The practice / 03 disciplines</p>
+			<h2>Image.<br />Sequence.<br /><em>System.</em></h2>
+			<p>I move between filmmaking, graphic design, and software because the most interesting work rarely stays inside one medium.</p>
+		</div>
+
+		<figure class="dark-relic__portrait">
+			<div class="dark-relic__frame" aria-hidden="true"></div>
+			<Image
+				src={heroMovement}
+				alt="Figure in a white shirt with a vermilion beam crossing their eyes"
+				widths={[480, 720, 960]}
+				sizes="(max-width: 700px) 90vw, 42vw"
+				loading="lazy"
+				decoding="async"
+			/>
+			<figcaption>Everything is material / everything is edited</figcaption>
+		</figure>
+
+		<ol class="discipline-ledger">
+			<li><span>01</span><h3>Film & Motion</h3><p>Editorial, campaign film, kinetic type, and motion systems.</p></li>
+			<li><span>02</span><h3>Design</h3><p>Art direction, identity, launch graphics, and production frameworks.</p></li>
+			<li><span>03</span><h3>Technology</h3><p>Purpose-built software and interfaces for people who make things.</p></li>
+		</ol>
+	</section>
+
+	<section class="tool-editions" data-motion-chapter>
+		<header class="tool-editions__intro">
+			<p class="studio-kicker">Independent software / Field instruments</p>
+			<h2>Tools for<br /><em>the work.</em></h2>
 		</header>
 
-		<ul class="book-spine-list">
-			{projects.map((project) => (
-				<li>
-					<a href={`/portfolio/${project.id}`}>
-						<span class="book-spine-list__title">{project.data.title}</span>
-						<span class="book-spine-list__meta">
-							{project.data.medium} · {project.data.year}
-						</span>
-					</a>
-				</li>
+		<div class="tool-editions__list">
+			{tools.map((tool, index) => (
+				<a href={tool.data.externalUrl || `/tools/${tool.id}`} class="tool-edition" data-reveal>
+					<div class="tool-edition__media">
+						{tool.data.heroImage ? (
+							<Image src={tool.data.heroImage} alt={`${tool.data.name} interface`} widths={[560, 900]} sizes="(max-width: 700px) 100vw, 45vw" loading="lazy" decoding="async" />
+						) : <div>{tool.data.name}</div>}
+					</div>
+					<div class="tool-edition__text">
+						<p class="studio-kicker">{String(index + 1).padStart(2, '0')} / {tool.data.status} / {tool.data.platform}</p>
+						<h3>{tool.data.name}</h3>
+						<p>{tool.data.oneLiner}</p>
+					</div>
+				</a>
 			))}
-		</ul>
-
-		<p class="book-interior__more">
-			<a href="/portfolio">All work</a>
-			<span aria-hidden="true">·</span>
-			<a href="/tools">Tools</a>
-			<span aria-hidden="true">·</span>
-			<a href="mailto:colton.batts@gmail.com">colton.batts@gmail.com</a>
-		</p>
+		</div>
 	</section>
+
+	<section class="client-ledger" data-motion-chapter>
+		<p class="studio-kicker">Selected clients / 2022—2026</p>
+		<div><span>Google <sup>01</sup></span><span>Nuuly <sup>02</sup></span><span>Under Armour <sup>03</sup></span><span>Kate Spade <sup>04</sup></span></div>
+	</section>
+
+	<section class="closing-poster" data-motion-chapter>
+		<p class="studio-kicker">New business / Selected collaborations</p>
+		<h2>Make something<br /><em>worth keeping.</em></h2>
+		<a href="mailto:colton.batts@gmail.com">Start a conversation <span>↗</span></a>
+	</section>
+
+	<script>
+		function initHomeVideos() {
+			const players = document.querySelectorAll<HTMLIFrameElement>('.project-edition__video iframe');
+			const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+			if (!players.length || reduced) return;
+			const observer = new IntersectionObserver((entries) => {
+				entries.forEach((entry) => {
+					const iframe = entry.target as HTMLIFrameElement;
+					if (entry.isIntersecting && iframe.dataset.src && !iframe.src) {
+						iframe.src = iframe.dataset.src.replace('autoplay=0', 'autoplay=1');
+					}
+				});
+			}, { threshold: 0.22, rootMargin: '160px 0px' });
+			players.forEach((player) => observer.observe(player));
+		}
+
+		document.addEventListener('astro:page-load', initHomeVideos);
+	</script>
 </BaseLayout>

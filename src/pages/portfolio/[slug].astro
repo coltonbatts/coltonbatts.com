@@ -18,61 +18,123 @@ export async function getStaticPaths() {
 
 const { painting, prev, next } = Astro.props;
 const { Content } = await render(painting);
-const { title, medium, dimensions, year, series, vimeoId } = painting.data;
+const { title, medium, dimensions, year, image, series, available, vimeoId } = painting.data;
 ---
 
 <BaseLayout title={title} description={`${title} — ${medium}, ${year}. Colton Batts.`}>
-	<article class="case-study" data-motion-chapter>
-		<header class="case-study__header">
-			<a href="/portfolio" class="case-study__back">&larr; All work</a>
-			{series && <p class="studio-kicker">{series}</p>}
-			<h1>{title}</h1>
-			<dl class="case-study__meta">
-				<div>
-					<dt>Role</dt>
-					<dd>{medium}</dd>
-				</div>
-				<div>
-					<dt>Scope</dt>
-					<dd>{dimensions}</dd>
-				</div>
-				<div>
-					<dt>Year</dt>
-					<dd>{year}</dd>
-				</div>
-			</dl>
-		</header>
 
-		<figure class="case-study__media project-edition__media--client">
-			{vimeoId ? (
-				<div class="case-study__video">
-					<iframe
-						src={`https://player.vimeo.com/video/${vimeoId}?background=1&autoplay=1&loop=1&muted=1&dnt=1`}
-						allow="autoplay; fullscreen"
-						loading="eager"
-						title={title}
-					></iframe>
-				</div>
-			) : (
-				<div class="case-study__plate">{title}</div>
-			)}
-		</figure>
-
-		<div class="case-study__body prose">
-			<Content />
+	<section class="border-b-2 border-charcoal">
+		<div class="max-w-5xl mx-auto px-6 pt-8 pb-6">
+			<a
+				href="/portfolio"
+				class="font-mono text-label uppercase tracking-instrument text-charcoal/40 hover:text-charcoal transition-colors"
+			>
+				&larr; All Projects
+			</a>
 		</div>
+	</section>
 
-		<nav class="case-study__nav" aria-label="Adjacent projects">
-			{prev ? (
-				<a href={`/portfolio/${prev.id}`}>&larr; {prev.data.title}</a>
-			) : (
-				<span></span>
-			)}
-			{next ? (
-				<a href={`/portfolio/${next.id}`}>{next.data.title} &rarr;</a>
-			) : (
-				<span></span>
-			)}
-		</nav>
-	</article>
+	<div class="max-w-5xl mx-auto px-6 py-12 md:py-22">
+		<div class="grid md:grid-cols-12 gap-8 md:gap-12">
+
+			<div class="md:col-span-8">
+				<div class="painting-card__frame">
+					<div class="painting-card__mat" style="padding: 1.5rem;">
+						{vimeoId ? (
+							<div style="position:relative;aspect-ratio:16/9;overflow:hidden;">
+								<iframe
+									src={`https://player.vimeo.com/video/${vimeoId}?background=1&autoplay=1&loop=1&muted=1&dnt=1`}
+									style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;"
+									allow="autoplay; fullscreen"
+									loading="eager"
+									title={title}
+								></iframe>
+							</div>
+						) : (
+							<div
+								style="aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;background:#1a1a1a;color:rgba(255,255,255,0.25);font-family:monospace;font-size:0.875rem;text-transform:uppercase;letter-spacing:0.1em;"
+								class="painting-card__image"
+							>
+								{title}
+							</div>
+						)}
+					</div>
+				</div>
+			</div>
+
+			<div class="md:col-span-4 md:pt-4">
+				<div class="sticky top-8">
+					{series && (
+						<p class="font-mono text-meta uppercase tracking-instrument text-charcoal/25 mb-4">
+							{series}
+						</p>
+					)}
+					<h1 class="text-display-sm mb-4">{title}</h1>
+
+					<div class="divider-muted mb-6 pb-6">
+						<dl class="space-y-3">
+							<div>
+								<dt class="font-mono text-meta uppercase tracking-instrument text-charcoal/35">Role</dt>
+								<dd class="font-mono text-sm text-charcoal/70 mt-0.5">{medium}</dd>
+							</div>
+							<div>
+								<dt class="font-mono text-meta uppercase tracking-instrument text-charcoal/35">Scope</dt>
+								<dd class="font-mono text-sm text-charcoal/70 mt-0.5">{dimensions}</dd>
+							</div>
+							<div>
+								<dt class="font-mono text-meta uppercase tracking-instrument text-charcoal/35">Year</dt>
+								<dd class="font-mono text-sm text-charcoal/70 mt-0.5">{year}</dd>
+							</div>
+						</dl>
+					</div>
+
+					{available && (
+						<div class="mb-6 pb-6 border-b border-1 border-bone">
+							<p class="font-mono text-label uppercase tracking-instrument text-raw mb-3">
+								● Available
+							</p>
+							<a
+								href="mailto:colton.batts@gmail.com?subject=Inquiry: {title}"
+								class="btn-instrument--raw btn-instrument text-sm"
+							>
+								Inquire
+							</a>
+						</div>
+					)}
+
+					<div class="prose prose-sm max-w-none text-charcoal/70 leading-relaxed">
+						<Content />
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<section class="border-t-2 border-charcoal">
+		<div class="max-w-5xl mx-auto px-6 py-10">
+			<div class="flex items-center justify-between">
+				{prev ? (
+					<a
+						href={`/portfolio/${prev.id}`}
+						class="font-mono text-label uppercase tracking-instrument text-charcoal/40 hover:text-charcoal transition-colors"
+					>
+						&larr; {prev.data.title}
+					</a>
+				) : (
+					<span></span>
+				)}
+				{next ? (
+					<a
+						href={`/portfolio/${next.id}`}
+						class="font-mono text-label uppercase tracking-instrument text-charcoal/40 hover:text-charcoal transition-colors text-right"
+					>
+						{next.data.title} &rarr;
+					</a>
+				) : (
+					<span></span>
+				)}
+			</div>
+		</div>
+	</section>
+
 </BaseLayout>

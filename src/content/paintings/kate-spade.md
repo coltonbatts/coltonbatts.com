@@ -9,8 +9,4 @@ available: false
 order: 4
 ---
 
-**The job.** Social-first video for Kate Spade — product-driven campaigns optimized for Instagram and paid social.
-
-**What I did.** Polished editorial on a quick-turnaround clock: product clarity first, brand tone intact, no filler frames. Editor judgment under commercial constraints.
-
-**Outcome.** Clean, placement-ready social assets that sold product without looking like a template feed.
+Social-first video content for Kate Spade — polished editorial for product-driven campaigns. Quick-turnaround delivery optimized for Instagram and paid social placements.
