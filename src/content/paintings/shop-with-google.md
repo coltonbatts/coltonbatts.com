@@ -10,4 +10,8 @@ order: 1
 vimeoId: "1121660660"
 ---
 
-Lead editor on 30+ video assets for Google's "Shop With Google" campaign series. Fast-paced editorial requiring 24-hour rough-cut turnarounds across multiple formats — social, broadcast, and digital display.
+**The job.** Lead editor on Google’s Shop with Google campaign series — 30+ video assets spanning social, broadcast, and digital display.
+
+**What I did.** Built the cut language under 24-hour rough-cut turnarounds: pacing systems that held brand clarity across formats without sanding off the edge. Owned editorial judgment from assembly through delivery.
+
+**Outcome.** A coherent campaign body that moved at platform speed — fast enough for the calendar, sharp enough to still read after launch.

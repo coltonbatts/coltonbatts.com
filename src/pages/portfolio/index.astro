@@ -4,105 +4,40 @@ import PaintingCard from '../../components/PaintingCard.astro';
 import { getCollection } from 'astro:content';
 
 const paintings = await getCollection('paintings');
-
-/** Sort by order field, then by year descending */
-paintings.sort((a, b) => {
-	if (a.data.order !== b.data.order) return a.data.order - b.data.order;
-	return b.data.year - a.data.year;
-});
-
-/** Group paintings by series */
-const seriesMap = new Map<string, typeof paintings>();
-const unsorted: typeof paintings = [];
-
-for (const painting of paintings) {
-	const series = painting.data.series;
-	if (series) {
-		if (!seriesMap.has(series)) seriesMap.set(series, []);
-		seriesMap.get(series)!.push(painting);
-	} else {
-		unsorted.push(painting);
-	}
-}
-
-/** Total count for the header */
-const totalCount = paintings.length;
-
-/**
- * All projects get full-width treatment — each client
- * occupies its own row for consistent visual weight.
- */
-function getGridClass(_featured: boolean, _index: number): string {
-	return 'gallery-grid__item--full';
-}
+paintings.sort((a, b) => a.data.order - b.data.order);
 ---
 
-<BaseLayout title="Portfolio" description="Production & editorial work by Colton Batts.">
+<BaseLayout title="Work" description="Film and motion by Colton Batts.">
 	<section class="page-hero" data-motion-chapter>
-		<p class="studio-kicker">Archive / {String(totalCount).padStart(2, '0')} works</p>
-		<h1>Selected<br /><em>projects.</em></h1>
-		<p>Moving image, campaign systems, and editorial work made for global brands and independent studios.</p>
+		<p class="studio-kicker">Work</p>
+		<h1>Selected.</h1>
+		<p>Moving image for brands that want a cut with a spine.</p>
 	</section>
 
 	<div class="archive-index">
-
-		{[...seriesMap.entries()].map(([series, seriesPaintings]) => (
-			<section class="archive-section">
-				<div class="archive-section__heading">
-					<p class="section-label">{series} / {String(seriesPaintings.length).padStart(2, '0')}</p>
+		<div class="gallery-grid">
+			{paintings.map((painting) => (
+				<div class="gallery-grid__item--full">
+					<PaintingCard
+						title={painting.data.title}
+						medium={painting.data.medium}
+						dimensions={painting.data.dimensions}
+						year={painting.data.year}
+						image={painting.data.image}
+						slug={painting.id}
+						featured={painting.data.featured}
+						available={painting.data.available}
+						series={painting.data.series}
+						vimeoId={painting.data.vimeoId}
+					/>
 				</div>
-
-				<div class="gallery-grid">
-					{seriesPaintings.map((painting, i) => (
-						<div class={getGridClass(painting.data.featured, i)}>
-							<PaintingCard
-								title={painting.data.title}
-								medium={painting.data.medium}
-								dimensions={painting.data.dimensions}
-								year={painting.data.year}
-								image={painting.data.image}
-								slug={painting.id}
-								featured={painting.data.featured}
-								available={painting.data.available}
-								series={painting.data.series}
-								vimeoId={painting.data.vimeoId}
-							/>
-						</div>
-					))}
-				</div>
-			</section>
-		))}
-
-		{unsorted.length > 0 && (
-			<section class="archive-section">
-				<div class="archive-section__heading">
-					<p class="section-label">Other</p>
-				</div>
-				<div class="gallery-grid">
-					{unsorted.map((painting, i) => (
-						<div class={getGridClass(painting.data.featured, i)}>
-							<PaintingCard
-								title={painting.data.title}
-								medium={painting.data.medium}
-								dimensions={painting.data.dimensions}
-								year={painting.data.year}
-								image={painting.data.image}
-								slug={painting.id}
-								featured={painting.data.featured}
-								available={painting.data.available}
-								vimeoId={painting.data.vimeoId}
-							/>
-						</div>
-					))}
-				</div>
-			</section>
-		)}
+			))}
+		</div>
 	</div>
 
 	<section class="archive-cta">
-		<p class="studio-kicker">Commissions / Collaborations</p>
-		<h2>Let’s make<br /><em>the next one.</em></h2>
-		<a href="mailto:colton.batts@gmail.com">Discuss a project ↗</a>
+		<p class="studio-kicker">New business</p>
+		<h2>Write.</h2>
+		<a href="/contact">Contact</a>
 	</section>
-
 </BaseLayout>

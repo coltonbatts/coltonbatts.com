@@ -2,14 +2,53 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
-<BaseLayout title="Contact" description="Get in touch.">
-	<section class="contact-page" data-motion-chapter>
-		<p class="studio-kicker">Correspondence / Fort Worth, Texas</p>
-		<h1>Let’s make<br /><em>something matter.</em></h1>
-		<div class="contact-page__note">
-			<p>For films, identities, digital tools, or an interesting problem that does not fit neatly into a category.</p>
-			<a href="mailto:colton.batts@gmail.com">colton.batts@gmail.com <span>↗</span></a>
+<BaseLayout
+	title="Contact"
+	description="New business — film and motion with Colton Batts."
+>
+	<section class="contact-page contact-page--dark" data-motion-chapter>
+		<p class="studio-kicker">New business</p>
+		<h1>Write.</h1>
+
+		<div class="contact-page__lead">
+			<p>
+				Film, motion, design. Brands who want images with a spine.
+			</p>
+			<a class="contact-page__email" href="mailto:colton.batts@gmail.com?subject=Project inquiry">
+				colton.batts@gmail.com
+			</a>
 		</div>
-		<p class="contact-page__availability">Available for selected collaborations<br />Response time / usually within 24 hours</p>
+
+		<div class="contact-grid contact-grid--dark">
+			<div class="contact-block">
+				<p class="studio-kicker">Take</p>
+				<ul>
+					<li>Campaign film &amp; brand editorial</li>
+					<li>Social / digital motion systems</li>
+					<li>Kinetic type &amp; launch packages</li>
+				</ul>
+			</div>
+			<div class="contact-block">
+				<p class="studio-kicker">Pass</p>
+				<ul>
+					<li>Brief-less “just cut this”</li>
+					<li>Template-looking work</li>
+					<li>Motion as filler</li>
+				</ul>
+			</div>
+			<div class="contact-block">
+				<p class="studio-kicker">Start with</p>
+				<ul>
+					<li>What &amp; for whom</li>
+					<li>Timeline / scope</li>
+					<li>One reference for the feeling</li>
+				</ul>
+			</div>
+			<div class="contact-block contact-block--status">
+				<p class="studio-kicker">Now</p>
+				<p class="contact-status">Open</p>
+				<p class="contact-block__prose">Usually within 24 hours.</p>
+			</div>
+		</div>
 	</section>
 </BaseLayout>

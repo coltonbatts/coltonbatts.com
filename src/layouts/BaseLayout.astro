@@ -7,15 +7,17 @@ import '../styles/editorial.css';
 interface Props {
 	title?: string;
 	description?: string;
+	/** Homepage book-cover mode — chrome stays quiet. */
+	cover?: boolean;
 }
 
-const { title = site.title, description = site.description } = Astro.props;
+const { title = site.title, description = site.description, cover = false } = Astro.props;
 const fullTitle = title === site.title ? title : `${title} | ${site.title}`;
 const currentPath = Astro.url.pathname;
 ---
 
 <!doctype html>
-<html lang="en" data-motion-intensity="editorial">
+<html lang="en" data-motion-intensity="editorial" class:list={[{ 'is-cover': cover }]}>
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="description" content={description} />
@@ -25,17 +27,17 @@ const currentPath = Astro.url.pathname;
 		<meta name="generator" content={Astro.generator} />
 
 		<link rel="preload" href="/fonts/InstrumentSerif-Regular.woff2" as="font" type="font/woff2" crossorigin />
+		<link rel="preload" href="/fonts/InstrumentSerif-Italic.woff2" as="font" type="font/woff2" crossorigin />
 		<link rel="preload" href="/fonts/InstrumentSans.woff2" as="font" type="font/woff2" crossorigin />
+		<link rel="preload" href="/fonts/UnifrakturMaguntia-Regular.woff2" as="font" type="font/woff2" crossorigin />
 		<link rel="preload" href="/fonts/IBMPlexMono-Bold.woff2" as="font" type="font/woff2" crossorigin />
 
-		<!-- Open Graph -->
 		<meta property="og:type" content="website" />
 		<meta property="og:url" content={Astro.url} />
 		<meta property="og:title" content={fullTitle} />
 		<meta property="og:description" content={description} />
 		<meta property="og:image" content={new URL('/card.jpg', Astro.url)} />
 
-		<!-- Twitter -->
 		<meta property="twitter:card" content="summary_large_image" />
 		<meta property="twitter:url" content={Astro.url} />
 		<meta property="twitter:title" content={fullTitle} />
@@ -46,75 +48,60 @@ const currentPath = Astro.url.pathname;
 		<ClientRouter />
 	</head>
 
-	<body class="antialiased min-h-screen flex flex-col">
+	<body class:list={['antialiased', 'min-h-screen', 'flex', 'flex-col', { 'body--cover': cover }]}>
 		<a class="skip-link" href="#main-content">Skip to content</a>
 
-		<header class="site-header">
-			<nav class="site-nav" aria-label="Primary navigation">
-				<a href="/" class="site-logo" aria-label="Colton Batts — home">
-					<span class="site-logo__name">Colton Batts</span>
-					<span class="site-logo__role">Studio / Fort Worth, Texas</span>
-				</a>
+		{!cover && (
+			<header class="site-header">
+				<nav class="site-nav" aria-label="Primary navigation">
+					<a href="/" class="site-logo" aria-label="Colton Batts — home">
+						<span class="site-logo__name">Colton Batts</span>
+						<span class="site-logo__role">Film & Motion</span>
+					</a>
 
-				<p class="site-nav__date" aria-label="Studio date">
-					<span>Film · Design · Technology</span>
-					<span>Est. 2016</span>
-				</p>
+					<button
+						id="mobile-menu-toggle"
+						class="site-menu-toggle"
+						aria-label="Toggle Menu"
+						aria-expanded="false"
+						aria-controls="mobile-menu"
+					>
+						<span></span>
+						<span></span>
+					</button>
 
-				<button
-					id="mobile-menu-toggle"
-					class="site-menu-toggle"
-					aria-label="Toggle Menu"
-					aria-expanded="false"
-					aria-controls="mobile-menu"
-				>
-					<span></span>
-					<span></span>
-				</button>
-
-				<div id="mobile-menu" class="site-menu">
-					<ul>
-						{navItems.map((item, index) => (
-							<li>
-								<a
-									href={item.href}
-									aria-current={(currentPath === item.href || (item.href !== '/' && currentPath.startsWith(item.href))) ? 'page' : undefined}
-								>
-									<span>{String(index + 1).padStart(2, '0')}</span>{item.label}
-								</a>
-							</li>
-						))}
-					</ul>
-				</div>
-			</nav>
-		</header>
+					<div id="mobile-menu" class="site-menu">
+						<ul>
+							{navItems.map((item) => (
+								<li>
+									<a
+										href={item.href}
+										aria-current={(currentPath === item.href || (item.href !== '/' && currentPath.startsWith(item.href))) ? 'page' : undefined}
+									>
+										{item.label}
+									</a>
+								</li>
+							))}
+						</ul>
+					</div>
+				</nav>
+			</header>
+		)}
 
 		<main id="main-content" class="flex-1">
 			<slot />
 		</main>
 
-		<footer class="site-footer">
-			<div class="site-footer__grid">
-				<div class="site-footer__intro">
-					<p class="studio-kicker">Colophon / 2026</p>
-					<p class="site-footer__mark">Make it clear.<br /><em>Make it last.</em></p>
-				</div>
-				<div>
-					<p class="studio-kicker">Index</p>
-					<ul>
-						{navItems.map((item) => (
-							<li><a href={item.href}>{item.label}</a></li>
-						))}
-					</ul>
-				</div>
-				<div>
-					<p class="studio-kicker">Correspondence</p>
+		{!cover && (
+			<footer class="site-footer">
+				<div class="site-footer__grid">
+					<p class="site-footer__mark">Colton Batts</p>
 					<a class="site-footer__email" href="mailto:colton.batts@gmail.com">colton.batts@gmail.com</a>
-					<p>Available for select collaborations<br />&copy; {new Date().getFullYear()} Colton Batts</p>
+					<p class="site-footer__copy">&copy; {new Date().getFullYear()}</p>
 				</div>
-			</div>
-		</footer>
-		<!-- Mobile menu — delegated to document so it survives view-transition swaps -->
+			</footer>
+		)}
+
 		<script is:inline>
 			document.addEventListener('click', function (e) {
 				var toggle = document.getElementById('mobile-menu-toggle');
@@ -134,25 +121,9 @@ const currentPath = Astro.url.pathname;
 			});
 		</script>
 
-		<!-- Scroll reveals — IntersectionObserver only, re-run after each router swap -->
 		<script>
 			function initReveals() {
 				const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-				const chapters = document.querySelectorAll<HTMLElement>('[data-motion-chapter]');
-				if (reduced) {
-					chapters.forEach((el) => el.classList.add('motion-chapter-in'));
-				} else if (chapters.length) {
-					const chapterObserver = new IntersectionObserver((entries) => {
-						entries.forEach((entry) => {
-							if (!entry.isIntersecting) return;
-							entry.target.classList.add('motion-chapter-in');
-							chapterObserver.unobserve(entry.target);
-						});
-					}, { threshold: 0.2, rootMargin: '0px 0px -12% 0px' });
-					chapters.forEach((el) => chapterObserver.observe(el));
-				}
-
 				const reveals = document.querySelectorAll<HTMLElement>('[data-reveal]');
 				if (reduced) {
 					reveals.forEach((el) => el.classList.add('reveal', 'reveal--visible', 'reveal--instant'));
@@ -172,27 +143,7 @@ const currentPath = Astro.url.pathname;
 				}
 			}
 
-			function initParallax() {
-				const target = document.querySelector<HTMLElement>('[data-parallax]');
-				if (!target || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-				let frame = 0;
-				const update = () => {
-					const rect = target.getBoundingClientRect();
-					const progress = Math.max(-1, Math.min(1, (window.innerHeight - rect.top) / (window.innerHeight + rect.height)));
-					target.style.setProperty('--parallax-y', `${(progress * -40).toFixed(1)}px`);
-					frame = 0;
-				};
-				const onScroll = () => { if (!frame) frame = requestAnimationFrame(update); };
-				update();
-				window.addEventListener('scroll', onScroll, { passive: true });
-				document.addEventListener('astro:before-preparation', () => window.removeEventListener('scroll', onScroll), { once: true });
-			}
-
-			// astro:page-load fires on initial load and after every ClientRouter swap
-			document.addEventListener('astro:page-load', () => {
-				initReveals();
-				initParallax();
-			});
+			document.addEventListener('astro:page-load', initReveals);
 		</script>
 	</body>
 </html>
