@@ -3,7 +3,9 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection, render } from 'astro:content';
 
 export async function getStaticPaths() {
-	const paintings = await getCollection('paintings');
+	const paintings = (await getCollection('paintings')).filter(
+		(painting) => !painting.data.hidden,
+	);
 	paintings.sort((a, b) => a.data.order - b.data.order);
 
 	return paintings.map((painting, index) => ({

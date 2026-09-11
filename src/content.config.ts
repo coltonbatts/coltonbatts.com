@@ -50,6 +50,7 @@ const toolsCollection = defineCollection({
  *   featured    — Whether to highlight in the gallery layout
  *   series      — Category for grouping
  *   available   — (unused — retained for schema compat)
+ *   hidden      — Set aside: off the site everywhere, kept in the repo
  *   order       — Sort order (lower = first)
  *   vimeoId     — Optional Vimeo video ID for inline playback
  * ----------------------------------------------------------- */
@@ -65,6 +66,10 @@ const paintingsCollection = defineCollection({
 		featured: z.boolean().default(false),
 		series: z.string().optional(),
 		available: z.boolean().default(false),
+		// Set aside until the piece has media to show. Hidden entries are
+		// filtered out of every listing and generate no detail page, but the
+		// markdown stays in the repo so bringing one back is a one-line flip.
+		hidden: z.boolean().default(false),
 		order: z.number().default(0),
 		vimeoId: z.string().optional(),
 	}),

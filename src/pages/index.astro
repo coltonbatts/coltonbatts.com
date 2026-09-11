@@ -11,7 +11,9 @@ import underArmourFallback from '../assets/hero/under-armour-fallback.png';
 import ArtPlate from '../components/ArtPlate.astro';
 import { art } from '../data/art';
 
-const projects = (await getCollection('paintings')).sort((a, b) => a.data.order - b.data.order);
+const projects = (await getCollection('paintings'))
+	.filter((project) => !project.data.hidden)
+	.sort((a, b) => a.data.order - b.data.order);
 const tools = (await getCollection('tools')).slice(0, 2);
 
 /** The homepage shows a teaser; the full archive lives at /art. */
@@ -88,7 +90,7 @@ const projectFallbackImages: Record<string, ImageMetadata> = {
 	</section>
 
 	<section id="work" class="edition-intro" data-motion-chapter>
-		<p class="studio-kicker">Selected work / Four studies</p>
+		<p class="studio-kicker">Selected work / {String(projects.length).padStart(2, '0')} studies</p>
 		<h2>Selected<br /><em>work</em></h2>
 		<p>Commercial film, motion systems, and visual identities made to remain legible long after the launch.</p>
 	</section>

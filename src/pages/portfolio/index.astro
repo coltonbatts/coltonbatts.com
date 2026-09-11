@@ -3,7 +3,9 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import PaintingCard from '../../components/PaintingCard.astro';
 import { getCollection } from 'astro:content';
 
-const paintings = await getCollection('paintings');
+const paintings = (await getCollection('paintings')).filter(
+	(painting) => !painting.data.hidden,
+);
 
 /** Sort by order field, then by year descending */
 paintings.sort((a, b) => {
