@@ -8,8 +8,14 @@ import heroLead from '../assets/hero/hero-01.png';
 import heroMovement from '../assets/hero/movement-study.png';
 import underArmourFallback from '../assets/hero/under-armour-fallback.png';
 
+import ArtPlate from '../components/ArtPlate.astro';
+import { art } from '../data/art';
+
 const projects = (await getCollection('paintings')).sort((a, b) => a.data.order - b.data.order);
 const tools = (await getCollection('tools')).slice(0, 2);
+
+/** The homepage shows a teaser; the full archive lives at /art. */
+const featuredArt = art.slice(0, 6);
 
 const projectRoles: Record<string, string> = {
 	'shop-with-google': 'Lead Video Editor',
@@ -61,6 +67,23 @@ const projectFallbackImages: Record<string, ImageMetadata> = {
 
 		<div class="practice-ribbon" aria-label="Creative disciplines">
 			<span>Film</span><span>Design</span><span>Code</span>
+		</div>
+	</section>
+
+	<section id="art" class="art-edition" data-motion-chapter>
+		<header class="art-edition__intro">
+			<p class="studio-kicker">Selected art / {art.length} frames</p>
+			<h2>Art<br /><em>first.</em></h2>
+			<p>{featuredArt.length} of {art.length}, ordered by how they landed. The full archive and the captions live in the art index.</p>
+			<a class="art-edition__cta" href="/art">
+				Open the art archive <span aria-hidden="true">↗</span>
+			</a>
+		</header>
+
+		<div class="art-sheet art-sheet--ledger">
+			{featuredArt.map((piece) => (
+				<ArtPlate piece={piece} size="ledger" />
+			))}
 		</div>
 	</section>
 
