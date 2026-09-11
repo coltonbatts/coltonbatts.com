@@ -826,6 +826,24 @@ html {
   background-color: var(--bone) !important;
 }
 
+/* The old editorial layer fills the nav list with red and each nav cell with
+   the warm stock, which on a white wall reads as cream pills and red gaps.
+   Scoped with :not() so the hover and current-page vermilion fill survives. */
+.site-menu ul { background: transparent !important; }
+.site-menu a:not(:hover):not([aria-current='page']) { background-color: transparent !important; }
+
+/* The colophon was rendering at 11.5px and rotated. `global.css` wants
+   writing-mode: vertical-rl at clamp(4rem, 8vw, 9rem), but `editorial.css`'s
+   `.site-footer p { font-size: .72rem !important }` (0,1,1) out-specifies
+   `.site-footer__mark` (0,1,0), collapsing it to ~11px. Legible, horizontal, ink. */
+.site-footer p.site-footer__mark {
+  writing-mode: horizontal-tb;
+  font: 400 clamp(1.9rem, 3.2vw, 3rem)/1 var(--display) !important;
+  letter-spacing: -.03em !important;
+  margin: 1.5rem 0 0 !important;
+  color: var(--carbon) !important;
+}
+
 /* ---------------------------------------------------------------------------
  * VERMILION, AS A MARKER — the whole list.
  * Index numerals, the two hover states, and the hero seal. Nothing else.
