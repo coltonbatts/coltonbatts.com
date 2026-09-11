@@ -380,8 +380,11 @@ em {
   width: 100%;
   height: min(68vw, 56rem);
   object-fit: cover;
-  object-position: center 44%;
-  filter: saturate(.58) contrast(1.12);
+  /* Portrait source in a landscape band. 46% keeps the hovering cloth form
+     and the lit window both in frame; the top ~15% of the original is empty
+     night sky and is safe to lose. */
+  object-position: center 46%;
+  filter: saturate(.96) contrast(1.06);
   transform: translateY(var(--parallax-y, 0));
 }
 .reliquary-image figcaption {
