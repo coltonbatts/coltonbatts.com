@@ -8,6 +8,9 @@ import heroLead from '../assets/hero/hero-01.png';
 import heroMovement from '../assets/hero/movement-study.png';
 import underArmourFallback from '../assets/hero/under-armour-fallback.png';
 
+import ArtPlate from '../components/ArtPlate.astro';
+import { art } from '../data/art';
+
 const projects = (await getCollection('paintings')).sort((a, b) => a.data.order - b.data.order);
 const tools = (await getCollection('tools')).slice(0, 2);
 
@@ -62,6 +65,24 @@ const projectFallbackImages: Record<string, ImageMetadata> = {
 		<div class="practice-ribbon" aria-label="Creative disciplines">
 			<span>Film</span><span>Design</span><span>Code</span>
 		</div>
+	</section>
+
+	<section id="art" class="art-edition" data-motion-chapter>
+		<header class="art-edition__intro">
+			<p class="studio-kicker">Selected art / {art.length} frames</p>
+			<h2>Art<br /><em>first.</em></h2>
+			<p>Photographs, ordered by how they landed. The commissioned work follows below it.</p>
+		</header>
+
+		<div class="art-sheet art-sheet--ledger">
+			{art.map((piece) => (
+				<ArtPlate piece={piece} size="ledger" />
+			))}
+		</div>
+
+		<a class="art-edition__link" href="/art">
+			Open the art archive <span aria-hidden="true">↗</span>
+		</a>
 	</section>
 
 	<section id="work" class="edition-intro" data-motion-chapter>

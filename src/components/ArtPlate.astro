@@ -1,0 +1,50 @@
+---
+/**
+ * ArtPlate — one photograph, framed as a printed plate.
+ *
+ * Uses the same registration language as the hero reliquary and the
+ * project editions: a hairline frame, an inset hairline, corner ticks.
+ * The image is never cropped — width:100% / height:auto carries the
+ * intrinsic ratio through, and Astro emits the real width/height.
+ */
+import { Image } from 'astro:assets';
+import type { Artwork } from '../data/art';
+
+interface Props {
+	piece: Artwork;
+	/** `ledger` is the homepage ribbon; `sheet` is the archive page. */
+	size?: 'sheet' | 'ledger';
+	showCaption?: boolean;
+}
+
+const { piece, size = 'sheet', showCaption = false } = Astro.props;
+
+const index = String(piece.order).padStart(2, '0');
+
+const widths = size === 'ledger' ? [320, 640] : [420, 840, 1280];
+const sizes =
+	size === 'ledger'
+		? '(max-width: 619px) 92vw, (max-width: 999px) 45vw, 23vw'
+		: '(max-width: 619px) 92vw, (max-width: 999px) 45vw, 31vw';
+---
+
+<figure class="art-plate">
+	<div class="art-plate__media">
+		<Image
+			src={piece.src}
+			alt={piece.alt}
+			widths={widths}
+			sizes={sizes}
+			loading="lazy"
+			decoding="async"
+		/>
+	</div>
+	<figcaption class="art-plate__label">
+		<span class="art-plate__index">{index}</span>
+		<span class="art-plate__title">{piece.title}</span>
+		<span class="art-plate__year">{piece.year}</span>
+		{showCaption && piece.caption && (
+			<span class="art-plate__caption">{piece.caption}</span>
+		)}
+	</figcaption>
+</figure>

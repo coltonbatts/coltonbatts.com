@@ -1,0 +1,46 @@
+---
+/**
+ * /art — the photographic archive.
+ *
+ * The art leads here; the commissioned work lives at /portfolio.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ArtPlate from '../../components/ArtPlate.astro';
+import { art } from '../../data/art';
+
+const years = art.map((piece) => piece.year);
+const span =
+	Math.min(...years) === Math.max(...years)
+		? String(Math.min(...years))
+		: `${Math.min(...years)}—${Math.max(...years)}`;
+---
+
+<BaseLayout
+	title="Art"
+	description="Selected photographs by Colton Batts — the archive, in the order Instagram ranked them."
+>
+	<section class="page-hero" data-motion-chapter>
+		<p class="studio-kicker">Archive / {art.length} frames</p>
+		<h1>The<br /><em>archive.</em></h1>
+		<p>Photographs, {span}, ordered by how they landed. Stills only — the motion and commissioned work lives with the projects.</p>
+	</section>
+
+	<div class="archive-index">
+		<div class="art-sheet">
+			{art.map((piece) => (
+				<ArtPlate piece={piece} size="sheet" showCaption />
+			))}
+		</div>
+
+		<p class="art-note">
+			Archive images at 1440px on the long edge — Instagram's ceiling, not the
+			originals and not print-ready. Aspect ratios as shot; nothing cropped or retouched.
+		</p>
+	</div>
+
+	<section class="archive-cta">
+		<p class="studio-kicker">Commissions / Four studies</p>
+		<h2>The commercial<br /><em>work.</em></h2>
+		<a href="/portfolio">Open the portfolio ↗</a>
+	</section>
+</BaseLayout>

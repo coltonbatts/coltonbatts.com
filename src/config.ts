@@ -19,6 +19,7 @@ export const reel = {
 
 export const navItems = [
 	{ href: '/', label: 'Home' },
+	{ href: '/art', label: 'Art' },
 	{ href: '/tools', label: 'Tools' },
 	{ href: '/portfolio', label: 'Portfolio' },
 	{ href: '/now', label: 'Now' },

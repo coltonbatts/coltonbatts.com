@@ -284,7 +284,7 @@ em {
   background: transparent !important;
   color: var(--vermilion) !important;
 }
-.site-menu ul { display: grid; grid-template-columns: repeat(5, 1fr); height: 100%; margin: 0; padding: 0; list-style: none; }
+.site-menu ul { display: grid; grid-template-columns: repeat(6, 1fr); height: 100%; margin: 0; padding: 0; list-style: none; }
 .site-menu li { display: flex; }
 .site-menu a {
   display: flex;
@@ -723,6 +723,66 @@ main > .max-w-4xl, main > .max-w-5xl, main section > .max-w-5xl, main div > .max
   .contact-page h1 { margin: auto 0; font-size: 22vw !important; }
   .contact-page__note p { width: 80%; margin-left: auto; }
   .contact-page__availability { margin-top: 4rem; }
+}
+
+/* Art archive — the stills. Numbered plates, never cropped. */
+.art-sheet { columns: 1; column-gap: var(--gutter); color: var(--vermilion); }
+@media (min-width: 620px) { .art-sheet { columns: 2; } }
+@media (min-width: 1000px) { .art-sheet { columns: 3; } .art-sheet--ledger { columns: 4; column-gap: calc(var(--gutter) * .75); } }
+
+/*
+ * Column flow keeps every plate at its intrinsic ratio, so the sheet
+ * stays ragged the way a contact sheet should. Nothing is cropped to fit.
+ */
+.art-plate { display: block; break-inside: avoid; -webkit-column-break-inside: avoid; page-break-inside: avoid; margin: 0 0 clamp(3rem, 5vw, 5rem); color: inherit; }
+.art-sheet--ledger .art-plate { margin-bottom: clamp(2rem, 3vw, 3rem); }
+
+.art-plate__media { position: relative; overflow: hidden; border: 1px solid currentColor; background: var(--carbon); }
+.art-plate__media img { display: block; width: 100%; height: auto; filter: saturate(.7) contrast(1.06); transition: filter .6s linear; }
+.art-plate:hover .art-plate__media img { filter: saturate(1) contrast(1); }
+
+/* Plate marks — the same registration language as the reliquary and the project editions. */
+.art-plate__media::before { content: ''; position: absolute; inset: .55rem; z-index: 2; pointer-events: none; border: 1px solid currentColor; opacity: .4; }
+.art-plate__media::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background:
+    linear-gradient(currentColor 0 0) left .3rem top .3rem / .8rem 1px,
+    linear-gradient(currentColor 0 0) left .3rem top .3rem / 1px .8rem,
+    linear-gradient(currentColor 0 0) right .3rem top .3rem / .8rem 1px,
+    linear-gradient(currentColor 0 0) right .3rem top .3rem / 1px .8rem,
+    linear-gradient(currentColor 0 0) left .3rem bottom .3rem / .8rem 1px,
+    linear-gradient(currentColor 0 0) left .3rem bottom .3rem / 1px .8rem,
+    linear-gradient(currentColor 0 0) right .3rem bottom .3rem / .8rem 1px,
+    linear-gradient(currentColor 0 0) right .3rem bottom .3rem / 1px .8rem;
+  background-repeat: no-repeat;
+  opacity: .75;
+}
+
+.art-plate__label { display: grid; grid-template-columns: auto 1fr auto; gap: .6rem; align-items: baseline; padding-top: .7rem; border-top: 1px solid currentColor; }
+.art-plate__index { font: 400 .9rem/1 var(--display); font-style: italic; }
+.art-plate__title { margin: 0; font: 400 clamp(1.05rem, 1.5vw, 1.5rem)/1.15 var(--display); letter-spacing: -.02em; }
+.art-plate__year { font: 650 .54rem/1.35 var(--mono); letter-spacing: .07em; text-transform: uppercase; }
+/* Captions are prose from the source manifest, so they set in the sans. */
+.art-plate__caption { grid-column: 1 / -1; font-family: var(--sans); font-size: .72rem; line-height: 1.45; }
+
+.art-edition { padding: var(--space) var(--gutter); color: var(--vermilion); }
+.art-edition__intro { display: grid; grid-template-columns: repeat(12, 1fr); gap: var(--gutter); margin-bottom: clamp(4rem, 8vw, 8rem); }
+.art-edition__intro > .studio-kicker { grid-column: 1 / span 3; }
+.art-edition__intro h2 { grid-column: 4 / -1; margin: 0; color: var(--vermilion) !important; font: 400 clamp(5rem, 12vw, 13rem)/.78 var(--display) !important; letter-spacing: -.055em !important; }
+.art-edition__intro > p:last-child { grid-column: 9 / -1; margin: 3rem 0 0; font-size: clamp(1rem, 1.35vw, 1.35rem); line-height: 1.3; }
+.art-edition__link { display: flex; justify-content: space-between; margin-top: clamp(3rem, 6vw, 6rem); padding: 1rem 0; border-top: 1px solid currentColor; border-bottom: 1px solid currentColor; color: var(--vermilion); font: 650 .66rem/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; text-decoration: none; transition: color .2s linear; }
+.art-edition__link:hover { color: var(--carbon); }
+
+.art-note { margin: clamp(4rem, 8vw, 8rem) 0 0; padding-top: 1rem; border-top: 1px solid var(--vermilion); font: 650 .56rem/1.6 var(--mono); letter-spacing: .07em; text-transform: uppercase; max-width: 70ch; }
+
+@media (max-width: 700px) {
+  .art-edition__intro { display: block; }
+  .art-edition__intro h2 { margin-top: 2rem; font-size: 25vw !important; }
+  .art-edition__intro > p:last-child { width: 78%; margin-left: auto; }
 }
 
 @media (prefers-reduced-motion: reduce) {
