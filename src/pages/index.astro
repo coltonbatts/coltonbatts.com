@@ -14,6 +14,9 @@ import { art } from '../data/art';
 const projects = (await getCollection('paintings')).sort((a, b) => a.data.order - b.data.order);
 const tools = (await getCollection('tools')).slice(0, 2);
 
+/** The homepage shows a teaser; the full archive lives at /art. */
+const featuredArt = art.slice(0, 6);
+
 const projectRoles: Record<string, string> = {
 	'shop-with-google': 'Lead Video Editor',
 	nuuly: 'Video Editor / Motion Designer',
@@ -71,18 +74,17 @@ const projectFallbackImages: Record<string, ImageMetadata> = {
 		<header class="art-edition__intro">
 			<p class="studio-kicker">Selected art / {art.length} frames</p>
 			<h2>Art<br /><em>first.</em></h2>
-			<p>Photographs, ordered by how they landed. The commissioned work follows below it.</p>
+			<p>{featuredArt.length} of {art.length}, ordered by how they landed. The full archive and the captions live in the art index.</p>
+			<a class="art-edition__cta" href="/art">
+				Open the art archive <span aria-hidden="true">↗</span>
+			</a>
 		</header>
 
 		<div class="art-sheet art-sheet--ledger">
-			{art.map((piece) => (
+			{featuredArt.map((piece) => (
 				<ArtPlate piece={piece} size="ledger" />
 			))}
 		</div>
-
-		<a class="art-edition__link" href="/art">
-			Open the art archive <span aria-hidden="true">↗</span>
-		</a>
 	</section>
 
 	<section id="work" class="edition-intro" data-motion-chapter>
