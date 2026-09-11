@@ -1,14 +1,20 @@
 /* -----------------------------------------------------------
  * ART ARCHIVE
  * The 24 selected photographs, in manifest order (Instagram likes,
- * descending). Generated from Portfolio/manifest.csv — titles and
- * captions are parsed from that file, never authored here.
+ * descending). Orders, years and captions are parsed from
+ * Portfolio/manifest.csv, which is the archive's record.
+ *
+ * Titles: the manifest only carries filename slugs, and reads
+ * untitled-* for rows Colton has not named yet. Names he has given
+ * go in `named` below — one line each. That map is the single place
+ * a title is authored; the entries array is generated and should not
+ * be hand-edited.
  *
  * Source: 1440px on the long edge, the Instagram ceiling. Not
  * originals, not print-ready. Aspect ratios left untouched.
  *
- * Entries whose manifest `name` still reads untitled-* carry
- * `untitled: true` and render as "Untitled, {year}" until named.
+ * Entries with no name carry `untitled: true` and render as
+ * "Untitled, {year}" until named. `untitled` exports the remainder.
  * ----------------------------------------------------------- */
 
 import type { ImageMetadata } from 'astro';
@@ -52,7 +58,7 @@ export interface Artwork {
 	src: ImageMetadata;
 }
 
-export const art: Artwork[] = [
+const entries: Artwork[] = [
 	{
 		order: 1,
 		title: 'Untitled, 2021',
@@ -295,5 +301,19 @@ export const art: Artwork[] = [
 	},
 ];
 
-/** Rows still unnamed in the manifest — for the naming hand-off. */
+/**
+ * Names Colton has given, keyed by archive order. One line each — this is the
+ * only place a title is authored. Anything not listed keeps the manifest
+ * fallback, so adding a name is a one-line change and nothing else moves.
+ */
+const named: Record<number, string> = {
+	1: 'Suburban Gothic',
+};
+
+export const art: Artwork[] = entries.map((piece) => {
+	const title = named[piece.order];
+	return title ? { ...piece, title, untitled: false } : piece;
+});
+
+/** Rows still unnamed — the naming hand-off. */
 export const untitled = art.filter((piece) => piece.untitled);
