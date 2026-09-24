@@ -30,9 +30,8 @@
   --color-bone: #000000;
 
   --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
-  --font-sans:
-    'Geist Pixel', 'Inter', system-ui, -apple-system, BlinkMacSystemFont,
-    sans-serif;
+  --font-sans: 'Instrument Sans', 'Helvetica Neue', Arial, sans-serif;
+  --font-display: 'Instrument Serif', 'Times New Roman', serif;
 
   --text-xs: 0.8125rem;
   --text-xs--line-height: 1.5;
@@ -344,7 +343,7 @@
     position: absolute;
     left: 0;
     top: 0;
-    font-family: 'Geist Pixel Triangle', monospace;
+    font-family: var(--display);
     color: #ffffff;
     font-size: 1.25rem;
     line-height: 1;
@@ -850,7 +849,7 @@ html[data-motion-intensity] [data-motion-chapter].motion-chapter-in {
 }
 
 @utility painting-card__title {
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: var(--sans);
   font-weight: 700;
   font-size: 1rem;
   letter-spacing: -0.01em;
@@ -970,7 +969,7 @@ html[data-motion-intensity] [data-motion-chapter].motion-chapter-in {
 }
 
 @utility wordmark__text {
-  font-family: 'Geist Pixel Circle', sans-serif;
+  font-family: var(--display);
   font-size: 1.5rem;
   font-weight: 900;
   color: #ffffff;
@@ -1130,45 +1129,10 @@ html[data-motion-intensity] [data-motion-chapter].motion-chapter-in {
  * Inter: the structural layer (headlines, body, authority).
  * ============================================================= */
 
-@font-face {
-  font-family: 'Geist Pixel';
-  src: url('/fonts/GeistPixel-Square.woff2') format('woff2');
-  font-weight: 400;
-  font-style: normal;
-  font-display: block;
-}
 
-@font-face {
-  font-family: 'Geist Pixel Circle';
-  src: url('/fonts/GeistPixel-Circle.woff2') format('woff2');
-  font-weight: 400;
-  font-style: normal;
-  font-display: block;
-}
 
-@font-face {
-  font-family: 'Geist Pixel Triangle';
-  src: url('/fonts/GeistPixel-Triangle.woff2') format('woff2');
-  font-weight: 400;
-  font-style: normal;
-  font-display: block;
-}
 
-@font-face {
-  font-family: 'Geist Pixel Grid';
-  src: url('/fonts/GeistPixel-Grid.woff2') format('woff2');
-  font-weight: 400;
-  font-style: normal;
-  font-display: block;
-}
 
-@font-face {
-  font-family: 'Geist Pixel Line';
-  src: url('/fonts/GeistPixel-Line.woff2') format('woff2');
-  font-weight: 400;
-  font-style: normal;
-  font-display: block;
-}
 
 @font-face {
   font-family: 'IBM Plex Mono';
@@ -1178,21 +1142,7 @@ html[data-motion-intensity] [data-motion-chapter].motion-chapter-in {
   font-display: swap;
 }
 
-@font-face {
-  font-family: 'Inter';
-  src: url('/fonts/Inter-Regular.woff2') format('woff2');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
 
-@font-face {
-  font-family: 'Inter';
-  src: url('/fonts/Inter-Black.woff2') format('woff2');
-  font-weight: 900;
-  font-style: normal;
-  font-display: swap;
-}
 
 /* =============================================================
  * CSS CUSTOM PROPERTIES
@@ -1232,7 +1182,7 @@ html[data-motion-intensity] [data-motion-chapter].motion-chapter-in {
 
 /* unwrapped: @layer base (native layers invert !important precedence) */
 html {
-	font-family: 'Geist Pixel', 'Inter', system-ui, -apple-system, sans-serif;
+	font-family: var(--sans);
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 	letter-spacing: -0.01em;
@@ -1241,7 +1191,7 @@ html {
 }
 
 body {
-	font-family: 'Geist Pixel', sans-serif;
+	font-family: var(--display);
 	background-color: #000000 !important;
 	min-height: 100vh;
 	color: #ffffff !important;
@@ -1271,7 +1221,7 @@ h3,
 h4,
 h5,
 h6 {
-	font-family: 'Geist Pixel', system-ui, sans-serif;
+	font-family: var(--display);
 	font-weight: 900;
 	letter-spacing: -0.03em;
 	line-height: 1.1;
@@ -1280,7 +1230,7 @@ h6 {
 
 h1,
 h2 {
-	font-family: 'Geist Pixel', sans-serif;
+	font-family: var(--display);
 	text-transform: uppercase;
 }
 
@@ -1394,25 +1344,25 @@ hr {
 
 	0%,
 	24% {
-		font-family: 'Geist Pixel Circle', sans-serif;
+		font-family: var(--display);
 		letter-spacing: -0.045em;
 	}
 
 	25%,
 	49% {
-		font-family: 'Geist Pixel Triangle', sans-serif;
+		font-family: var(--display);
 		letter-spacing: -0.045em;
 	}
 
 	50%,
 	74% {
-		font-family: 'Geist Pixel Grid', sans-serif;
+		font-family: var(--display);
 		letter-spacing: -0.045em;
 	}
 
 	75%,
 	100% {
-		font-family: 'Geist Pixel', sans-serif;
+		font-family: var(--display);
 		letter-spacing: -0.045em;
 	}
 }
@@ -1446,7 +1396,7 @@ hr {
 
 .hero-topline {
 	display: block;
-	font-family: 'Geist Pixel Circle', sans-serif;
+	font-family: var(--display);
 	font-size: clamp(1.35rem, 5.8vw, 4.5rem);
 	line-height: 0.98;
 	letter-spacing: 0.01em;
@@ -1486,7 +1436,7 @@ hr {
 }
 
 .toolmaker-display__main {
-	font-family: 'Geist Pixel Circle', sans-serif;
+	font-family: var(--display);
 	text-rendering: optimizeSpeed;
 	-webkit-font-smoothing: none;
 	-moz-osx-font-smoothing: auto;
@@ -1529,7 +1479,7 @@ hr {
 }
 
 .tool-thumb-pixel__name {
-	font-family: 'Geist Pixel', sans-serif;
+	font-family: var(--display);
 	font-size: clamp(2rem, 6.4vw, 4rem);
 	line-height: 1;
 	letter-spacing: 0.01em;
@@ -1576,7 +1526,7 @@ hr {
 .graphic-hero__intro {
   max-width: 37rem;
   margin-top: 1.5rem;
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: var(--sans);
   font-size: clamp(1rem, 2vw, 1.35rem);
   line-height: 1.45;
   color: #ffffff;
@@ -1700,7 +1650,7 @@ hr {
 
 .design-services__item p:last-child {
   max-width: 24rem;
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: var(--sans);
   font-size: 0.96rem;
   line-height: 1.5;
   color: #ffffff;
@@ -1819,7 +1769,7 @@ hr {
 .studio-hero__copy > p:not(.studio-kicker) {
   max-width: 34rem;
   margin: 1.25rem 0 0;
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: var(--sans);
   font-size: 1.05rem;
   line-height: 1.45;
   color: rgba(255, 255, 255, 0.86);
@@ -1873,7 +1823,7 @@ hr {
 .production-scene__slab {
   position: absolute;
   border: 2px solid #ffffff;
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: var(--sans);
   font-weight: 900;
   letter-spacing: 0;
   text-transform: uppercase;
@@ -2112,7 +2062,7 @@ hr {
 .studio-project__plate strong {
   align-self: center;
   max-width: 8ch;
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: var(--sans);
   font-size: 4rem;
   font-weight: 900;
   line-height: 0.88;
@@ -2226,7 +2176,7 @@ hr {
 .studio-capabilities__item p:last-child,
 .studio-point p,
 .studio-lab__info p {
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: var(--sans);
   font-size: 1rem;
   line-height: 1.52;
   color: rgba(255, 255, 255, 0.78);
@@ -2551,7 +2501,7 @@ hr {
 .studio-section__header h2,
 .studio-point h2,
 .studio-contact h2 {
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: var(--sans);
   font-weight: 900;
   letter-spacing: 0;
   color: var(--studio-paper) !important;
@@ -2561,7 +2511,7 @@ hr {
 .studio-lab__info h3,
 .studio-capabilities__item h2,
 .studio-project__plate strong {
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: var(--sans);
   font-weight: 900;
   letter-spacing: 0;
 }
@@ -3007,7 +2957,7 @@ html[data-motion-intensity] [data-motion-chapter] {
 	--studio-red-hairline: rgba(161, 31, 22, 0.42);
 	--studio-serif: Georgia, 'Times New Roman', Times, serif;
 	--studio-sans: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
-	--studio-body: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+	--studio-body: var(--sans);
 	--border-weight: 1px;
 	--border-color: var(--studio-red);
 	--charcoal: var(--studio-red);
@@ -3969,7 +3919,7 @@ a {
 	--editorial-ink: #17100d;
 	--editorial-serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
 	--editorial-sans: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-	--editorial-body: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+	--editorial-body: var(--sans);
 }
 
 html {

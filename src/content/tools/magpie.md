@@ -1,6 +1,6 @@
 ---
 name: MagpieApp
-oneLiner: The Artisan's Blueprint for Modern Embroidery. Transform images into high-fidelity technical patterns for hand-embroidery.
+oneLiner: Turns a photograph into a pattern you can stitch by hand.
 status: active
 platform: macOS / Windows / Linux
 version: "0.9.0"

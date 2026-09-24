@@ -26,7 +26,7 @@ const timeline = await Promise.all(
 <BaseLayout title="Now" description="A running timeline of notes and links.">
 	<div class="max-w-4xl mx-auto px-6 py-20">
 		<div class="mb-16">
-			<h1 class="text-3xl font-bold tracking-tighter uppercase font-sans">Now</h1>
+			<h1 class="text-5xl font-display">Now</h1>
 			<div class="flex items-center gap-4 mt-2">
 				<span class="section-label !mb-0">Archive_Log</span>
 				<div class="h-[1px] flex-1 bg-charcoal/20"></div>
@@ -45,7 +45,7 @@ const timeline = await Promise.all(
 							{/* Date Tag - Desktop: Floating left, Mobile: Top */}
 							<div class="md:absolute md:-left-[154px] md:top-0 mb-6 md:mb-0">
 								<div class="flex md:flex-col items-baseline md:items-end gap-2 md:gap-0">
-									<span class="text-4xl font-bold leading-none tracking-tighter text-charcoal font-sans">{entry.day}</span>
+									<span class="text-4xl leading-none text-charcoal font-display">{entry.day}</span>
 									<div class="flex flex-col md:items-end">
 										<span class="text-[10px] font-bold font-mono text-charcoal leading-none tracking-[0.2em]">{entry.month}</span>
 										<span class="text-[10px] font-mono text-charcoal/40 leading-none mt-1">'{entry.year}</span>
@@ -63,7 +63,7 @@ const timeline = await Promise.all(
 											<span class="text-[10px] font-mono px-1.5 py-0.5 border border-charcoal/30 text-charcoal/50 uppercase">Entry_{timeline.length - index}</span>
 											{index === 0 && <span class="text-[10px] font-mono px-1.5 py-0.5 bg-charcoal text-black font-bold uppercase">Latest</span>}
 										</div>
-										<h2 class="text-xl md:text-2xl font-bold tracking-tight uppercase leading-tight font-sans">
+										<h2 class="text-2xl md:text-3xl leading-tight font-display">
 											{entry.data.title || "Log Entry"}
 										</h2>
 										{entry.data.summary && (
@@ -73,7 +73,7 @@ const timeline = await Promise.all(
 										)}
 									</header>
 
-									<div class="prose prose-invert max-w-none text-sm leading-relaxed font-sans prose-headings:font-sans prose-headings:uppercase prose-headings:tracking-tighter">
+									<div class="prose prose-invert max-w-none text-sm leading-relaxed font-sans prose-headings:font-display">
 										<Content />
 									</div>
 

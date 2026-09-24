@@ -1,0 +1,129 @@
+---
+/**
+ * WorkMedia — the picture for one piece of commissioned work.
+ *
+ * Uses the best source a project has, in this order:
+ *   1. poster (+ loop) — a still from the cut, with a short muted loop that
+ *      plays while the frame is on screen. Self-hosted, so no third-party
+ *      player on the page. The loop never loads under reduced motion.
+ *   2. vimeoId — the Vimeo background player, lazy-loaded in view.
+ *   3. neither — a typographic plate with the project title, so a new entry
+ *      can go live before its media exists.
+ *
+ * Files: poster in src/assets/work/<slug>-poster.jpg (frontmatter `poster`),
+ * loop in public/work/<slug>-loop.mp4 (frontmatter `loop`).
+ */
+import type { ImageMetadata } from 'astro';
+import { Picture } from 'astro:assets';
+
+interface Props {
+	title: string;
+	poster?: ImageMetadata;
+	posterAlt?: string;
+	loop?: string;
+	vimeoId?: string;
+	sizes?: string;
+}
+
+const {
+	title,
+	poster,
+	posterAlt = `Still from ${title}`,
+	loop,
+	vimeoId,
+	sizes = '(min-width: 700px) calc(100vw - 5.5rem), 100vw',
+} = Astro.props;
+---
+
+<div class="work-media">
+	{poster ? (
+		<>
+			<Picture
+				src={poster}
+				alt={posterAlt}
+				formats={['avif', 'webp']}
+				widths={[720, 1200, 1600, 2400]}
+				sizes={sizes}
+				loading="lazy"
+				decoding="async"
+				class="work-media__poster"
+			/>
+			{loop && (
+				<video
+					class="work-media__loop"
+					data-src={loop}
+					muted
+					loop
+					playsinline
+					preload="none"
+					aria-hidden="true"
+					tabindex="-1"
+				></video>
+			)}
+		</>
+	) : vimeoId ? (
+		<iframe
+			class="work-media__vimeo"
+			data-vimeo={vimeoId}
+			allow="autoplay; fullscreen"
+			loading="lazy"
+			title={`${title} — film`}
+		></iframe>
+	) : (
+		<div class="work-media__plate">
+			<strong>{title}</strong>
+		</div>
+	)}
+</div>
+
+<script>
+	/*
+	 * Loops and Vimeo players load when they come into view and pause when
+	 * they leave. Under reduced motion the loop never loads (the poster
+	 * stands in) and Vimeo loads as a normal player with controls, so
+	 * nothing moves unless the viewer presses play.
+	 */
+	function initWorkMedia() {
+		const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+		const loops = document.querySelectorAll<HTMLVideoElement>('.work-media__loop');
+		const players = document.querySelectorAll<HTMLIFrameElement>('.work-media__vimeo');
+		if (!loops.length && !players.length) return;
+
+		const observer = new IntersectionObserver((entries) => {
+			entries.forEach((entry) => {
+				const el = entry.target;
+				if (el instanceof HTMLVideoElement) {
+					if (entry.isIntersecting) {
+						if (!el.src && el.dataset.src) el.src = el.dataset.src;
+						el.play().catch(() => {});
+					} else {
+						el.pause();
+					}
+				} else if (el instanceof HTMLIFrameElement) {
+					const id = el.dataset.vimeo;
+					if (entry.isIntersecting && !el.src && id) {
+						el.src = reduced
+							? `https://player.vimeo.com/video/${id}?muted=1&dnt=1`
+							: `https://player.vimeo.com/video/${id}?background=1&autoplay=1&loop=1&muted=1&dnt=1`;
+					} else if (el.src && el.contentWindow && !reduced) {
+						el.contentWindow.postMessage(
+							JSON.stringify({ method: entry.isIntersecting ? 'play' : 'pause' }),
+							'https://player.vimeo.com',
+						);
+					}
+				}
+			});
+		}, { threshold: 0.25, rootMargin: '160px 0px' });
+
+		if (!reduced) {
+			loops.forEach((video) => {
+				video.addEventListener('playing', () => video.classList.add('is-playing'), { once: true });
+				observer.observe(video);
+			});
+		}
+		players.forEach((player) => observer.observe(player));
+		document.addEventListener('astro:before-swap', () => observer.disconnect(), { once: true });
+	}
+
+	document.addEventListener('astro:page-load', initWorkMedia);
+</script>

@@ -37,34 +37,13 @@ const {
 				href="/tools"
 				class="font-mono text-label uppercase tracking-instrument text-charcoal/40 hover:text-charcoal transition-colors"
 			>
-				&larr; All Tools
+				&larr; All tools
 			</a>
 		</div>
 	</section>
 
 	<section class="border-b-2 border-charcoal">
 		<div class="max-w-5xl mx-auto px-6 pt-12 pb-10 md:pt-16 md:pb-12">
-
-			<div class="flex flex-wrap items-center gap-3 mb-6">
-				<span class:list={[
-					'status-badge',
-					{
-						'status-badge--active': status === 'active',
-						'status-badge--beta': status === 'beta',
-						'status-badge--archived': status === 'archived',
-					},
-				]}>
-					{status}
-				</span>
-				{version && (
-					<span class="font-mono text-meta uppercase tracking-instrument text-charcoal/40">
-						v{version}
-					</span>
-				)}
-				<span class="font-mono text-meta uppercase tracking-instrument text-charcoal/30">
-					{platform}
-				</span>
-			</div>
 
 			<h1 class="text-display md:text-display-lg mb-4">{name}</h1>
 
@@ -192,12 +171,10 @@ const {
 									<dt class="font-mono text-meta uppercase tracking-instrument text-manual/35">Recommended</dt>
 									<dd class="font-mono text-sm text-manual/75 mt-0.5">{hardware.recommended}</dd>
 								</div>
-								{hardware.notes && (
-									<div class="pt-3 border-t border-manual/10">
-										<p class="font-mono text-xs text-manual/40 leading-relaxed">{hardware.notes}</p>
-									</div>
-								)}
 							</dl>
+							{hardware.notes && (
+								<p class="mt-4 pt-3 border-t border-manual/10 font-mono text-xs text-manual/40 leading-relaxed">{hardware.notes}</p>
+							)}
 						</div>
 					)}
 

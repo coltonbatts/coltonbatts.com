@@ -53,11 +53,16 @@ const toolsCollection = defineCollection({
  *   hidden      — Set aside: off the site everywhere, kept in the repo
  *   order       — Sort order (lower = first)
  *   vimeoId     — Optional Vimeo video ID for inline playback
+ *   poster      — Optional still from the cut (src/assets/work/<slug>-poster.jpg,
+ *                 16:9, 2400×1350). Takes precedence over vimeoId in listings.
+ *   posterAlt   — Alt text for the poster. Defaults to "Still from <title>".
+ *   loop        — Optional muted loop played over the poster while in view
+ *                 (public path, e.g. /work/<slug>-loop.mp4).
  * ----------------------------------------------------------- */
 
 const paintingsCollection = defineCollection({
 	loader: glob({ pattern: '**/[^_]*.md', base: './src/content/paintings' }),
-	schema: z.object({
+	schema: ({ image }) => z.object({
 		title: z.string(),
 		medium: z.string(),
 		dimensions: z.string(),
@@ -72,6 +77,9 @@ const paintingsCollection = defineCollection({
 		hidden: z.boolean().default(false),
 		order: z.number().default(0),
 		vimeoId: z.string().optional(),
+		poster: image().optional(),
+		posterAlt: z.string().optional(),
+		loop: z.string().optional(),
 	}),
 });
 

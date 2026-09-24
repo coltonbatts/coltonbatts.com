@@ -1,6 +1,6 @@
 ---
 name: ColorWizard
-oneLiner: Spectral color mixing engine for oil painters. Mix pigments on screen the way they behave on canvas.
+oneLiner: Mixes oil paint on screen the way it mixes on canvas.
 status: beta
 platform: macOS
 externalUrl: https://colorwizard.app/

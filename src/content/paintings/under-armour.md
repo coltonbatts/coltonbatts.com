@@ -10,6 +10,7 @@ order: 3
 # Set aside: no Vimeo cut yet, so the case study has no media to show.
 # Flip to false once the edit exists.
 hidden: true
+poster: ../../assets/hero/under-armour-fallback.png
 ---
 
 Edited training series and brand content for Under Armour. High-energy editorial with tight pacing — built for athlete-focused storytelling across digital and broadcast platforms.

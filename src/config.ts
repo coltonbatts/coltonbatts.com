@@ -1,6 +1,6 @@
 export const site = {
 	title: 'Colton Batts',
-	description: 'Graphic design, motion, and production systems.',
+	description: 'Photographs and commercial film by Colton Batts, Fort Worth.',
 	url: 'https://coltonbatts.com',
 };
 
@@ -17,11 +17,14 @@ export const reel = {
 	title: 'Colton Batts — Reel',
 };
 
+/** Primary nav, in the order the site argues: images, film, tools, contact.
+ *  The logo is the way home. */
 export const navItems = [
-	{ href: '/', label: 'Home' },
 	{ href: '/art', label: 'Art' },
+	{ href: '/portfolio', label: 'Work' },
 	{ href: '/tools', label: 'Tools' },
-	{ href: '/portfolio', label: 'Portfolio' },
-	{ href: '/now', label: 'Now' },
 	{ href: '/contact', label: 'Contact' },
 ];
+
+/** The footer index also carries the secondary pages. */
+export const footerItems = [...navItems, { href: '/now', label: 'Now' }];

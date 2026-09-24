@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection, render } from 'astro:content';
+import WorkMedia from '../../components/WorkMedia.astro';
 
 export async function getStaticPaths() {
 	const paintings = (await getCollection('paintings')).filter(
@@ -20,7 +21,7 @@ export async function getStaticPaths() {
 
 const { painting, prev, next } = Astro.props;
 const { Content } = await render(painting);
-const { title, medium, dimensions, year, image, series, available, vimeoId } = painting.data;
+const { title, medium, dimensions, year, available, vimeoId } = painting.data;
 ---
 
 <BaseLayout title={title} description={`${title} — ${medium}, ${year}. Colton Batts.`}>
@@ -31,7 +32,7 @@ const { title, medium, dimensions, year, image, series, available, vimeoId } = p
 				href="/portfolio"
 				class="font-mono text-label uppercase tracking-instrument text-charcoal/40 hover:text-charcoal transition-colors"
 			>
-				&larr; All Projects
+				&larr; All work
 			</a>
 		</div>
 	</section>
@@ -40,37 +41,11 @@ const { title, medium, dimensions, year, image, series, available, vimeoId } = p
 		<div class="grid md:grid-cols-12 gap-8 md:gap-12">
 
 			<div class="md:col-span-8">
-				<div class="painting-card__frame">
-					<div class="painting-card__mat" style="padding: 1.5rem;">
-						{vimeoId ? (
-							<div style="position:relative;aspect-ratio:16/9;overflow:hidden;">
-								<iframe
-									src={`https://player.vimeo.com/video/${vimeoId}?background=1&autoplay=1&loop=1&muted=1&dnt=1`}
-									style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;"
-									allow="autoplay; fullscreen"
-									loading="eager"
-									title={title}
-								></iframe>
-							</div>
-						) : (
-							<div
-								style="aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;background:#1a1a1a;color:rgba(255,255,255,0.25);font-family:monospace;font-size:0.875rem;text-transform:uppercase;letter-spacing:0.1em;"
-								class="painting-card__image"
-							>
-								{title}
-							</div>
-						)}
-					</div>
-				</div>
+				<WorkMedia title={title} vimeoId={vimeoId} />
 			</div>
 
 			<div class="md:col-span-4 md:pt-4">
 				<div class="sticky top-8">
-					{series && (
-						<p class="font-mono text-meta uppercase tracking-instrument text-charcoal/25 mb-4">
-							{series}
-						</p>
-					)}
 					<h1 class="text-display-sm mb-4">{title}</h1>
 
 					<div class="divider-muted mb-6 pb-6">

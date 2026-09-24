@@ -1,11 +1,11 @@
 ---
 /**
- * ArtPlate — one photograph, framed as a printed plate.
+ * ArtPlate — one photograph.
  *
- * Uses the same registration language as the hero reliquary and the
- * project editions: a hairline frame, an inset hairline, corner ticks.
- * The image is never cropped — width:100% / height:auto carries the
- * intrinsic ratio through, and Astro emits the real width/height.
+ * The homepage ledger shows the frames alone; the archive sheet carries
+ * the title, year and caption. The image is never cropped — width:100% /
+ * height:auto carries the intrinsic ratio through, and Astro emits the real
+ * width/height.
  */
 import { Image } from 'astro:assets';
 import type { Artwork } from '../data/art';
@@ -18,8 +18,6 @@ interface Props {
 }
 
 const { piece, size = 'sheet', showCaption = false } = Astro.props;
-
-const index = String(piece.order).padStart(2, '0');
 
 const widths = size === 'ledger' ? [320, 640] : [420, 840, 1280];
 const sizes =
@@ -39,12 +37,13 @@ const sizes =
 			decoding="async"
 		/>
 	</div>
-	<figcaption class="art-plate__label">
-		<span class="art-plate__index">{index}</span>
-		<span class="art-plate__title">{piece.title}</span>
-		<span class="art-plate__year">{piece.year}</span>
-		{showCaption && piece.caption && (
-			<span class="art-plate__caption">{piece.caption}</span>
-		)}
-	</figcaption>
+	{size === 'sheet' && (
+		<figcaption class="art-plate__label">
+			<span class="art-plate__title">{piece.title}</span>
+			<span class="art-plate__year">{piece.year}</span>
+			{showCaption && piece.caption && (
+				<span class="art-plate__caption">{piece.caption}</span>
+			)}
+		</figcaption>
+	)}
 </figure>
