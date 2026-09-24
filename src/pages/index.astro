@@ -60,7 +60,8 @@ const projectRoles: Record<string, string> = {
 			<p class="monograph-hero__statement"><span>Images with consequence.</span> <span>Systems with a point of view.</span></p>
 		</div>
 
-		<figure class="monograph-hero__image">
+		<!-- Darkroom adds grain and halation after load; the <img> and its preload stay as they are. -->
+		<figure class="monograph-hero__image" data-darkroom="print">
 			<img
 				src={heroImage.src}
 				srcset={heroImage.srcSet.attribute}

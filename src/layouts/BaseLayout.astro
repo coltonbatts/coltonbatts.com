@@ -1,5 +1,6 @@
 ---
 import { ClientRouter } from 'astro:transitions';
+import Darkroom from '../components/Darkroom.astro';
 import { footerItems, navItems, site } from '../config';
 import '../styles/global.css';
 import '../styles/editorial.css';
@@ -171,5 +172,7 @@ const currentPath = Astro.url.pathname;
 				initReveals();
 			});
 		</script>
+
+		<Darkroom />
 	</body>
 </html>

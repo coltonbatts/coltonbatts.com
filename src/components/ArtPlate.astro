@@ -6,6 +6,10 @@
  * the title, year and caption. The image is never cropped — width:100% /
  * height:auto carries the intrinsic ratio through, and Astro emits the real
  * width/height.
+ *
+ * `data-darkroom="develop"` hands the frame to Darkroom.astro, which prints
+ * it with grain and halation as it scrolls in. Without WebGL the <img> is
+ * all there is.
  */
 import { Image } from 'astro:assets';
 import type { Artwork } from '../data/art';
@@ -27,7 +31,7 @@ const sizes =
 ---
 
 <figure class="art-plate">
-	<div class="art-plate__media">
+	<div class="art-plate__media" data-darkroom="develop">
 		<Image
 			src={piece.src}
 			alt={piece.alt}

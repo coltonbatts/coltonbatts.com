@@ -1,0 +1,16 @@
+---
+/**
+ * DarkroomRuntime — the bundled entry for src/lib/darkroom/runtime.ts.
+ *
+ * Only ever rendered inside the <template> in Darkroom.astro. Browsers don't
+ * fetch or run scripts inside a template, so this costs nothing at page load;
+ * the loader reads its built `src` and imports it once the page is idle.
+ * The module hands its controls to the loader on `window.__darkroom`.
+ */
+---
+
+<script>
+	import { start, stop } from '../lib/darkroom/runtime';
+
+	(window as Window & { __darkroom?: { start: () => void; stop: () => void } }).__darkroom = { start, stop };
+</script>

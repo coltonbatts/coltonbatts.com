@@ -1,0 +1,92 @@
+---
+/**
+ * Darkroom — film character for images that are already on the page.
+ *
+ * Mark an image's box with `data-darkroom` and this puts a canvas over the
+ * <img> that prints it like a photographic print: a red-orange halation
+ * around the lights, a fixed grain strongest in the midtones, and — for
+ * `develop` plates — the image rising out of paper white as it scrolls
+ * in, shadows first.
+ *
+ *   data-darkroom="develop"  Art plates. Develop on first view, then hold.
+ *   data-darkroom="print"    The hero. Never hidden; grain and halation
+ *                            fade in over the already-painted image.
+ *
+ * The <img> is untouched and stays underneath, so layout, alt text, the
+ * hero preload and LCP are exactly what they'd be without this. The canvas
+ * is aria-hidden and ignores the pointer.
+ *
+ * It does nothing — the plain image stands — under prefers-reduced-motion,
+ * Save-Data, without WebGL2, if a shader fails to build, or with
+ * `?darkroom=0` in the URL. If the GPU drops the context mid-visit, the
+ * canvases are removed and the images show through.
+ *
+ * Loading: nothing is requested at page load. The loader is inline, and the
+ * runtime's <script> is parked inside a <template>, where the browser won't
+ * fetch it. After `load` and an idle callback, and only on a page with
+ * something to print, the loader imports that script's built URL. So the
+ * engine can't compete with the fonts or the LCP image, and visitors who
+ * opt out never download it. Frames are only drawn while something is
+ * changing (a plate developing or a hover); a finished print is a static
+ * canvas and costs nothing.
+ *
+ * Include once, in the layout. The implementation is in src/lib/darkroom/.
+ */
+import DarkroomRuntime from './DarkroomRuntime.astro';
+---
+
+<template id="darkroom-runtime"><DarkroomRuntime /></template>
+
+<script is:inline>
+	(function () {
+		/** Bumped on every navigation, so a late load can't start on the wrong page. */
+		var generation = 0;
+		var loading = null;
+
+		function allowed() {
+			if (!document.querySelector('[data-darkroom]')) return false;
+			if (matchMedia('(prefers-reduced-motion: reduce)').matches) return false;
+			if (navigator.connection && navigator.connection.saveData) return false;
+			if (new URLSearchParams(location.search).get('darkroom') === '0') return false;
+			return 'WebGL2RenderingContext' in window;
+		}
+
+		/** After load, after idle: the hero's LCP is long settled before a shader compiles. */
+		function afterLoadAndIdle(run) {
+			function idle() {
+				if ('requestIdleCallback' in window) requestIdleCallback(run, { timeout: 2000 });
+				else setTimeout(run, 200);
+			}
+			if (document.readyState === 'complete') idle();
+			else addEventListener('load', idle, { once: true });
+		}
+
+		function loadRuntime() {
+			if (!loading) {
+				var template = document.getElementById('darkroom-runtime');
+				var script = template && template.content.querySelector('script[src]');
+				loading = script
+					? import(script.src).then(function () { return window.__darkroom || null; })
+					: Promise.resolve(null);
+				loading = loading.catch(function () { return null; });
+			}
+			return loading;
+		}
+
+		document.addEventListener('astro:page-load', function () {
+			var page = ++generation;
+			if (!allowed()) return;
+			afterLoadAndIdle(function () {
+				if (page !== generation) return;
+				loadRuntime().then(function (runtime) {
+					if (runtime && page === generation) runtime.start();
+				});
+			});
+		});
+
+		document.addEventListener('astro:before-swap', function () {
+			generation++;
+			if (window.__darkroom) window.__darkroom.stop();
+		});
+	})();
+</script>
