@@ -79,10 +79,6 @@ const projectRoles: Record<string, string> = {
 	<section id="art" class="art-edition" data-motion-chapter>
 		<header class="art-edition__intro">
 			<h2>Art<br /><em>first.</em></h2>
-			<p>{featuredArt.length} of {art.length}, ordered by how they landed. The full archive and the captions live in the art index.</p>
-			<a class="art-edition__cta" href="/art">
-				Open the art archive <span aria-hidden="true">↗</span>
-			</a>
 		</header>
 
 		<div class="art-sheet art-sheet--ledger">
@@ -90,11 +86,14 @@ const projectRoles: Record<string, string> = {
 				<ArtPlate piece={piece} size="ledger" />
 			))}
 		</div>
+
+		<a class="art-edition__cta" href="/art">
+			Open the art archive <span aria-hidden="true">→</span>
+		</a>
 	</section>
 
 	<section id="work" class="edition-intro" data-motion-chapter>
 		<h2>Selected<br /><em>work</em></h2>
-		<p>Commercial film, motion systems, and visual identities made to remain legible long after the launch.</p>
 	</section>
 
 	<section class="project-editions" aria-label="Selected projects">
@@ -103,7 +102,6 @@ const projectRoles: Record<string, string> = {
 				<header class="project-edition__head">
 					<h3>{project.data.title}</h3>
 					<p>{projectRoles[project.id] || project.data.medium}<br />{project.data.dimensions} · {project.data.year}</p>
-					<span aria-hidden="true">↘</span>
 				</header>
 
 				<div class="project-edition__media">

@@ -381,31 +381,23 @@ em {
 
 /* Work edition */
 .edition-intro {
-  display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  gap: var(--gutter);
   padding: var(--space) var(--gutter) clamp(3rem, 6vw, 6rem);
-  align-items: end;
   color: var(--carbon);
 }
 .edition-intro h2 {
-  grid-column: 1 / span 8;
   margin: 0;
   color: var(--carbon) !important;
   font: 400 clamp(5rem, 13vw, 14rem)/.78 var(--display) !important;
   letter-spacing: -.055em !important;
 }
-.edition-intro > p:last-child { grid-column: 9 / -1; margin: 0; font-size: clamp(1rem, 1.35vw, 1.35rem); line-height: 1.3; }
 
 .project-editions { border-top: 1px solid var(--hairline); }
 .project-edition { display: block; padding: clamp(2rem, 4vw, 4rem) var(--gutter) clamp(5rem, 9vw, 9rem); border-bottom: 1px solid currentColor; color: var(--carbon); text-decoration: none; }
 /* Alternate light and dark rows, however many studies there are. */
 .project-edition:nth-child(even) { background: var(--carbon); color: var(--paper); }
-.project-edition__head { display: grid; grid-template-columns: repeat(12, 1fr); align-items: start; gap: var(--gutter); padding-bottom: clamp(2rem, 5vw, 5rem); }
-.project-edition__head h3 { grid-column: 1 / span 8; margin: 0; color: inherit !important; font: 400 clamp(4rem, 10vw, 11rem)/.82 var(--display) !important; letter-spacing: -.055em !important; }
-.project-edition__head > p { grid-column: 10 / span 2; margin: .5rem 0 0; font: 650 .58rem/1.55 var(--mono); letter-spacing: .06em; text-transform: uppercase; }
-.project-edition__head > span { grid-column: 12; justify-self: end; font-size: 2rem; line-height: 1; transition: transform .35s cubic-bezier(.2,.7,.2,1); }
-.project-edition:hover .project-edition__head > span { transform: translate(.4rem, .4rem); }
+.project-edition__head { padding-bottom: clamp(2rem, 4vw, 4rem); }
+.project-edition__head h3 { margin: 0; color: inherit !important; font: 400 clamp(4rem, 10vw, 11rem)/.82 var(--display) !important; letter-spacing: -.055em !important; }
+.project-edition__head > p { margin: 1.25rem 0 0; font: 650 .66rem/1.55 var(--mono); letter-spacing: .06em; text-transform: uppercase; }
 .project-edition__media { background: var(--carbon); }
 
 /* WorkMedia — poster + loop, Vimeo, or the title plate. One frame, no marks. */
@@ -426,8 +418,8 @@ em {
   color: var(--paper);
 }
 .dark-relic__copy { grid-column: 1 / span 6; }
-.dark-relic__copy h2 { margin: 2rem 0 4rem; color: var(--paper) !important; font: 400 clamp(4.5rem, 10vw, 11rem)/.8 var(--display) !important; letter-spacing: -.055em !important; }
-.dark-relic__copy > p:last-child { width: 62%; margin: 0 0 0 auto; font-size: clamp(1rem, 1.4vw, 1.4rem); line-height: 1.35; }
+.dark-relic__copy h2 { margin: 0 0 2rem; color: var(--paper) !important; font: 400 clamp(4.5rem, 10vw, 11rem)/.8 var(--display) !important; letter-spacing: -.055em !important; }
+.dark-relic__copy > p:last-child { max-width: 30rem; margin: 0; font-size: clamp(1rem, 1.4vw, 1.4rem); line-height: 1.35; }
 .dark-relic__portrait { grid-column: 8 / -1; align-self: start; margin: 0; }
 .dark-relic__portrait img { display: block; width: 100%; filter: grayscale(1) contrast(1.35); }
 .discipline-ledger { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(3, 1fr); margin: clamp(7rem, 13vw, 13rem) 0 0; padding: 0; border-top: 1px solid var(--paper); list-style: none; }
@@ -486,16 +478,16 @@ em {
 
 /* Archive and contact pages */
 .page-hero {
-  display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  gap: var(--gutter);
-  min-height: clamp(38rem, 68vw, 64rem);
-  padding: clamp(3rem, 6vw, 6rem) var(--gutter) clamp(5rem, 9vw, 9rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+  padding: clamp(5rem, 10vw, 10rem) var(--gutter) clamp(4rem, 7vw, 7rem);
   border-bottom: 1px solid currentColor;
   color: var(--carbon);
 }
-.page-hero h1 { grid-column: 1 / span 10; align-self: center; margin: 0; color: var(--carbon) !important; font: 400 clamp(6rem, 16vw, 18rem)/.78 var(--display) !important; letter-spacing: -.055em !important; }
-.page-hero > p:last-child { grid-column: 9 / -1; align-self: end; margin: 0; font-size: clamp(1rem, 1.35vw, 1.35rem); line-height: 1.3; }
+.page-hero h1 { margin: 0; color: var(--carbon) !important; font: 400 clamp(6rem, 16vw, 18rem)/.78 var(--display) !important; letter-spacing: -.055em !important; }
+.page-hero > p:last-child { max-width: 32rem; margin: 0; font-size: clamp(1rem, 1.35vw, 1.35rem); line-height: 1.3; }
 .page-hero--olive { background: var(--carbon) !important; color: var(--paper) !important; }
 .page-hero--olive h1, .page-hero--olive p { color: var(--paper) !important; }
 
@@ -578,7 +570,6 @@ main > .max-w-4xl, main > .max-w-5xl, main section > .max-w-5xl, main div > .max
 
 @media (max-width: 940px) {
 
-  .project-edition__head > p { grid-column: 9 / span 3; }
   .dark-relic__copy { grid-column: 1 / span 7; }
   .dark-relic__portrait { grid-column: 8 / -1; }
 
@@ -593,19 +584,13 @@ main > .max-w-4xl, main > .max-w-5xl, main section > .max-w-5xl, main div > .max
 
   .site-logo__role { display: none; }
 
-  .edition-intro { display: block; }
-  .edition-intro h2 { margin-top: 2rem; font-size: 28vw !important; }
-  .edition-intro > p:last-child { width: 75%; margin: 2rem 0 0 auto; }
+  .edition-intro h2 { font-size: 28vw !important; }
   .project-edition { padding-inline: var(--gutter); }
-  .project-edition__head { display: grid; grid-template-columns: 1fr auto; }
-  .project-edition__head h3 { grid-column: 1 / -1; font-size: 18vw !important; }
-  .project-edition__head > p { grid-column: 1; }
-  .project-edition__head > span { grid-column: 2; }
+  .project-edition__head h3 { font-size: 18vw !important; }
   .work-media { aspect-ratio: 4 / 3; }
 
   .dark-relic { display: block; }
   .dark-relic__copy h2 { font-size: 23vw !important; }
-  .dark-relic__copy > p:last-child { width: 78%; }
   .dark-relic__portrait { width: 90%; margin: 6rem auto 0; }
   .discipline-ledger { display: block; }
   .discipline-ledger li, .discipline-ledger li + li { padding: 1.5rem 0 3rem; border-right: 0; border-bottom: 1px solid var(--paper); }
@@ -627,9 +612,7 @@ main > .max-w-4xl, main > .max-w-5xl, main section > .max-w-5xl, main div > .max
   .site-footer__grid > div:nth-child(2), .site-footer__grid > div:nth-child(3) { grid-column: auto; }
   .site-footer__mark { font-size: 4rem !important; }
 
-  .page-hero { display: flex; flex-direction: column; min-height: 38rem; }
-  .page-hero h1 { margin: auto 0 2rem; font-size: 27vw !important; }
-  .page-hero > p:last-child { width: 78%; margin-left: auto; }
+  .page-hero h1 { font-size: 27vw !important; }
   .painting-card__label { display: block !important; }
   .painting-card__meta { margin-top: 1.5rem !important; }
   .archive-cta { display: block; }
@@ -677,24 +660,21 @@ main > .max-w-4xl, main > .max-w-5xl, main section > .max-w-5xl, main div > .max
 .art-plate__caption { grid-column: 1 / -1; font-family: var(--sans); font-size: .72rem; line-height: 1.45; }
 
 .art-edition { padding: var(--space) var(--gutter); color: var(--carbon); }
-.art-edition__intro { display: grid; grid-template-columns: repeat(12, 1fr); align-items: end; gap: 0 var(--gutter); margin-bottom: clamp(2.5rem, 5vw, 5rem); }
-.art-edition__intro h2 { grid-column: 1 / span 8; grid-row: 1 / span 2; margin: 0; color: var(--carbon) !important; font: 400 clamp(5rem, 12vw, 13rem)/.78 var(--display) !important; letter-spacing: -.055em !important; }
-.art-edition__intro > p:not(.studio-kicker) { grid-column: 9 / -1; margin: 0; font-size: clamp(1rem, 1.35vw, 1.35rem); line-height: 1.3; }
+.art-edition__intro { margin-bottom: clamp(2.5rem, 5vw, 5rem); }
+.art-edition__intro h2 { margin: 0; color: var(--carbon) !important; font: 400 clamp(5rem, 12vw, 13rem)/.78 var(--display) !important; letter-spacing: -.055em !important; }
 /*
- * Header CTA — the same physical treatment as .btn-instrument elsewhere
- * (mono, uppercase, a single underline), pinned into the header's right
- * rail so the archive link is reachable before the sheet is scrolled.
+ * Archive link — the same physical treatment as .btn-instrument elsewhere
+ * (mono, uppercase, a single underline). It follows the frames: show, then
+ * the way to more.
  */
-.art-edition__cta { grid-column: 9 / -1; justify-self: start; display: inline-flex; align-items: center; gap: .6rem; margin-top: 2.5rem; padding: .8rem 0; border-bottom: 1px solid currentColor; color: var(--carbon); font: 650 .66rem/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; text-decoration: none; transition: color .2s linear, padding-right .2s linear; }
+.art-edition__cta { display: inline-flex; align-items: center; gap: .6rem; margin-top: clamp(2rem, 4vw, 3.5rem); padding: .8rem 0; border-bottom: 1px solid currentColor; color: var(--carbon); font: 650 .66rem/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; text-decoration: none; transition: color .2s linear, padding-right .2s linear; }
 .art-edition__cta:hover { color: var(--carbon); padding-right: .75rem; }
 
 .art-note { margin: clamp(4rem, 8vw, 8rem) 0 0; padding-top: 1rem; border-top: 1px solid var(--hairline); font: 650 .56rem/1.6 var(--mono); letter-spacing: .07em; text-transform: uppercase; max-width: 70ch; }
 
 @media (max-width: 700px) {
-  .art-edition__intro { display: block; }
-  .art-edition__intro h2 { margin-top: 2rem; font-size: 25vw !important; }
-  .art-edition__intro > p:not(.studio-kicker) { width: 78%; margin: 2rem 0 0 auto; }
-  .art-edition__cta { display: flex; justify-content: space-between; margin-top: 3rem; }
+  .art-edition__intro h2 { font-size: 25vw !important; }
+  .art-edition__cta { display: flex; justify-content: space-between; }
 }
 
 @media (prefers-reduced-motion: reduce) {
