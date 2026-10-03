@@ -1,0 +1,270 @@
+/*
+ * Home — the hiring-first front page.
+ * Same three inks as editorial.css (bone, vermilion, carbon); everything is
+ * namespaced `.hm-` so it can't collide with global.css's legacy rules.
+ */
+
+.hm-kicker {
+  margin: 0;
+  font: 650 .62rem/1.4 var(--mono);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
+.hm-button {
+  display: inline-flex;
+  align-items: center;
+  gap: .6rem;
+  padding: 1rem 1.35rem;
+  border: 1px solid var(--carbon);
+  color: var(--carbon);
+  font: 650 .7rem/1 var(--mono);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: background .2s ease, color .2s ease, border-color .2s ease;
+}
+.hm-button:hover,
+.hm-button:focus-visible { background: var(--carbon); color: var(--paper); }
+.hm-button--primary { background: var(--vermilion); border-color: var(--vermilion); color: var(--paper); }
+.hm-button--primary:hover,
+.hm-button--primary:focus-visible { background: var(--carbon); border-color: var(--carbon); }
+
+.hm-link {
+  color: var(--carbon);
+  font: 650 .68rem/1.4 var(--mono);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  text-decoration: underline;
+  text-underline-offset: .3em;
+  text-decoration-thickness: 1px;
+}
+.hm-link:hover,
+.hm-link:focus-visible { color: var(--vermilion); }
+
+/* ── Hero ─────────────────────────────────────────────── */
+.hm-hero {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: var(--gutter);
+  padding: clamp(4rem, 9vw, 9rem) var(--gutter) clamp(3.5rem, 7vw, 6.5rem);
+  border-bottom: 1px solid var(--hairline);
+}
+.hm-hero__copy { grid-column: 1 / span 10; }
+.hm-hero h1 {
+  margin: 1.4rem 0 0;
+  max-width: 14ch;
+  font: 400 clamp(3.4rem, 9.2vw, 9.5rem)/.9 var(--display);
+  letter-spacing: -.035em;
+  color: var(--carbon) !important;
+}
+.hm-hero h1 em { color: var(--vermilion) !important; font-style: italic; }
+.hm-hero__lede {
+  max-width: 38rem;
+  margin: clamp(1.75rem, 3vw, 2.75rem) 0 0;
+  font: 400 clamp(1.1rem, 1.7vw, 1.4rem)/1.5 var(--sans);
+  color: var(--carbon);
+}
+.hm-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 1.75rem;
+  margin-top: clamp(1.75rem, 3vw, 2.75rem);
+}
+
+/* ── Credibility strip ────────────────────────────────── */
+.hm-proof {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: .9rem clamp(1.5rem, 4vw, 3.5rem);
+  padding: 1.6rem var(--gutter);
+  border-bottom: 1px solid var(--hairline);
+}
+.hm-proof ul { display: contents; margin: 0; padding: 0; list-style: none; }
+.hm-proof li { font: 400 clamp(1.3rem, 2.2vw, 1.9rem)/1 var(--display); letter-spacing: -.01em; }
+.hm-proof .hm-kicker { margin-right: auto; }
+
+/* ── Flagship ─────────────────────────────────────────── */
+.hm-flagship {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: var(--gutter);
+  align-items: center;
+  padding: var(--space) var(--gutter) 0;
+}
+.hm-flagship__text { grid-column: 1 / span 5; }
+.hm-flagship__media { grid-column: 7 / span 6; }
+.hm-flagship--reverse .hm-flagship__text { grid-column: 8 / span 5; grid-row: 1; }
+.hm-flagship--reverse .hm-flagship__media { grid-column: 1 / span 6; grid-row: 1; }
+
+.hm-flagship h2 {
+  margin: 1rem 0 0;
+  font: 400 clamp(3rem, 7vw, 7rem)/.9 var(--display);
+  letter-spacing: -.035em;
+  color: var(--carbon) !important;
+}
+.hm-flagship__line {
+  margin: 1.4rem 0 0;
+  font: 400 clamp(1.2rem, 1.9vw, 1.55rem)/1.4 var(--display);
+  color: var(--carbon);
+}
+.hm-flagship__body { margin: 1rem 0 0; max-width: 32rem; font: 400 1rem/1.6 var(--sans); color: var(--ink-muted); }
+.hm-facts {
+  margin: 1.75rem 0 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--hairline);
+}
+.hm-facts li {
+  padding: .7rem 0;
+  border-bottom: 1px solid var(--hairline);
+  font: 650 .64rem/1.4 var(--mono);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+.hm-flagship__links { display: flex; flex-wrap: wrap; gap: .9rem 1.75rem; margin-top: 1.75rem; }
+
+/* Trailer is portrait (9:16, 60s) — keep it a phone-shaped column, not a stretched slab. */
+.hm-trailer {
+  position: relative;
+  width: min(100%, 22rem);
+  margin-inline: auto;
+  aspect-ratio: 9 / 16;
+  overflow: hidden;
+  background: var(--carbon);
+}
+.hm-trailer img,
+.hm-trailer iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; object-fit: cover; }
+.hm-trailer button {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: end start;
+  width: 100%;
+  padding: 1.25rem;
+  border: 0;
+  background: linear-gradient(to top, rgba(20, 19, 16, .72), transparent 45%);
+  color: var(--paper);
+  font: 650 .68rem/1 var(--mono);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.hm-trailer button span::before { content: '▶'; margin-right: .6rem; color: var(--vermilion); }
+.hm-trailer button:hover span,
+.hm-trailer button:focus-visible span { text-decoration: underline; text-underline-offset: .3em; }
+
+/* ColorWizard — no screenshot yet, so the panel shows the actual workflow. */
+.hm-flow {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: step;
+  border-top: 1px solid var(--carbon);
+}
+.hm-flow li {
+  counter-increment: step;
+  display: grid;
+  grid-template-columns: 3.5rem 1fr;
+  gap: 1rem;
+  padding: 1.5rem 0;
+  border-bottom: 1px solid var(--hairline);
+}
+.hm-flow li::before {
+  content: '0' counter(step);
+  font: 650 .68rem/2 var(--mono);
+  letter-spacing: .08em;
+  color: var(--vermilion);
+}
+.hm-flow strong { display: block; font: 400 clamp(1.8rem, 3.4vw, 3rem)/1 var(--display); letter-spacing: -.02em; }
+.hm-flow span { display: block; margin-top: .45rem; font: 400 .95rem/1.5 var(--sans); color: var(--ink-muted); }
+
+/* ── Also shipped ─────────────────────────────────────── */
+.hm-also { padding: var(--space) var(--gutter) 0; }
+.hm-also > header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 1rem; }
+.hm-also h2 { margin: 0; font: 400 clamp(2.4rem, 5vw, 4.6rem)/.95 var(--display); letter-spacing: -.03em; color: var(--carbon) !important; }
+.hm-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  gap: 0;
+  margin: clamp(1.75rem, 3vw, 3rem) 0 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--carbon);
+}
+.hm-card { border-bottom: 1px solid var(--hairline); }
+.hm-card + .hm-card { border-left: 1px solid var(--hairline); }
+.hm-card a {
+  display: flex;
+  flex-direction: column;
+  gap: .7rem;
+  height: 100%;
+  padding: 1.6rem 1.4rem 2rem;
+  color: var(--carbon);
+  text-decoration: none;
+  transition: background .2s ease;
+}
+.hm-card a:hover,
+.hm-card a:focus-visible { background: rgba(183, 42, 31, .06); }
+.hm-card h3 { margin: 0; font: 400 clamp(1.8rem, 2.8vw, 2.5rem)/1 var(--display); letter-spacing: -.02em; color: var(--carbon) !important; }
+.hm-card p { margin: 0; font: 400 .95rem/1.55 var(--sans); color: var(--ink-muted); }
+.hm-card__go { margin-top: auto; padding-top: .8rem; font: 650 .62rem/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--vermilion); }
+
+/* ── Experience ───────────────────────────────────────── */
+.hm-experience {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: var(--gutter);
+  padding: var(--space) var(--gutter) 0;
+}
+.hm-experience > header { grid-column: 1 / span 4; }
+.hm-experience h2 { margin: .9rem 0 0; font: 400 clamp(2.4rem, 5vw, 4.6rem)/.95 var(--display); letter-spacing: -.03em; color: var(--carbon) !important; }
+.hm-experience__list { grid-column: 6 / span 7; margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--carbon); }
+.hm-experience__list li { display: grid; grid-template-columns: 9rem 1fr; gap: 1rem; padding: 1.3rem 0; border-bottom: 1px solid var(--hairline); }
+.hm-experience__list time { font: 650 .64rem/1.8 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--ink-muted); }
+.hm-experience__list h3 { margin: 0; font: 400 1.6rem/1.1 var(--display); color: var(--carbon) !important; }
+.hm-experience__list p { margin: .4rem 0 0; font: 400 .95rem/1.55 var(--sans); color: var(--ink-muted); }
+.hm-experience__more { grid-column: 6 / span 7; margin-top: -1rem; }
+
+/* ── Closing ──────────────────────────────────────────── */
+.hm-close {
+  margin-top: var(--space);
+  padding: clamp(4rem, 9vw, 8rem) var(--gutter);
+  border-top: 1px solid var(--carbon);
+  background: var(--carbon);
+  color: var(--paper);
+}
+.hm-close h2 { margin: 1rem 0 0; max-width: 16ch; font: 400 clamp(3rem, 8vw, 8rem)/.92 var(--display); letter-spacing: -.035em; color: var(--paper) !important; }
+.hm-close h2 em { color: #ff6a5c !important; }
+.hm-close .hm-kicker { color: rgba(255, 255, 255, .7); }
+.hm-close__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.75rem; margin-top: clamp(1.75rem, 3vw, 2.75rem); }
+.hm-close .hm-button { border-color: var(--paper); color: var(--paper); }
+.hm-close .hm-button--primary { background: var(--vermilion); border-color: var(--vermilion); }
+.hm-close .hm-button:hover,
+.hm-close .hm-button:focus-visible { background: var(--paper); border-color: var(--paper); color: var(--carbon); }
+.hm-close .hm-link { color: var(--paper); }
+.hm-close .hm-link:hover { color: #ff6a5c; }
+
+@media (max-width: 900px) {
+  .hm-hero,
+  .hm-flagship,
+  .hm-experience { grid-template-columns: minmax(0, 1fr); }
+  .hm-hero__copy,
+  .hm-flagship__text,
+  .hm-flagship__media,
+  .hm-flagship--reverse .hm-flagship__text,
+  .hm-flagship--reverse .hm-flagship__media,
+  .hm-experience > header,
+  .hm-experience__list,
+  .hm-experience__more { grid-column: 1 / -1; grid-row: auto; }
+  .hm-flagship { gap: 2.5rem; }
+  .hm-card + .hm-card { border-left: 0; }
+  .hm-experience__list li { grid-template-columns: 1fr; gap: .3rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hm-button, .hm-card a { transition: none; }
+}

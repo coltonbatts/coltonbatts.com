@@ -17,14 +17,18 @@ export const reel = {
 	title: 'Colton Batts — Reel',
 };
 
-/** Primary nav, in the order the site argues: images, film, tools, contact.
- *  The logo is the way home. */
+/** Primary nav, in the order the site argues: the work, the tools, the proof,
+ *  the way to reach me. The logo is the way home. */
 export const navItems = [
-	{ href: '/art', label: 'Art' },
 	{ href: '/portfolio', label: 'Work' },
 	{ href: '/tools', label: 'Tools' },
+	{ href: '/resume', label: 'Resume' },
 	{ href: '/contact', label: 'Contact' },
 ];
 
 /** The footer index also carries the secondary pages. */
-export const footerItems = [...navItems, { href: '/now', label: 'Now' }];
+export const footerItems = [
+	...navItems,
+	{ href: '/art', label: 'Art' },
+	{ href: '/now', label: 'Now' },
+];
