@@ -11,7 +11,8 @@
     "art:status": "node --experimental-strip-types scripts/art-status.mjs",
     "preview": "astro preview",
     "astro": "astro",
-    "rive:lint": "node scripts/rive-lint.mjs"
+    "rive:lint": "node scripts/rive-lint.mjs",
+    "resume:pdf": "python3 scripts/build-resume-pdf.py"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.3",

@@ -2,30 +2,70 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import resume from '../data/resume_source.json';
 
-const { summary, experience, skills } = resume;
+const { summary, built, selected, experience, skills, contact } = resume;
+
+const card = 'mt-8 bg-paper p-8 border border-gray-200/60 shadow-[2px_2px_0_rgba(0,0,0,0.02)]';
+const label = 'text-xs font-bold uppercase tracking-[0.3em] text-charcoal/40 pb-2 border-b border-gray-100';
 ---
 
-<BaseLayout title="Resume" description="Professional resume and experience.">
+<BaseLayout title="Resume" description="Video editor and motion designer who builds the tools.">
 	<div class="max-w-4xl mx-auto px-6 py-20">
-		<h1 class="text-3xl font-bold mb-10 tracking-tighter">Resume</h1>
+		<h1 class="text-3xl font-bold mb-6 tracking-tighter">Resume</h1>
+		<p class="text-sm font-medium text-charcoal/60 mb-10">
+			{contact.location} · {contact.phone} · {contact.email} · {contact.website} · {contact.github}
+		</p>
 
 		<div class="prose max-w-none text-charcoal/90">
 			<a
-				href="/resume/Colton_Batts_Resume.pdf" 
-				class="border border-charcoal px-6 py-2 text-sm font-bold hover:bg-charcoal hover:text-white transition-colors inline-block mb-16"
+				href="/resume/Colton_Batts_Resume.pdf"
+				class="border border-charcoal px-6 py-2 text-sm font-bold hover:bg-charcoal hover:text-white transition-colors inline-block"
 			>
 				Download PDF
 			</a>
 		</div>
 
-		<section class="mt-12 bg-paper p-8 border border-gray-200/60 shadow-[2px_2px_0_rgba(0,0,0,0.02)]">
-			<h2 class="text-xs font-bold uppercase tracking-[0.3em] text-charcoal/40 mb-6 pb-2 border-b border-gray-100">Professional Summary</h2>
-			<p class="font-medium leading-snug text-charcoal/80">{summary}</p>
+		<section class={card}>
+			<h2 class={label}>Summary</h2>
+			<p class="font-medium leading-snug text-charcoal/80 mt-6">{summary}</p>
 		</section>
 
-		<section class="mt-8 bg-paper p-8 border border-gray-200/60 shadow-[2px_2px_0_rgba(0,0,0,0.02)] text-charcoal/90">
-			<h2 class="text-xs font-bold uppercase tracking-[0.3em] text-charcoal/40 mb-10 pb-2 border-b border-gray-100">Experience</h2>
-			<div class="grid gap-12">
+		<section class={card}>
+			<h2 class={label}>Built</h2>
+			<p class="text-sm font-medium text-charcoal/60 mt-6 mb-10">
+				Working software, published and in use — the same tools the commercial work runs on.
+			</p>
+			<div class="grid gap-10">
+				{built.map((tool) => (
+					<div>
+						<div class="flex items-baseline gap-3 flex-wrap">
+							<h3 class="text-xl font-bold">{tool.name}</h3>
+							<span class="text-[10px] font-bold uppercase tracking-widest text-charcoal/40">{tool.role}</span>
+						</div>
+						<p class="font-medium leading-snug text-charcoal/80 mt-3">{tool.line}</p>
+						<p class="text-sm font-medium text-charcoal/70 mt-3 leading-relaxed">{tool.body}</p>
+						<p class="text-[11px] font-bold uppercase tracking-widest text-charcoal/40 mt-4">
+							{tool.stack} · {tool.link}
+						</p>
+					</div>
+				))}
+			</div>
+		</section>
+
+		<section class={card}>
+			<h2 class={label}>Selected Work</h2>
+			<div class="grid gap-6 mt-8">
+				{selected.map((item) => (
+					<div>
+						<h3 class="text-base font-bold">{item.title}</h3>
+						<p class="text-sm font-medium text-charcoal/70 mt-1 leading-relaxed">{item.detail}</p>
+					</div>
+				))}
+			</div>
+		</section>
+
+		<section class={card}>
+			<h2 class={label}>Experience</h2>
+			<div class="grid gap-12 mt-10">
 				{experience.map((role) => (
 					<div class="relative pl-6 border-l-2 border-gray-100">
 						<h3 class="text-xl font-bold">{role.title}</h3>
@@ -44,9 +84,9 @@ const { summary, experience, skills } = resume;
 			</div>
 		</section>
 
-		<section class="mt-8 bg-paper p-8 border border-gray-200/60 shadow-[2px_2px_0_rgba(0,0,0,0.02)]">
-			<h2 class="text-xs font-bold uppercase tracking-[0.3em] text-charcoal/40 mb-8 pb-2 border-b border-gray-100">Skills</h2>
-			<div class="grid gap-10 md:grid-cols-2">
+		<section class={card}>
+			<h2 class={label}>Skills</h2>
+			<div class="grid gap-10 md:grid-cols-2 mt-8">
 				{skills.map((group) => (
 					<div>
 						<h3 class="text-xs font-bold mb-4 uppercase text-charcoal/60">{group.category}</h3>

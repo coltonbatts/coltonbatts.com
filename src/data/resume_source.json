@@ -1,13 +1,66 @@
 {
-  "format": "chronological",
+  "format": "claim-first",
   "contact": {
     "name": "Colton Batts",
     "location": "Fort Worth, TX",
     "phone": "646-373-6126",
     "email": "colton.batts@gmail.com",
-    "website": "coltonbatts.com"
+    "website": "coltonbatts.com",
+    "github": "github.com/coltonbatts"
   },
-  "summary": "Production-focused multimedia designer with 10+ years delivering high-volume, broadcast-quality content for global brands including Google, Under Armour, and Kate Spade. Expert in Adobe Premiere Pro and After Effects with strong Photoshop-driven design support and file hygiene. Known for fast turnarounds, clean stakeholder review cycles, and shipping polished deliverables across video, motion, and print. Currently seeking full-time opportunities to bring agency-level production expertise to an in-house team or studio environment.",
+  "summary": "Video editor and motion designer who builds the tools. Ten years as lead editor on national campaigns for Google, Under Armour, Kate Spade and Nuuly — and the author of VCR, a headless motion renderer in Rust that turns YAML scenes into ProRes 4444 with alpha. I work at the seam between the edit and the toolchain, which is why the output arrives fast and repeats. Looking for a full-time role on a team that ships.",
+  "built": [
+    {
+      "name": "VCR",
+      "role": "Author — motion renderer",
+      "line": "Motion graphics from the terminal: YAML scenes in, ProRes 4444 with alpha out.",
+      "body": "A headless renderer for repeatable motion work — write a scene once, change the data, render the variants. No GUI, no timeline to babysit. Declarative scenes, custom shaders, text and layered compositing, GPU-accelerated on Apple Silicon.",
+      "stack": "Rust · Metal · open source",
+      "link": "github.com/coltonbatts/VCR"
+    },
+    {
+      "name": "ColorWizard",
+      "role": "Author — color instrument",
+      "line": "From a reference color to a paint mix and a thread match.",
+      "body": "An instrument for artists who work in physical materials: sample a color from any image and get a practical oil-paint recipe plus the closest DMC thread. Live as a web app and a desktop build.",
+      "stack": "TypeScript · React · Next.js · Tauri · WebGL",
+      "link": "colorwizard.app"
+    },
+    {
+      "name": "MagpieApp",
+      "role": "Author — craft tooling",
+      "line": "A photograph into a thread-matched hand-embroidery pattern.",
+      "body": "Runs entirely offline. Built for and used by a working embroidery studio, where the pattern it outputs is the pattern that gets stitched.",
+      "stack": "Desktop · offline",
+      "link": "coltonbatts.com/tools/magpie"
+    },
+    {
+      "name": "coltonbatts.com",
+      "role": "Design and build",
+      "line": "A self-built publishing system with a WebGL2 darkroom render layer.",
+      "body": "Astro site with a custom GPU pass for film grain, halation and develop, plus an automated image pipeline that carries 24 archive photographs and the commercial portfolio.",
+      "stack": "Astro · TypeScript · WebGL2 / GLSL",
+      "link": "coltonbatts.com"
+    }
+  ],
+  "selected": [
+    {
+      "title": "\"See What I've Done\" — All Clean (music video)",
+      "detail": "Director. Featured on Post-Punk.com, which called it \"red and green lit Italian Giallo horror and the surreal stylings of David Lynch.\""
+    },
+    {
+      "title": "After Hours — solo photographic show",
+      "detail": "Dang Good Candy, Fort Worth, 2021."
+    },
+    {
+      "title": "The archive — 24 photographs, 2021–2022",
+      "detail": "Published at coltonbatts.com/art. Another 73 frames in the same register span 2012–2025."
+    },
+    {
+      "title": "Photography — Fort Worth Weekly",
+      "detail": "On assignment, 2023–2024."
+    }
+  ],
   "experience": [
     {
       "title": "Lead Video Editor",
@@ -15,12 +68,21 @@
       "location": "New York, NY (Remote)",
       "dates": "2021 – Present",
       "bullets": [
-        "Ongoing contract relationship serving as lead editor for high-profile national campaigns and commercial clients",
-        "Shop With Google: Edited 30+ unique video assets for national 'Back to School' and evergreen campaigns; managed high-volume deliverables across multiple aspect ratios",
-        "Under Armour: Edited the 'New Rollout' internal training series (5+ comprehensive deliverables); praised for narrative clarity and brand guideline adherence",
-        "Kate Spade: Created stylized intro sequences and social media assets, using motion graphics to match the brand's high-fashion aesthetic",
-        "Nuuly: Provided integrated production support, designing key props and graphic assets utilized in final video campaigns",
-        "Managed remote proxy workflows and rapid revision cycles, consistently turning around rough cuts within 24 hours"
+        "Lead editor on national campaigns for Google, Under Armour, Kate Spade and Nuuly — 30+ delivered assets on the Shop With Google 'Back to School' and evergreen work alone, across every aspect ratio.",
+        "Under Armour: edited the 'New Rollout' internal training series; cited for narrative clarity and brand guideline adherence.",
+        "Kate Spade: built stylized title and social systems in After Effects to carry a high-fashion look across a campaign.",
+        "Nuuly: designed key props and graphic assets used in the final cuts, not just cut around them.",
+        "Owned the remote proxy workflow and revision cycle end to end; rough cuts consistently inside 24 hours."
+      ]
+    },
+    {
+      "title": "Founder & Creative Director",
+      "company": "Alternative Design LLC",
+      "location": "Fort Worth, TX",
+      "dates": "2022 – Present",
+      "bullets": [
+        "Independent studio for film, motion and design systems: scoping, pricing, direction and delivery handled directly with the client.",
+        "Built and shipped the software tools the work needs — VCR, ColorWizard, MagpieApp — when nothing off the shelf did the job."
       ]
     },
     {
@@ -29,32 +91,28 @@
       "location": "Fort Worth, TX",
       "dates": "2015 – 2021",
       "bullets": [
-        "Led print-ready design production for retail and events: large-format signage, building wraps, flags, and promotional display systems across multiple OEM brands",
-        "Produced vendor-ready files to spec (bleed/trim, scale, export settings), coordinated proofing, and managed revisions through final install",
-        "Owned the internal video production pipeline for 6 years, serving as primary editor for corporate communications, training, and promotional media"
+        "Led print-ready production across retail and events — large-format signage, building wraps, flags and display systems — for multiple OEM brands.",
+        "Produced vendor-ready files to spec (bleed/trim, scale, export settings) and ran proofing through to install.",
+        "Owned the internal video pipeline for six years as primary editor for corporate, training and promotional media."
       ]
     }
   ],
   "skills": [
     {
-      "category": "Core NLE",
-      "items": ["Adobe Premiere Pro (Expert)", "DaVinci Resolve"]
+      "category": "Editing & Post",
+      "items": ["Adobe Premiere Pro (expert)", "After Effects", "DaVinci Resolve", "Proxy & multi-cam workflows", "Color correction", "Sound design / mixing"]
+    },
+    {
+      "category": "Software",
+      "items": ["Rust", "TypeScript / JavaScript", "Python", "React / Next.js", "Astro", "Tauri", "WebGL2 / GLSL", "Metal", "FFmpeg", "Git & GitHub"]
     },
     {
       "category": "Motion & Design",
-      "items": ["Adobe After Effects", "Photoshop", "Illustrator"]
+      "items": ["Motion systems", "Title & graphic packages", "Storyboarding", "Photoshop", "Illustrator"]
     },
     {
-      "category": "Print + Production Design",
+      "category": "Production Design",
       "items": ["Large-format print (wraps, signage)", "Event collateral systems", "Vendor proofing", "Print-ready file setup"]
-    },
-    {
-      "category": "Post-Production",
-      "items": ["Proxy workflows", "Multi-cam editing", "Color correction", "Sound design/mixing"]
-    },
-    {
-      "category": "Workflow Optimization",
-      "items": ["AI-assisted asset generation", "Storyboarding", "Fast pre-production cycles"]
     }
   ],
   "education": []
