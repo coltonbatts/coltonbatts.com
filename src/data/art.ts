@@ -246,7 +246,7 @@ const entries: Artwork[] = [
 		year: 2022,
 		likes: 483,
 		untitled: false,
-		alt: 'A figure in a pink dress standing in a foggy field with a transmission tower behind, muted colour.',
+		alt: 'A figure in a pink dress standing in a foggy field with a transmission tower behind, muted color.',
 		src: img19,
 	},
 	{

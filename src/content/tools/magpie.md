@@ -30,7 +30,7 @@ hardware:
   notes: "WebGL 2.0 required for the Pixi.js renderer. Pattern generation speed scales linearly with core count via rayon."
 ---
 
-## Built for an Embroiderist
+## Built for an Embroiderer
 
 MagpieApp exists because my wife needed it. She's a hand-embroidery artist, and the tools available to her were either industrial digitizing software designed for machine embroidery or phone apps that produced unusable patterns. Nothing sat in the middle — professional-grade, designed for human hands, running on a desktop.
 
