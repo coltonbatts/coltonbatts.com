@@ -571,3 +571,14 @@ html .hm-reel__slate span { color: var(--blood-bright); }
 .sound-toggle:focus-visible,
 .sound-toggle[aria-pressed='true'] { color: var(--paper); }
 .sound-toggle:focus-visible { outline: 1px solid var(--paper); outline-offset: 4px; }
+
+/* Keep the accent phrase on one line. */
+html .hm-hero h1 em { white-space: nowrap; }
+
+/* Desktop: set the headline in three deliberate lines. Narrow screens wrap naturally. */
+html .hm-hero h1 { max-width: 24ch; }
+@media (min-width: 800px) {
+  html .hm-hero h1 { font-size: clamp(2.6rem, 6.2vw, 5.6rem); }
+  html .hm-br { display: inline; }
+}
+@media (max-width: 799px) { html .hm-br { display: none; } }
