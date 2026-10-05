@@ -3,6 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import { Image } from 'astro:assets';
 import '../styles/home.css';
 
+import ReelStage from '../components/ReelStage.astro';
 import trailerPoster from '../assets/home/vcr-trailer-poster.jpg';
 
 const email = 'colton.batts@gmail.com';
@@ -15,20 +16,19 @@ const vcrTrailerId = '1166117135';
 >
 	<section class="hm-hero">
 		<div class="hm-hero__copy">
-			<p class="hm-kicker">Video · Motion · Software — Fort Worth, Texas</p>
+			<p class="hm-kicker">Fort Worth, Texas</p>
 			<h1>I make the work, and I <em>build the tools</em> that make it.</h1>
-			<p class="hm-hero__lede">
-				Ten years shipping campaign video for Google, Kate Spade and Under Armour. Now building motion renderers, color instruments and agents. Open to full-time roles and selected projects.
-			</p>
 			<div class="hm-hero__actions">
 				<a class="hm-button hm-button--primary" href={`mailto:${email}`}>Email me <span aria-hidden="true">↗</span></a>
-				<a class="hm-link" href="#built">See what I’ve built ↓</a>
+				<a class="hm-link" href="#reel">Watch the reel ↓</a>
 			</div>
 		</div>
 	</section>
 
+	<ReelStage />
+
 	<section class="hm-proof" aria-label="Clients">
-		<p class="hm-kicker">10+ years in production</p>
+		<p class="hm-kicker">Shipped for</p>
 		<ul>
 			<li>Google</li>
 			<li>Nuuly</li>
@@ -41,14 +41,10 @@ const vcrTrailerId = '1166117135';
 		<div class="hm-flagship__text">
 			<p class="hm-kicker">Open source · Motion tooling</p>
 			<h2>VCR</h2>
-			<p class="hm-flagship__line">Motion graphics from the terminal. YAML scenes in, ProRes 4444 with alpha out.</p>
-			<p class="hm-flagship__body">
-				A headless renderer for people who want motion work to be repeatable: write a scene once, change the data, and render the variants. No GUI, no timeline to babysit.
-			</p>
+			<p class="hm-flagship__line">Motion graphics from the terminal.</p>
 			<ul class="hm-facts">
-				<li>Rust · Metal GPU on Apple Silicon</li>
-				<li>ProRes 4444 with alpha, ready for the edit</li>
-				<li>Declarative scenes, custom shaders, text and layered compositing</li>
+				<li>Rust · Metal GPU</li>
+				<li>YAML in · ProRes 4444 out</li>
 			</ul>
 			<div class="hm-flagship__links">
 				<a class="hm-link" href="https://github.com/coltonbatts/VCR" rel="noopener">Source on GitHub ↗</a>
@@ -75,10 +71,7 @@ const vcrTrailerId = '1166117135';
 		<div class="hm-flagship__text">
 			<p class="hm-kicker">Live · Web</p>
 			<h2>ColorWizard</h2>
-			<p class="hm-flagship__line">From a reference color to a paint mix and a thread match.</p>
-			<p class="hm-flagship__body">
-				An instrument for artists who work in physical materials. Sample a color from any image and get a practical starting recipe for oil paint, plus the closest DMC thread. Recipes are model-based starting points, not a promise of the final mix.
-			</p>
+			<p class="hm-flagship__line">A color in, a paint mix and a thread match out.</p>
 			<div class="hm-flagship__links">
 				<a class="hm-button hm-button--primary" href="https://colorwizard.app/" rel="noopener">Open ColorWizard ↗</a>
 				<a class="hm-link" href="https://github.com/coltonbatts/colorwizard" rel="noopener">Source on GitHub ↗</a>
@@ -87,10 +80,10 @@ const vcrTrailerId = '1166117135';
 
 		<div class="hm-flagship__media">
 			<ol class="hm-flow">
-				<li><div><strong>Open</strong><span>Load a reference image.</span></div></li>
-				<li><div><strong>Sample</strong><span>Pick any color from it.</span></div></li>
-				<li><div><strong>Recipe</strong><span>Get a paint mix and the closest thread.</span></div></li>
-				<li><div><strong>Save</strong><span>Keep the palette for the work.</span></div></li>
+				<li><div><strong>Open</strong><span>Image</span></div></li>
+				<li><div><strong>Sample</strong><span>Color</span></div></li>
+				<li><div><strong>Recipe</strong><span>Paint + thread</span></div></li>
+				<li><div><strong>Save</strong><span>Palette</span></div></li>
 			</ol>
 		</div>
 	</section>
@@ -105,7 +98,7 @@ const vcrTrailerId = '1166117135';
 				<a href="https://coffee.capturethis.com" rel="noopener">
 					<p class="hm-kicker">Operations</p>
 					<h3>Capture This Coffee</h3>
-					<p>Shoot-day coffee ordering and direct label printing for production crews.</p>
+					<p>Coffee orders for crews.</p>
 					<span class="hm-card__go">Visit ↗</span>
 				</a>
 			</li>
@@ -113,7 +106,7 @@ const vcrTrailerId = '1166117135';
 				<a href="/tools/magpie">
 					<p class="hm-kicker">Craft</p>
 					<h3>MagpieApp</h3>
-					<p>Turns a photograph into a thread-matched hand-embroidery pattern. Runs offline.</p>
+					<p>Photo to embroidery pattern.</p>
 					<span class="hm-card__go">Read more →</span>
 				</a>
 			</li>
@@ -121,7 +114,7 @@ const vcrTrailerId = '1166117135';
 				<a href="/portfolio">
 					<p class="hm-kicker">Commercial</p>
 					<h3>Client work</h3>
-					<p>Lead editor on 30+ campaign assets for Shop with Google, plus motion and social for Nuuly.</p>
+					<p>Google, Nuuly, Kate Spade.</p>
 					<span class="hm-card__go">See the work →</span>
 				</a>
 			</li>
@@ -130,8 +123,7 @@ const vcrTrailerId = '1166117135';
 
 	<section class="hm-experience">
 		<header>
-			<p class="hm-kicker">Experience</p>
-			<h2>Where the craft comes from.</h2>
+			<h2>Experience</h2>
 		</header>
 		<ol class="hm-experience__list">
 			<li>
@@ -154,7 +146,7 @@ const vcrTrailerId = '1166117135';
 
 	<section class="hm-close" id="contact">
 		<p class="hm-kicker">Open to work</p>
-		<h2>Let’s make <em>something</em> that matters.</h2>
+		<h2>Let’s <em>work</em>.</h2>
 		<div class="hm-close__actions">
 			<a class="hm-button hm-button--primary" href={`mailto:${email}`}>{email} <span aria-hidden="true">↗</span></a>
 			<a class="hm-link" href="/resume">Resume</a>

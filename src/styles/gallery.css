@@ -1,0 +1,554 @@
+/*
+ * GALLERY — loaded after editorial.css and home.css.
+ * A24 by way of an old-master gallery: a quiet white wall, true-black rooms
+ * with film grain, hairline frames, museum-label captions, one oxblood accent
+ * and a few small occult marks. Everything is sharp-cornered and centered.
+ * It overrides tokens and surfaces only. Delete this file and its import in
+ * BaseLayout to get the previous look back.
+ */
+
+@font-face {
+  font-family: 'Geist Pixel Square';
+  src: url('/fonts/GeistPixel-Square.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Geist Pixel Grid';
+  src: url('/fonts/GeistPixel-Grid.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Geist Pixel Circle';
+  src: url('/fonts/GeistPixel-Circle.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Geist Pixel Triangle';
+  src: url('/fonts/GeistPixel-Triangle.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Geist Pixel Line';
+  src: url('/fonts/GeistPixel-Line.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --bone: #eeede8;
+  --paper: #f6f5f1;
+  --bone-deep: #e1dfd8;
+  --carbon: #0f0e0d;
+  --vermilion: #741a1f; /* oxblood; the token name is legacy */
+  --ink-muted: #5b5851;
+  --hairline: rgba(15, 14, 13, .16);
+  --rule: rgba(15, 14, 13, .55);
+  --blood-bright: #cf4f55; /* oxblood, lifted for use on black */
+  --pixel: 'Geist Pixel Square', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --pixel-accent: 'Geist Pixel Circle', 'Geist Pixel Square', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --helvetica: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --futura: Futura, 'Futura PT', 'Century Gothic', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;
+  --book: var(--helvetica);
+  /* Re-point the site's font tokens: headlines pixel, labels Futura, text Helvetica. */
+  --display: var(--pixel);
+  --sans: var(--helvetica);
+  --mono: var(--futura);
+  --font-display: var(--pixel);
+  --font-sans: var(--helvetica);
+  --font-mono: var(--futura);
+  --measure: 38rem;
+  --ease-slow: cubic-bezier(.2, .6, .2, 1);
+
+  /* Legacy Tailwind-name tokens used by older routes. */
+  --color-charcoal: #0f0e0d;
+  --color-ink: #0f0e0d;
+  --color-raw: #741a1f;
+  --color-raw-dark: #5a1317;
+  --color-manual: #e1dfd8;
+  --color-manual-light: #f6f5f1;
+
+  /* Film grain, as a data URI so it ships with the CSS. */
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  /* A small sigil: circle, inverted triangle, a point at the centre. */
+  --sigil: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' fill='none' stroke='black' stroke-width='1.2'%3E%3Ccircle cx='16' cy='16' r='14'/%3E%3Cpath d='M16 27 4.5 9h23z'/%3E%3Ccircle cx='16' cy='16' r='1.4' fill='black' stroke='none'/%3E%3C/svg%3E");
+}
+
+html, body { background-color: var(--bone) !important; }
+::selection { background: var(--carbon); color: var(--paper); }
+
+/* The wall: even light, with a faint spotlight falling from above. */
+html body {
+  background-image: radial-gradient(75% 38% at 50% 0%, rgba(255, 255, 255, .75), transparent 72%) !important;
+  background-repeat: no-repeat !important;
+  background-size: 100% 60rem !important;
+}
+html::before { content: none !important; }
+
+/* Everything is sharp. */
+*, *::before, *::after { border-radius: 0; }
+
+/* ── Masthead ─────────────────────────────────────────────────────────────── */
+.site-header { background: var(--bone) !important; border-bottom: 1px solid var(--hairline) !important; }
+.site-logo__name { background: none; }
+.site-menu a {
+  border-left: 0;
+  border-radius: 0;
+  font-size: .64rem !important;
+  letter-spacing: .24em !important;
+  transition: color .5s var(--ease-slow), background-color .5s var(--ease-slow);
+}
+.site-menu a:hover { background: transparent !important; color: var(--vermilion) !important; }
+.site-menu a[aria-current='page'] { background: var(--carbon) !important; color: var(--paper) !important; }
+
+@media (min-width: 901px) {
+  .site-nav { grid-template-columns: 1fr !important; justify-items: center; gap: 0 !important; padding-top: 1.25rem !important; }
+  .site-logo { grid-column: 1 / -1; justify-content: center; padding-bottom: .5rem; }
+  .site-menu { grid-column: 1 / -1; width: 100% !important; }
+  .site-menu ul { width: min(34rem, 100%); margin-inline: auto; gap: .25rem; padding-block: .6rem .9rem; border-top: 1px solid var(--hairline); }
+}
+
+/* ── Type ─────────────────────────────────────────────────────────────────── */
+html .hm-kicker {
+  font: 600 .62rem/1.5 var(--mono);
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+html .hm-hero h1 em,
+html .hm-close h2 em { text-decoration: none; background: none; }
+html .hm-hero__lede,
+html .hm-flagship__body,
+html .hm-card p,
+html .hm-experience__list p,
+html .hm-flow span,
+.prose,
+.page-hero > p:last-child { font-family: var(--book); }
+html .hm-hero__lede { font-size: clamp(1.05rem, 1.5vw, 1.25rem); }
+
+/* ── Buttons and links: flat, uppercase, hairline ─────────────────────────── */
+html .hm-button {
+  border-radius: 0;
+  padding: 1.05rem 1.9rem;
+  border: 1px solid var(--carbon);
+  background: transparent;
+  color: var(--carbon);
+  box-shadow: none;
+  outline: 0;
+  letter-spacing: .26em;
+  transition: background .5s var(--ease-slow), color .5s var(--ease-slow), border-color .5s var(--ease-slow);
+}
+html .hm-button:hover,
+html .hm-button:focus-visible { background: var(--carbon); color: var(--paper); transform: none; box-shadow: none; }
+html .hm-button--primary { background: var(--carbon); color: var(--paper); box-shadow: none; }
+html .hm-button--primary:hover,
+html .hm-button--primary:focus-visible { background: var(--vermilion); border-color: var(--vermilion); }
+html .hm-link { letter-spacing: .24em; transition: color .5s var(--ease-slow); text-decoration-thickness: 1px; }
+html .hm-link:hover { color: var(--vermilion); }
+
+/* ── Home: centered, one column ───────────────────────────────────────────── */
+html .hm-hero,
+html .hm-flagship,
+html .hm-also,
+html .hm-experience,
+html .hm-proof,
+html .hm-close { text-align: center; }
+
+html .hm-hero { grid-template-columns: minmax(0, 1fr); justify-items: center; border-bottom: 0; }
+html .hm-hero__copy { grid-column: 1 / -1; display: flex; flex-direction: column; align-items: center; }
+html .hm-hero h1 { max-width: 15ch; margin-inline: auto; text-wrap: balance; line-height: .95; }
+html .hm-hero__lede { margin-inline: auto; max-width: var(--measure); }
+html .hm-hero__actions,
+html .hm-flagship__links,
+html .hm-close__actions { justify-content: center; }
+
+/* A sigil above the hero, and between sections. */
+html .hm-hero__copy::before,
+html .hm-flagship::before,
+html .hm-also::before,
+html .hm-experience::before {
+  content: '';
+  display: block;
+  grid-column: 1 / -1;
+  width: 1.7rem;
+  height: 1.7rem;
+  margin: 0 auto 1.4rem;
+  background: var(--carbon);
+  -webkit-mask: var(--sigil) center / contain no-repeat;
+  mask: var(--sigil) center / contain no-repeat;
+  opacity: .8;
+}
+html .hm-hero__copy::before { margin-bottom: 1.6rem; }
+html .hm-flagship,
+html .hm-also,
+html .hm-experience { position: relative; }
+
+/* Credits strip: a ruled line, like a title card. */
+html .hm-proof {
+  justify-content: center;
+  margin: 0;
+  padding-inline: var(--gutter);
+  border-block: 1px solid var(--hairline);
+  background: transparent;
+  border-radius: 0;
+}
+html .hm-proof .hm-kicker { margin-right: 0; flex-basis: 100%; }
+html .hm-proof li { letter-spacing: .02em; }
+
+/* Projects: copy over media, both on the centerline. */
+html .hm-flagship,
+html .hm-flagship--reverse { grid-template-columns: minmax(0, 1fr); justify-items: center; gap: 2.5rem; border-top: 0; }
+html .hm-flagship__text,
+html .hm-flagship__media,
+html .hm-flagship--reverse .hm-flagship__text,
+html .hm-flagship--reverse .hm-flagship__media { grid-column: 1 / -1; grid-row: auto; width: 100%; }
+html .hm-flagship__text { max-width: var(--measure); margin-inline: auto; }
+html .hm-flagship__body { margin-inline: auto; }
+html .hm-flagship__media { display: flex; justify-content: center; }
+html .hm-facts { max-width: 24rem; margin-inline: auto; border-top-color: var(--hairline); }
+html .hm-facts li { letter-spacing: .22em; }
+html .hm-flow { width: min(100%, 34rem); text-align: center; border-top-color: var(--hairline); }
+html .hm-flow li { display: block; padding: 1.25rem 0; }
+html .hm-flow li::before { display: block; line-height: 1.4; margin-bottom: .35rem; }
+
+html .hm-also > header { flex-direction: column; align-items: center; justify-content: center; gap: .6rem; }
+html .hm-experience { grid-template-columns: minmax(0, 1fr); justify-items: center; }
+html .hm-experience > header,
+html .hm-experience__list,
+html .hm-experience__more { grid-column: 1 / -1; width: min(100%, 44rem); }
+html .hm-experience__list { border-top-color: var(--hairline); }
+html .hm-experience__list li { grid-template-columns: 1fr; gap: .3rem; justify-items: center; }
+html .hm-experience__list time { letter-spacing: .24em; }
+html .hm-experience__more { margin-top: 0; }
+
+/* ── Framed work: a thin hairline mat around every image ──────────────────── */
+html .hm-reel__frame,
+html .hm-trailer,
+.work-media,
+.tool-edition__media,
+.tool-entry > img,
+.tool-entry__plate,
+.art-plate__media,
+.painting-card__frame,
+.project-edition__media,
+.monograph-hero__image {
+  border-radius: 0;
+  box-shadow: none;
+  outline: 1px solid var(--rule);
+  outline-offset: 9px;
+}
+html .hm-trailer { transform: none; margin: 10px auto; }
+html .hm-reel__frame { margin: 10px; }
+html .hm-reel { padding-inline: calc(var(--gutter) + 10px); }
+.art-plate__media, .tool-entry > img, .tool-entry__plate { margin: 10px; }
+.tool-entry > img, .tool-entry__plate { width: min(calc(100% - 20px), 56rem); }
+.art-plate__media { width: calc(100% - 20px); }
+html .hm-trailer button, html .hm-reel__frame button { border-radius: 0; }
+html .hm-trailer, html .hm-reel__frame { background-color: #070606; }
+html .hm-reel__caption { letter-spacing: .24em; }
+
+/* Stills drain to monochrome until you look at them. */
+.tool-edition__media img, .art-plate__media img, .tool-entry > img, .work-media img {
+  filter: grayscale(.85) contrast(1.05);
+  transition: filter 1.2s var(--ease-slow), transform 1.6s var(--ease-slow);
+}
+.tool-edition:hover .tool-edition__media img,
+.art-plate:hover .art-plate__media img,
+.tool-entry:hover > img,
+.work-media:hover img { filter: grayscale(0) contrast(1); }
+
+/* ── Cards: framed plates that go black when you reach for them ───────────── */
+html .hm-cards { gap: 1.25rem; border-top: 0; }
+html .hm-card, html .hm-card + .hm-card { border: 0; }
+html .hm-card a {
+  align-items: center;
+  text-align: center;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: inset 0 0 0 1px var(--rule);
+  transform: none;
+  transition: background .6s var(--ease-slow), color .6s var(--ease-slow), box-shadow .6s var(--ease-slow);
+}
+html .hm-card a:hover,
+html .hm-card a:focus-visible { background: var(--carbon); box-shadow: inset 0 0 0 1px var(--carbon); transform: none; }
+html .hm-card a:hover h3,
+html .hm-card a:focus-visible h3 { color: var(--paper) !important; }
+html .hm-card a:hover p,
+html .hm-card a:hover .hm-kicker,
+html .hm-card a:focus-visible p,
+html .hm-card a:focus-visible .hm-kicker { color: rgba(246, 245, 241, .7); }
+html .hm-card a:hover .hm-card__go,
+html .hm-card a:focus-visible .hm-card__go { color: var(--blood-bright); }
+html .hm-card__go { letter-spacing: .24em; }
+
+/* ── Dark rooms: true black, film grain, a pool of light ──────────────────── */
+html .hm-close,
+.closing-poster,
+.project-edition:nth-child(even),
+.page-hero--olive,
+.contact-page,
+.site-footer {
+  background-color: #070606 !important;
+  background-image:
+    radial-gradient(70% 90% at 50% 0%, rgba(255, 255, 255, .035), transparent 70%),
+    var(--grain) !important;
+  background-size: auto, 220px 220px !important;
+  color: var(--paper) !important;
+}
+html .hm-close {
+  margin: var(--space) 0 0;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+html .hm-close h2 em,
+.page-hero--olive h1 em,
+.contact-page h1 em { color: var(--blood-bright) !important; }
+html .hm-close .hm-link:hover { color: var(--blood-bright); }
+html .hm-close .hm-button { border-color: var(--paper); color: var(--paper); }
+html .hm-close .hm-button--primary { background: var(--paper); border-color: var(--paper); color: var(--carbon); }
+html .hm-close .hm-button:hover,
+html .hm-close .hm-button:focus-visible { background: var(--blood-bright); border-color: var(--blood-bright); color: var(--paper); }
+html .hm-close h2 { margin-inline: auto; }
+html .hm-close .hm-kicker { color: rgba(246, 245, 241, .6); }
+
+.closing-poster { margin: 0; }
+.project-edition { border-bottom-color: var(--hairline); }
+
+/* ── Footer: the last dark room ───────────────────────────────────────────── */
+.site-footer { border-top: 0 !important; text-align: center; position: relative; margin: 0 !important; width: 100% !important; max-width: none !important; }
+.site-footer::before { content: none; }
+.site-footer p.site-footer__mark,
+.site-footer li a,
+.site-footer a.site-footer__email,
+.site-footer .site-footer__email,
+.site-footer p:not(.studio-kicker) { color: var(--paper) !important; }
+.site-footer li a:hover { color: var(--blood-bright) !important; }
+.site-footer__email { border-bottom-color: rgba(246, 245, 241, .4) !important; }
+.site-footer__grid { grid-template-columns: minmax(0, 1fr) !important; justify-items: center; text-align: center; }
+.site-footer__intro,
+.site-footer__grid > div:nth-child(2),
+.site-footer__grid > div:nth-child(3) { grid-column: 1 / -1 !important; }
+.site-footer ul { display: flex; flex-wrap: wrap; justify-content: center; gap: .25rem 1.75rem; }
+.site-footer li a { letter-spacing: .22em; }
+.site-footer__seal { margin-inline: auto; background-color: var(--paper); }
+
+/* ── Motion: slow and quiet ───────────────────────────────────────────────── */
+.reveal {
+  opacity: 0 !important;
+  transform: translateY(.6rem);
+  transition: opacity 1.4s var(--ease-slow), transform 1.4s var(--ease-slow), clip-path 1.4s var(--ease-slow);
+}
+.reveal--visible { opacity: 1 !important; transform: translateY(0); }
+
+/* ---------------------------------------------------------------------------
+ * INNER PAGES — same centerline.
+ * --------------------------------------------------------------------------- */
+.page-hero,
+.page-hero h1,
+.page-hero > p,
+.edition-intro,
+.archive-section__heading,
+.tool-editions__intro,
+.art-edition__intro,
+.contact-page h1 { text-align: center; }
+.page-hero { align-items: center; border-bottom-color: var(--hairline); }
+.page-hero > p:last-child,
+.page-hero h1 { margin-inline: auto; }
+.page-hero--olive { margin: 0; border-bottom: 0; }
+
+/* Work index. */
+.project-edition,
+.project-edition__head,
+.project-edition__head h3,
+.project-edition__head > p { text-align: center; }
+.project-edition__head > p { display: flex; flex-wrap: wrap; justify-content: center; gap: .35rem 2rem; letter-spacing: .24em; }
+.edition-intro { margin-inline: auto; }
+
+/* Tools index. */
+.tool-entry { grid-template-columns: minmax(0, 1fr); justify-items: center; text-align: center; gap: 1.5rem; }
+.tool-entry__meta,
+.tool-entry__info,
+.tool-entry > img,
+.tool-entry__plate { grid-column: 1 / -1; grid-row: auto; }
+.tool-entry__meta { width: min(100%, 36rem); gap: 1.5rem; justify-content: center; border-top: 1px solid var(--rule); letter-spacing: .24em; }
+.tool-entry__info { align-self: auto; max-width: 34rem; }
+.tool-entry__info span { margin-top: 1.25rem; letter-spacing: .24em; }
+
+/* Contact. */
+.contact-page { text-align: center; justify-items: center; min-height: calc(100svh - 7rem); align-content: center; padding-block: clamp(5rem, 12vw, 11rem) 2.5rem; row-gap: 2rem; margin: 0; }
+.contact-page__note { grid-column: 1 / -1; width: min(100%, 30rem); }
+.contact-page__note p { width: 100%; margin: 0 auto 2rem; font-family: var(--book); }
+.contact-page__note a { justify-content: center; gap: .75rem; letter-spacing: .24em; }
+.contact-page__availability { grid-column: 1 / -1; text-align: center; letter-spacing: .24em; }
+
+/* Art archive: museum wall labels under each plate. */
+.art-plate__label { grid-template-columns: 1fr; text-align: center; justify-items: center; border-top: 0; padding-top: 1.1rem; }
+.art-plate__title { font-style: italic; }
+.art-plate__year { letter-spacing: .26em; }
+.art-plate__caption { font-family: var(--book); }
+.painting-card__label { text-align: center; justify-items: center; grid-template-columns: 1fr !important; }
+
+/* Resume and legacy boxed sections: plain gallery cards with a hairline frame. */
+html .bg-paper,
+html .section-block:not(.bg-charcoal) {
+  background: var(--paper) !important;
+  color: var(--carbon);
+  border: 1px solid var(--rule) !important;
+  box-shadow: none !important;
+  border-radius: 0;
+  padding: 2rem !important;
+}
+html .bg-charcoal {
+  background-color: #070606 !important;
+  background-image: var(--grain) !important;
+  background-size: 220px 220px !important;
+  border: 0 !important;
+  border-radius: 0;
+}
+main .max-w-4xl h1 { color: var(--carbon) !important; text-align: center; font-size: clamp(3rem, 7vw, 5rem); letter-spacing: -.03em; }
+main .max-w-4xl .prose:has(> a[href$='.pdf']) { display: flex; justify-content: center; }
+main .max-w-4xl .prose > a[href$='.pdf'] { color: var(--carbon) !important; border: 1px solid var(--carbon) !important; background: transparent; letter-spacing: .24em; text-transform: uppercase; font-size: .66rem; transition: background .5s var(--ease-slow), color .5s var(--ease-slow); }
+main .max-w-4xl .prose > a[href$='.pdf']:hover { background: var(--carbon) !important; color: var(--paper) !important; }
+main .max-w-4xl h2 { text-align: center; border-bottom-color: var(--hairline) !important; letter-spacing: .3em; }
+main .max-w-4xl section h2 { color: var(--ink-muted) !important; }
+main .max-w-4xl section .flex-wrap { justify-content: center; }
+main .max-w-4xl section .grid.md\:grid-cols-2 > div > h3 { text-align: center; }
+main .max-w-4xl [class*="bg-gray-50"] { background: var(--bone-deep) !important; border-color: var(--hairline) !important; color: var(--carbon) !important; }
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1 !important; transform: none; }
+}
+
+/* ── Wordmark: the name is the masthead, the title sits underneath ───────── */
+.site-logo { flex-direction: column; align-items: center; gap: .55rem; text-align: center; }
+.site-logo__name {
+  display: block;
+  width: auto;
+  height: auto;
+  overflow: visible;
+  background: none;
+  color: var(--carbon);
+  font: 400 clamp(2.4rem, 4.4vw, 4rem)/1 var(--display);
+  letter-spacing: -.02em;
+  white-space: nowrap;
+}
+.site-logo__name::before { content: none; }
+.site-logo__role {
+  font: 600 .6rem/1.4 var(--mono);
+  letter-spacing: .34em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+@media (max-width: 900px) {
+  .site-logo { align-items: flex-start; gap: .3rem; text-align: left; }
+  .site-logo__name { font-size: 1.7rem; }
+  .site-logo__role { display: block; font-size: .5rem; letter-spacing: .26em; }
+}
+
+/* ---------------------------------------------------------------------------
+ * TOOLS INDEX — typographic plates, no screenshots.
+ * Each tool is a framed card: status line, the name set large, a one-liner and
+ * a small spec ledger. It goes black when you reach for it, like the home cards.
+ * --------------------------------------------------------------------------- */
+.tool-archive { display: grid; gap: clamp(1.25rem, 2.5vw, 2rem); }
+.tool-entry + .tool-entry { margin-top: 0; }
+a.tool-entry {
+  grid-template-rows: auto auto;
+  align-content: center;
+  gap: 2rem;
+  padding: clamp(2.5rem, 6vw, 5.5rem) var(--gutter);
+  box-shadow: inset 0 0 0 1px var(--rule);
+  outline: 0;
+  transition: background .6s var(--ease-slow), color .6s var(--ease-slow), box-shadow .6s var(--ease-slow);
+}
+.tool-entry__meta { border-top: 0; padding-top: 0; width: auto; color: var(--ink-muted); transition: color .6s var(--ease-slow); }
+.tool-entry__info { max-width: 46rem; }
+.tool-entry__info h2 { font-size: clamp(3.5rem, 9vw, 8rem) !important; line-height: .9 !important; margin: 0 0 1.4rem !important; }
+.tool-entry__info p { font-family: var(--book); font-size: clamp(1.05rem, 1.5vw, 1.25rem); color: var(--ink-muted); transition: color .6s var(--ease-slow); }
+.tool-entry__ledger { display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem 2.5rem; margin: 2rem 0 0; padding: 1.1rem 0 0; border-top: 1px solid var(--hairline); }
+.tool-entry__ledger div { display: grid; gap: .3rem; }
+.tool-entry__ledger dt { font: 600 .55rem/1 var(--mono); letter-spacing: .28em; text-transform: uppercase; color: var(--ink-muted); }
+.tool-entry__ledger dd { margin: 0; font: 400 1rem/1.2 var(--display); }
+.tool-entry__info span { color: var(--vermilion); transition: color .6s var(--ease-slow); }
+
+a.tool-entry:hover,
+a.tool-entry:focus-visible { background: var(--carbon); box-shadow: inset 0 0 0 1px var(--carbon); }
+a.tool-entry:hover .tool-entry__info h2,
+a.tool-entry:focus-visible .tool-entry__info h2 { color: var(--paper) !important; }
+a.tool-entry:hover,
+a.tool-entry:hover .tool-entry__info p,
+a.tool-entry:hover .tool-entry__meta,
+a.tool-entry:hover .tool-entry__ledger dt,
+a.tool-entry:focus-visible .tool-entry__info p,
+a.tool-entry:focus-visible .tool-entry__meta { color: rgba(246, 245, 241, .72); }
+a.tool-entry:hover .tool-entry__ledger,
+a.tool-entry:focus-visible .tool-entry__ledger { border-top-color: rgba(246, 245, 241, .25); }
+a.tool-entry:hover .tool-entry__ledger dd { color: var(--paper); }
+a.tool-entry:hover .tool-entry__info span,
+a.tool-entry:focus-visible .tool-entry__info span { color: var(--blood-bright); }
+
+/* ---------------------------------------------------------------------------
+ * TYPE — Geist Pixel for headlines, Helvetica for text, Futura for labels.
+ * The pixel faces are far wider than the condensed serif they replace, so
+ * every display size is pulled down, tracking is zeroed (negative tracking
+ * fuses pixel glyphs) and italics are dropped: the accent phrase switches to
+ * the Circle cut instead of slanting.
+ * --------------------------------------------------------------------------- */
+body { font-variation-settings: normal !important; font-weight: 400; }
+main h1, main h2, main h3, .site-logo__name, .site-footer__mark { font-family: var(--pixel) !important; letter-spacing: 0 !important; font-weight: 400; }
+em, html .hm-hero h1 em, html .hm-close h2 em, .page-hero h1 em, .contact-page h1 em, .site-footer__mark em {
+  font-family: var(--pixel-accent) !important;
+  font-style: normal !important;
+  letter-spacing: 0 !important;
+}
+
+html .hm-hero h1 { font-size: clamp(2.3rem, 6.6vw, 6.4rem); line-height: 1.08; max-width: 17ch; }
+html .hm-hero__lede { font-style: normal; font-size: clamp(1rem, 1.3vw, 1.15rem); line-height: 1.6; }
+html .hm-flagship h2 { font-size: clamp(2.6rem, 6vw, 5.6rem); line-height: 1.02; }
+html .hm-flagship__line { font-family: var(--helvetica); font-size: clamp(1.05rem, 1.4vw, 1.2rem); }
+html .hm-also h2,
+html .hm-experience h2 { font-size: clamp(2rem, 4vw, 3.6rem); line-height: 1.08; }
+html .hm-card h3 { font-size: clamp(1.25rem, 2vw, 1.8rem); line-height: 1.2; }
+html .hm-proof li { font-family: var(--pixel); font-size: clamp(1rem, 1.5vw, 1.35rem); letter-spacing: 0; }
+html .hm-flow strong { font-size: clamp(1.4rem, 2.4vw, 2rem); line-height: 1.1; }
+html .hm-experience__list h3 { font-size: 1.15rem; line-height: 1.25; }
+html .hm-close h2 { font-size: clamp(2.6rem, 6.6vw, 6.2rem); line-height: 1.05; max-width: 14ch; }
+html .hm-reel__slate { font-family: var(--pixel); font-size: clamp(1.8rem, 5vw, 4.4rem); letter-spacing: 0; }
+html .hm-flagship h2,
+html .hm-hero h1,
+html .hm-close h2 { text-wrap: balance; }
+
+.site-logo__name { font-size: clamp(1.7rem, 3.2vw, 2.9rem); }
+.site-footer p.site-footer__mark { font-size: clamp(1.2rem, 2vw, 1.7rem) !important; line-height: 1.25 !important; text-transform: none; }
+@media (max-width: 900px) { .site-logo__name { font-size: 1.15rem; } }
+
+html .page-hero h1 { font-size: clamp(2.8rem, 9vw, 8.5rem) !important; line-height: 1.02 !important; letter-spacing: 0 !important; }
+html .project-edition__head h3 { font-size: clamp(2.2rem, 6.4vw, 6rem) !important; line-height: 1.05 !important; letter-spacing: 0 !important; }
+html .tool-entry__info h2 { font-size: clamp(2.4rem, 6.4vw, 6rem) !important; line-height: 1.05 !important; }
+html .contact-page h1 { font-size: clamp(2.4rem, 6.8vw, 6.4rem) !important; line-height: 1.08 !important; letter-spacing: 0 !important; }
+html .art-edition__intro h2, html .edition-intro h2 { font-size: clamp(2.2rem, 6vw, 5rem) !important; line-height: 1.05 !important; letter-spacing: 0 !important; }
+html .painting-card__title { font-size: clamp(1.8rem, 4vw, 3.4rem) !important; line-height: 1.1 !important; letter-spacing: 0 !important; }
+html .tool-entry__ledger dd { font-family: var(--helvetica); font-size: .9rem; }
+.art-plate__title { font-family: var(--helvetica); font-style: normal; font-size: .95rem; letter-spacing: .02em; }
+main .max-w-4xl h1 { font-size: clamp(2rem, 5vw, 3.6rem); line-height: 1.1; }
+
+/* Labels in Futura: uppercase, tracked, a touch heavier. */
+html .hm-kicker, .site-logo__role, .site-menu a, html .hm-button, html .hm-link, .tool-entry__meta, .tool-entry__info span,
+html .hm-card__go, html .hm-facts li, .site-footer li a, .project-edition__head > p, .contact-page__note a, .contact-page__availability,
+html .hm-reel__caption, html .hm-experience__list time, .art-plate__year, .tool-entry__ledger dt, .section-label {
+  font-family: var(--futura) !important;
+  font-weight: 500;
+}
+.site-menu a { font-family: var(--futura) !important; font-weight: 500; font-size: .7rem !important; }
+html .hm-button { font-size: .72rem; font-weight: 600; }
+html .hm-reel__slate span { font-family: var(--pixel-accent); font-style: normal; }
+html .hm-reel__slate span { color: var(--blood-bright); }
