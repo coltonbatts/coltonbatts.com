@@ -12,7 +12,7 @@ const years = art.map((piece) => piece.year);
 const span =
 	Math.min(...years) === Math.max(...years)
 		? String(Math.min(...years))
-		: `${Math.min(...years)}—${Math.max(...years)}`;
+		: `${Math.min(...years)}–${Math.max(...years)}`;
 ---
 
 <BaseLayout
@@ -27,7 +27,7 @@ const span =
 	<div class="archive-index">
 		<div class="art-sheet">
 			{art.map((piece) => (
-				<ArtPlate piece={piece} size="sheet" showCaption />
+				<ArtPlate piece={piece} size="sheet" />
 			))}
 		</div>
 

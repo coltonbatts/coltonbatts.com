@@ -10,4 +10,4 @@ order: 1
 vimeoId: "1121660660"
 ---
 
-Lead editor on 30+ video assets for Google's "Shop With Google" campaign series. Fast-paced editorial requiring 24-hour rough-cut turnarounds across multiple formats — social, broadcast, and digital display.
+Lead editor on 30+ video assets for Google's “Shop with Google” campaign series. Fast-paced editorial requiring 24-hour rough-cut turnarounds across multiple formats — social, broadcast, and digital display.

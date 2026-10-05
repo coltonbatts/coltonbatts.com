@@ -13,7 +13,7 @@ export default defineConfig({
 	// Preserve pre-v7 whitespace handling; the typography leans on
 	// spaces between inline elements.
 	compressHTML: true,
-	integrations: [sitemap()],
+	integrations: [sitemap({ filter: (page) => !page.includes('/scavenger-log') })],
 	vite: {
 		plugins: [tailwindcss()],
 	},
