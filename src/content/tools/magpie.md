@@ -5,7 +5,7 @@ status: active
 platform: macOS / Windows / Linux
 version: "0.9.0"
 lastUpdated: "2025.02"
-ownershipType: Own-Forever
+ownershipType: Yours to keep
 repoUrl: https://github.com/coltonbatts/MagpieApp
 techStack:
   - Tauri 2 + Rust Core
@@ -19,7 +19,7 @@ links:
     url: https://github.com/coltonbatts/MagpieApp
 bullets:
   - 5-stage structured workflow from fabric to export.
-  - Kubelka-Munk–grade DMC thread matching via CIEDE2000.
+  - DMC thread matching via CIEDE2000 color difference.
   - Native Rust processing pipeline with rayon parallelism.
   - WebGL-accelerated region rendering via Pixi.js.
   - Artisan Blueprint PDF and SVG export with Thread Manifest.
@@ -72,6 +72,6 @@ The Tauri 2 shell means the app is a real desktop application — native window,
 
 ## The Aesthetic
 
-The UI follows Editorial Modernism — the same design language as this site. Swiss-inspired typography, high-contrast layouts, no rounded corners, no gratuitous animation. The interface communicates through structure and hierarchy, not decoration.
+The UI follows Editorial Modernism: Swiss-inspired typography, high-contrast layouts, no rounded corners, no gratuitous animation. The interface communicates through structure and hierarchy, not decoration.
 
 Every panel, every label, every button is designed to feel like a technical manual for a precision instrument. Because that's what it is.

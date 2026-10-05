@@ -2,11 +2,11 @@
 name: ColorWizard
 oneLiner: Mixes oil paint on screen the way it mixes on canvas.
 status: beta
-platform: macOS
+platform: Web / macOS
 externalUrl: https://colorwizard.app/
 version: "0.1.0"
 lastUpdated: "2025.01"
-ownershipType: Own-Forever
+ownershipType: Yours to keep
 repoUrl: https://github.com/coltonbatts/colorwizard
 techStack:
   - Swift
