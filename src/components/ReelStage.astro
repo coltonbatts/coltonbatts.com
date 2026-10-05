@@ -1,0 +1,72 @@
+---
+import { reel } from '../data/reel';
+import { Image } from 'astro:assets';
+
+// Drop a poster frame at src/assets/home/reel-poster.(jpg|png|webp) and it is
+// picked up here, then printed by Darkroom (grain, halation, develops on scroll).
+const posters = import.meta.glob<{ default: ImageMetadata }>(
+	'../assets/home/reel-poster.{jpg,jpeg,png,webp}',
+	{ eager: true },
+);
+const poster = Object.values(posters)[0]?.default;
+---
+
+<section id="reel" class="hm-reel" aria-label="Reel">
+	<div
+		class="hm-reel__frame"
+		data-ready={reel.ready}
+		data-vimeo={reel.vimeoId ?? ''}
+		data-mp4={reel.mp4 ?? ''}
+		data-title={reel.title}
+	>
+		{reel.ready ? (
+			<>
+			{poster && (
+				<div class="hm-reel__print" data-darkroom="develop">
+					<Image
+						src={poster}
+						alt={`Still from ${reel.title}`}
+						widths={[720, 1280, 1920]}
+						sizes="100vw"
+						loading="eager"
+						decoding="async"
+					/>
+				</div>
+			)}
+			<button type="button" aria-label={`Play ${reel.title}`}>
+				<span>Play reel · {reel.duration}</span>
+			</button>
+			</>
+		) : (
+			<p class="hm-reel__slate">Reel <span>— in the cut</span></p>
+		)}
+	</div>
+	<p class="hm-reel__caption">
+		<span>Reel 2026</span>
+		<span>{reel.ready ? reel.duration : '00:00'}</span>
+	</p>
+</section>
+
+<script>
+	document.addEventListener('click', (event) => {
+		const button = (event.target as HTMLElement).closest('.hm-reel__frame button');
+		const frame = button?.closest<HTMLElement>('.hm-reel__frame');
+		if (!frame) return;
+		const { vimeo, mp4, title } = frame.dataset;
+		if (vimeo) {
+			const iframe = document.createElement('iframe');
+			iframe.src = `https://player.vimeo.com/video/${vimeo}?autoplay=1&dnt=1`;
+			iframe.allow = 'autoplay; fullscreen; picture-in-picture';
+			iframe.title = title ?? 'Reel';
+			frame.replaceChildren(iframe);
+		} else if (mp4) {
+			const video = document.createElement('video');
+			video.src = mp4;
+			video.controls = true;
+			video.autoplay = true;
+			video.playsInline = true;
+			video.setAttribute('aria-label', title ?? 'Reel');
+			frame.replaceChildren(video);
+		}
+	});
+</script>

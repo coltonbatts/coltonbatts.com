@@ -1,7 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
-import { Image } from 'astro:assets';
 
 const tools = await getCollection('tools');
 tools.sort((a, b) => {
@@ -28,21 +27,14 @@ tools.sort((a, b) => {
 					<div class="tool-entry__meta">
 						<span>{tool.data.status} · {tool.data.platform}</span>
 					</div>
-					{tool.data.heroImage ? (
-						<Image
-							src={tool.data.heroImage}
-							alt={`${tool.data.name} interface`}
-							widths={[720, 1200, 1600]}
-							sizes="(max-width: 768px) 100vw, 70vw"
-							loading="lazy"
-							decoding="async"
-						/>
-					) : (
-						<div class="tool-entry__plate">{tool.data.name}</div>
-					)}
 					<div class="tool-entry__info">
 						<h2>{tool.data.name}</h2>
 						<p>{tool.data.oneLiner}</p>
+						<dl class="tool-entry__ledger">
+							{tool.data.version && (<div><dt>Version</dt><dd>{tool.data.version}</dd></div>)}
+							{tool.data.ownershipType && (<div><dt>Ownership</dt><dd>{tool.data.ownershipType}</dd></div>)}
+							{tool.data.lastUpdated && (<div><dt>Updated</dt><dd>{tool.data.lastUpdated}</dd></div>)}
+						</dl>
 						<span>View project ↗</span>
 					</div>
 				</a>

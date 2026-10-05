@@ -1,0 +1,114 @@
+---
+/**
+ * Client row under the hero. Two treatments while we decide:
+ *   ?clients=logos (default) — monochrome marks; Nuuly and Kate Spade are
+ *     typeset stand-ins until real vector files exist.
+ *   ?clients=text — names set in the display face.
+ * Each links to its case study when one is published.
+ */
+const clients = [
+	{ name: 'Google', href: '/portfolio/shop-with-google' },
+	{ name: 'Nuuly', href: '/portfolio/nuuly' },
+	{ name: 'Under Armour' },
+	{ name: 'Kate Spade' },
+];
+---
+
+<section class="client-marks" aria-label="Selected clients" data-variant="logos">
+	<p class="studio-kicker">Selected clients</p>
+
+	<ul class="client-marks__row client-marks__row--logos">
+		{clients.map((c) => {
+			const Tag = c.href ? 'a' : 'span';
+			return (
+				<li>
+					<Tag href={c.href} aria-label={c.name}>
+						{c.name === 'Google' && (
+							<span class="mark mark--google">
+								<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133c-1.147 1.147-2.933 2.4-6.053 2.4c-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0C5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36c2.16-2.16 2.84-5.213 2.84-7.667c0-.76-.053-1.467-.173-2.053z"/></svg>
+								Google
+							</span>
+						)}
+						{c.name === 'Nuuly' && <span class="mark mark--nuuly">nuuly</span>}
+						{c.name === 'Under Armour' && (
+							<span class="mark mark--ua">
+								<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M15.954 12a17 17 0 0 1-.324.233c-.826.585-2.023.985-3.58.985h-.104c-1.556 0-2.755-.4-3.58-.985L8.042 12q.133-.099.324-.234c.825-.584 2.024-.985 3.58-.985h.104c1.557 0 2.756.401 3.58.985q.192.134.325.234M24 7.181s-.709-.541-2.95-1.365c-1.968-.721-3.452-.883-3.452-.883l.006 4.243c0 .598-.162 1.143-.618 1.765c-1.672-.61-3.254-.985-4.981-.985c-1.728 0-3.308.375-4.98.985c-.457-.619-.62-1.168-.62-1.765l.007-4.243s-1.494.16-3.463.883C.709 6.642 0 7.181 0 7.181c.093 1.926 1.78 3.638 4.435 4.820C1.777 13.180.090 14.887 0 16.818c0 0 .709.54 2.949 1.365c1.968.721 3.453.883 3.453.883l-.007-4.244c0-.597.164-1.143.619-1.764c1.672.61 3.252.983 4.98.983c1.727 0 3.309-.374 4.98-.983c.457.62.62 1.167.62 1.764l-.006 4.244s1.484-.16 3.452-.883c2.241-.826 2.95-1.365 2.95-1.365c-.093-1.927-1.78-3.640-4.435-4.819c2.657-1.182 4.343-2.888 4.435-4.820"/></svg>
+							</span>
+						)}
+						{c.name === 'Kate Spade' && (
+							<span class="mark mark--ks">kate spade<small>new york</small></span>
+						)}
+					</Tag>
+				</li>
+			);
+		})}
+	</ul>
+
+	<ul class="client-marks__row client-marks__row--text">
+		{clients.map((c) => {
+			const Tag = c.href ? 'a' : 'span';
+			return <li><Tag href={c.href}>{c.name}</Tag></li>;
+		})}
+	</ul>
+</section>
+
+<script is:inline>
+	(() => {
+		const v = new URLSearchParams(location.search).get('clients');
+		if (v === 'text') document.querySelector('.client-marks')?.setAttribute('data-variant', 'text');
+	})();
+</script>
+
+<style>
+	.client-marks {
+		padding: clamp(2rem, 4vw, 3.5rem) var(--gutter);
+		border-bottom: 1px solid var(--hairline);
+		color: var(--carbon);
+	}
+	.client-marks .studio-kicker { margin: 0 0 1.5rem; }
+
+	.client-marks__row {
+		display: grid;
+		grid-template-columns: repeat(4, 1fr);
+		align-items: center;
+		gap: 1.5rem var(--gutter);
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+	.client-marks[data-variant='logos'] .client-marks__row--text,
+	.client-marks[data-variant='text'] .client-marks__row--logos { display: none; }
+
+	.client-marks__row a,
+	.client-marks__row span { color: inherit; text-decoration: none; }
+
+	/* Marks sit quiet until hovered. */
+	.client-marks__row li > * {
+		display: inline-flex;
+		opacity: .55;
+		transition: opacity .4s ease;
+		animation: client-in 1.2s ease both;
+	}
+	.client-marks__row li:nth-child(2) > * { animation-delay: .12s; }
+	.client-marks__row li:nth-child(3) > * { animation-delay: .24s; }
+	.client-marks__row li:nth-child(4) > * { animation-delay: .36s; }
+	.client-marks__row a:hover { opacity: 1; }
+
+	@keyframes client-in { from { opacity: 0; transform: translateY(.3rem); } }
+	@media (prefers-reduced-motion: reduce) { .client-marks__row li > * { animation: none; } }
+
+	.mark { display: inline-flex; align-items: center; gap: .5rem; line-height: 1; }
+	.mark svg { width: auto; height: 1.9rem; }
+	.mark--google { font: 500 1.9rem/1 'Helvetica Neue', Arial, sans-serif; letter-spacing: -.03em; }
+	.mark--google svg { height: 1.5rem; }
+	.mark--nuuly { font: 600 2rem/1 'Avenir Next', 'Helvetica Neue', sans-serif; letter-spacing: -.02em; }
+	.mark--ua svg { height: 2.4rem; }
+	.mark--ks { flex-direction: column; align-items: flex-start; gap: .15rem; font: 400 1.9rem/1 var(--display); letter-spacing: -.02em; }
+	.mark--ks small { font: 500 .5rem/1 var(--mono); letter-spacing: .3em; text-transform: uppercase; }
+
+	.client-marks__row--text li > * { font: 400 clamp(1.8rem, 2.6vw, 3rem)/1 var(--display); letter-spacing: -.02em; }
+
+	@media (max-width: 700px) {
+		.client-marks__row { grid-template-columns: repeat(2, 1fr); }
+	}
+</style>

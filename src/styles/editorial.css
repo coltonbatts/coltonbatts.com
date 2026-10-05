@@ -48,14 +48,14 @@
 }
 
 :root {
-  --bone: #ffffff;
-  --paper: #ffffff;
+  --bone: #f3ecdf;
+  --paper: #f3ecdf;
   --vermilion: #b72a1f;
   --carbon: #141310;
-  --rule: rgba(20, 19, 16, .38);
-  --hairline: rgba(20, 19, 16, .18);
+  --rule: rgba(48, 36, 22, .38);
+  --hairline: rgba(48, 36, 22, .2);
   /* Secondary text. 6.6:1 on the wall; the old /25–/50 inks sat at 1.8–3.5:1. */
-  --ink-muted: #5f5d58;
+  --ink-muted: #5e5648;
   --rule-red: rgba(183, 42, 31, .55);
   --gutter: clamp(1rem, 2.8vw, 2.75rem);
   --space: clamp(6rem, 12vw, 12rem);
