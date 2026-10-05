@@ -105,6 +105,7 @@ const currentPath = Astro.url.pathname;
 				<div>
 					<a class="site-footer__email" href="mailto:colton.batts@gmail.com">colton.batts@gmail.com</a>
 					<p>Available for select collaborations<br />&copy; {new Date().getFullYear()} Colton Batts</p>
+					<button type="button" class="sound-toggle" data-sound-toggle aria-pressed="false">Sound: off</button>
 				</div>
 			</div>
 		</footer>
@@ -170,6 +171,10 @@ const currentPath = Astro.url.pathname;
 			document.addEventListener('astro:page-load', () => {
 				initReveals();
 			});
+		</script>
+
+		<script>
+			import '../scripts/presence';
 		</script>
 
 		<Darkroom />

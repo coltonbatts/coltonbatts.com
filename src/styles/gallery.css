@@ -552,3 +552,22 @@ html .hm-reel__caption, html .hm-experience__list time, .art-plate__year, .tool-
 html .hm-button { font-size: .72rem; font-weight: 600; }
 html .hm-reel__slate span { font-family: var(--pixel-accent); font-style: normal; }
 html .hm-reel__slate span { color: var(--blood-bright); }
+
+/* ── Sound toggle (footer). Off by default; see src/scripts/presence.ts ───── */
+.sound-toggle {
+  display: inline-block;
+  margin-top: 1.25rem;
+  padding: .5rem .25rem;
+  border: 0;
+  background: none;
+  color: rgba(246, 245, 241, .7);
+  font: 500 .62rem/1 var(--futura);
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: color .5s var(--ease-slow);
+}
+.sound-toggle:hover,
+.sound-toggle:focus-visible,
+.sound-toggle[aria-pressed='true'] { color: var(--paper); }
+.sound-toggle:focus-visible { outline: 1px solid var(--paper); outline-offset: 4px; }
