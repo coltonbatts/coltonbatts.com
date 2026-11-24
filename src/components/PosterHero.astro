@@ -1,0 +1,222 @@
+---
+import { Image } from 'astro:assets';
+import { site } from '../config';
+
+import plate01 from '../assets/art/01-untitled-2021.png';
+import plate02 from '../assets/art/02-365-256.png';
+import plate03 from '../assets/art/22-365-223.png';
+import plate04 from '../assets/art/09-untitled-2021.png';
+
+const plates = [
+	{
+		frame: '01A',
+		src: plate01,
+		alt: 'Suburban Gothic — dark house at night with glowing red window and draped white cloth',
+		title: 'Suburban Gothic',
+		meta: 'FORT WORTH · 2021',
+		shadow: '#171513',
+		spot: '#544B42',
+		paper: '#EDE6D8',
+		position: '50% 48%',
+	},
+	{
+		frame: '02A',
+		src: plate02,
+		alt: '365 / 256 — street lamp with a red bulb in fog above a draped cloth figure',
+		title: '365 / 256',
+		meta: 'FOG STUDY · 2021',
+		shadow: '#171513',
+		spot: '#4D4B47',
+		paper: '#EDE6D8',
+		position: '50% 40%',
+	},
+	{
+		frame: '03A',
+		src: plate03,
+		alt: '365 / 223 — dark smoke cloud with a glowing gold ring above a dusk horizon',
+		title: '365 / 223',
+		meta: 'SMOKE RING · 2021',
+		shadow: '#171513',
+		spot: '#574D48',
+		paper: '#EDE6D8',
+		position: '50% 44%',
+	},
+	{
+		frame: '04A',
+		src: plate04,
+		alt: 'Storm Study — silhouette figure suspended beneath lightning in a crimson sky',
+		title: 'Storm Study',
+		meta: 'NIGHT STILL · 2021',
+		shadow: '#171513',
+		spot: '#5A4644',
+		paper: '#EDE6D8',
+		position: '50% 46%',
+	},
+];
+
+const spineLetters = ['M', 'O', 'T', 'I', 'O', 'N'];
+---
+
+<section class="ns-hero" data-poster-root data-print-mode="color" aria-label="Colton Batts — Portfolio">
+	<div class="ns-hero__shell">
+		<!-- Full-Bleed Editorial Cover Poster (MEMORY / ERROR / ULTRA visual grammar) -->
+		<div class="ns-poster-frame">
+			<div class="ns-poster-stage" data-poster-stage>
+				{plates.map((plate, i) => (
+					<Image
+						src={plate.src}
+						alt={plate.alt}
+						widths={[720, 1280, 1800]}
+						sizes="(max-width: 900px) 96vw, 94vw"
+						loading={i === 0 ? 'eager' : 'lazy'}
+						fetchpriority={i === 0 ? 'high' : undefined}
+						decoding="async"
+						class:list={['ns-poster-stage__img', { 'is-active': i === 0 }]}
+						style={`object-position: ${plate.position};`}
+						data-poster-img={i}
+						data-frame={plate.frame}
+						data-shadow={plate.shadow}
+						data-spot={plate.spot}
+						data-paper={plate.paper}
+						data-title={plate.title}
+						data-meta={plate.meta}
+					/>
+				))}
+
+				<canvas
+					class="ns-poster-stage__canvas"
+					data-poster-canvas
+					aria-hidden="true"
+				></canvas>
+
+				<!-- Subtle top/bottom edge scrims for crisp ink legibility without dimming the artwork -->
+				<div class="ns-poster-scrim" aria-hidden="true"></div>
+
+				<!-- Dedicated interactive stage trigger (flat ARIA: never wraps jump links) -->
+				<button
+					type="button"
+					class="ns-poster-stage__hit"
+					data-poster-next
+					aria-label="Cycle to next cover print plate"
+					title="Click print to cycle plates"
+				></button>
+
+				<!-- Poster Typographic Overlay -->
+				<div class="ns-poster-overlay">
+					<!-- Pinned Top-Edge Micro Metadata -->
+					<div class="ns-poster-edge ns-poster-edge--top">
+						<span>{site.location}</span>
+						<span class="ns-poster-edge__mid" aria-hidden="true">{site.coordinates}</span>
+						<span>FILM · MOTION · SOFTWARE</span>
+					</div>
+
+					<!-- Vertical Stacked Letterform Spine (MEMORY / ERROR reference) -->
+					<div class="ns-poster-spine" aria-hidden="true">
+						<span class="ns-poster-spine__rule"></span>
+						<div class="ns-poster-spine__letters">
+							{spineLetters.map((char) => (
+								<span>{char}</span>
+							))}
+						</div>
+						<span class="ns-poster-spine__code" data-poster-frame>{plates[0].frame}</span>
+					</div>
+
+					<!-- Bottom Cover Lockup & Jump Index -->
+					<div class="ns-poster-bottom">
+						<div class="ns-poster-lockup">
+							<h1 class="ns-hero__title">
+								COLTON<br />BATTS
+							</h1>
+							<p class="ns-hero__role">
+								EDITOR · MOTION DESIGNER · CREATIVE TECHNOLOGIST
+							</p>
+						</div>
+
+						<nav class="ns-poster-jumps" aria-label="Jump to section">
+							<a href="#systems"><span>01</span> SYSTEMS ↓</a>
+							<a href="#screening"><span>02</span> FILM ↓</a>
+							<a href="#archive"><span>03</span> ARCHIVE ↓</a>
+							<a href={`mailto:${site.email}`} class="ns-poster-jumps__mail">EMAIL ↗</a>
+						</nav>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Tactile Warm Paper Proof Margin & 35mm Contact-Sheet Rail -->
+		<div class="ns-poster-rail">
+			<div class="ns-contact-strip" role="group" aria-label="Select cover print plate">
+				{plates.map((plate, i) => (
+					<button
+						type="button"
+						class:list={['ns-contact-thumb', { 'is-active': i === 0 }]}
+						data-plate-btn={i}
+						aria-pressed={i === 0 ? 'true' : 'false'}
+						aria-label={`Select frame ${plate.frame}: ${plate.title}`}
+					>
+						<span class="ns-contact-thumb__frame">
+							<Image
+								src={plate.src}
+								alt=""
+								widths={[140, 280]}
+								sizes="(max-width: 900px) 22vw, 7rem"
+								loading="eager"
+								decoding="async"
+								style={`object-position: ${plate.position};`}
+							/>
+						</span>
+						<span class="ns-contact-thumb__num">{plate.frame}</span>
+					</button>
+				))}
+			</div>
+
+			<div class="ns-poster-rail__info">
+				<span class="ns-stamp-seal" aria-hidden="true"></span>
+				<span class="ns-poster-rail__code" data-poster-frame>{plates[0].frame}</span>
+				<span class="ns-poster-rail__title" data-poster-title>{plates[0].title}</span>
+				<span class="ns-poster-rail__sep" aria-hidden="true">/</span>
+				<span class="ns-poster-rail__meta" data-poster-meta>{plates[0].meta}</span>
+			</div>
+
+			<div class="ns-print-toggle" role="group" aria-label="Print finish">
+				<button
+					type="button"
+					class="ns-mode-btn is-active"
+					data-print-mode="color"
+					aria-pressed="true"
+				>
+					COLOR
+				</button>
+				<button
+					type="button"
+					class="ns-mode-btn"
+					data-print-mode="xerox"
+					aria-pressed="false"
+				>
+					XEROX
+				</button>
+			</div>
+		</div>
+	</div>
+</section>
+
+<script>
+	import { mountPosterStage } from '../lib/poster-stage';
+
+	let cleanup: (() => void) | null = null;
+
+	function bootPoster() {
+		cleanup?.();
+		cleanup = null;
+		const root = document.querySelector<HTMLElement>('[data-poster-root]');
+		if (root) {
+			cleanup = mountPosterStage(root);
+		}
+	}
+
+	document.addEventListener('astro:page-load', bootPoster);
+	document.addEventListener('astro:before-swap', () => {
+		cleanup?.();
+		cleanup = null;
+	});
+</script>

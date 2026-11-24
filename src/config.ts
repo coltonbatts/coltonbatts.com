@@ -1,7 +1,12 @@
 export const site = {
 	title: 'Colton Batts',
-	description: 'Photographs and commercial film by Colton Batts, Fort Worth.',
+	description:
+		'Creative technologist, video editor, and motion designer in Fort Worth, TX — commercial film for Google, Nuuly, Under Armour & Kate Spade, plus shipped Rust, Metal & WebGL software.',
 	url: 'https://coltonbatts.com',
+	location: 'Fort Worth, TX',
+	coordinates: '32.7555°N · 97.3308°W',
+	email: 'colton.batts@gmail.com',
+	github: 'https://github.com/coltonbatts',
 };
 
 export const reel = {
@@ -17,18 +22,18 @@ export const reel = {
 	title: 'Colton Batts — Reel',
 };
 
-/** Primary nav, in the order the site argues: the work, the tools, the proof,
- *  the way to reach me. The logo is the way home. */
+/** Primary nav: commercial work, shipped software, visual archive, resume, contact. */
 export const navItems = [
 	{ href: '/portfolio', label: 'Work' },
 	{ href: '/tools', label: 'Tools' },
+	{ href: '/art', label: 'Art' },
 	{ href: '/resume', label: 'Resume' },
 	{ href: '/contact', label: 'Contact' },
 ];
 
-/** The footer index also carries the secondary pages. */
+/** The footer index also carries secondary pages. */
 export const footerItems = [
 	...navItems,
-	{ href: '/art', label: 'Art' },
 	{ href: '/now', label: 'Now' },
+	{ href: '/lab', label: 'Lab' },
 ];

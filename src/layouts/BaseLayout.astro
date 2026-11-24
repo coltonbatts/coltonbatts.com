@@ -4,7 +4,6 @@ import Darkroom from '../components/Darkroom.astro';
 import { footerItems, navItems, site } from '../config';
 import '../styles/global.css';
 import '../styles/editorial.css';
-import '../styles/gallery.css';
 
 interface Props {
 	title?: string;
@@ -26,7 +25,9 @@ const currentPath = Astro.url.pathname;
 		<link rel="apple-touch-icon" href="/favicon-custom.png" />
 		<meta name="generator" content={Astro.generator} />
 
-		<link rel="preload" href="/fonts/GeistPixel-Square.woff2" as="font" type="font/woff2" crossorigin />
+		<link rel="preload" href="/fonts/Inter-Variable.woff2" as="font" type="font/woff2" crossorigin />
+		<link rel="preload" href="/fonts/IBMPlexMono-Regular.woff2" as="font" type="font/woff2" crossorigin />
+		<link rel="preload" href="/fonts/UnifrakturMaguntia-Regular.woff2" as="font" type="font/woff2" crossorigin />
 
 		<!-- Open Graph -->
 		<meta property="og:type" content="website" />
@@ -52,9 +53,8 @@ const currentPath = Astro.url.pathname;
 
 		<header class="site-header">
 			<nav class="site-nav" aria-label="Primary navigation">
-				<a href="/" class="site-logo">
+				<a href="/" class="site-logo" aria-label="Colton Batts — Home">
 					<span class="site-logo__name">Colton Batts</span>
-					<span class="site-logo__role">Video · Motion · Software</span>
 				</a>
 
 				<button
@@ -76,7 +76,7 @@ const currentPath = Astro.url.pathname;
 									href={item.href}
 									aria-current={(currentPath === item.href || (item.href !== '/' && currentPath.startsWith(item.href))) ? 'page' : undefined}
 								>
-									{item.label}
+									<span>{item.label}</span>
 								</a>
 							</li>
 						))}
@@ -89,44 +89,82 @@ const currentPath = Astro.url.pathname;
 			<slot />
 		</main>
 
-		<footer class="site-footer">
+		<footer id="contact" class="site-footer">
 			<div class="site-footer__grid">
 				<div class="site-footer__intro">
-					<p class="site-footer__mark">Make it clear.<br /><em>Make it last.</em></p>
-					<span class="site-footer__seal" aria-hidden="true"></span>
+					<p class="site-footer__kicker">COLOPHON · {site.location}</p>
+					<p class="site-footer__mark">Make it sharp.<br />Make it last.</p>
+					<div class="site-footer__signoff">
+						<p class="site-footer__sig" aria-hidden="true">Colton Batts</p>
+						<div class="site-footer__stamp" aria-hidden="true">
+							<span class="site-footer__seal"></span>
+							<span>PRESS · FTW</span>
+						</div>
+					</div>
 				</div>
-				<div>
+
+				<div class="site-footer__index">
+					<p class="site-footer__kicker">INDEX</p>
 					<ul>
 						{footerItems.map((item) => (
-							<li><a href={item.href}>{item.label}</a></li>
+							<li>
+								<a href={item.href}>{item.label}</a>
+							</li>
 						))}
 					</ul>
 				</div>
-				<div>
-					<a class="site-footer__email" href="mailto:colton.batts@gmail.com">colton.batts@gmail.com</a>
-					<p>Available for select collaborations<br />&copy; {new Date().getFullYear()} Colton Batts</p>
+
+				<div class="site-footer__direct">
+					<p class="site-footer__kicker">DIRECT INQUIRY</p>
+					<a class="site-footer__email" href={`mailto:${site.email}`}>{site.email} ↗</a>
+					<p class="site-footer__links">
+						<a href={site.github} rel="noopener noreferrer" target="_blank">GitHub ↗</a>
+						<span aria-hidden="true"> · </span>
+						<a href="/resume/Colton_Batts_Resume.pdf">Resume PDF ↗</a>
+					</p>
+					<p class="site-footer__copy">
+						Open to full-time roles &amp; select commercial / creative-tech commissions.<br />
+						&copy; {new Date().getFullYear()} Colton Batts · {site.coordinates}
+					</p>
 					<button type="button" class="sound-toggle" data-sound-toggle aria-pressed="false">Sound: off</button>
 				</div>
 			</div>
 		</footer>
+
 		<!-- Mobile menu — delegated to document so it survives view-transition swaps -->
 		<script is:inline>
-			document.addEventListener('click', function (e) {
-				var toggle = document.getElementById('mobile-menu-toggle');
-				var menu = document.getElementById('mobile-menu');
-				if (!toggle || !menu) return;
-
-				if (toggle.contains(e.target)) {
-					var isOpen = toggle.getAttribute('aria-expanded') === 'true';
-					toggle.classList.toggle('is-open', !isOpen);
-					menu.classList.toggle('is-open', !isOpen);
-					toggle.setAttribute('aria-expanded', String(!isOpen));
-				} else if (menu.contains(e.target) && e.target.tagName === 'A') {
+			if (!window.__mobileMenuBound) {
+				window.__mobileMenuBound = true;
+				function closeMobileMenu(focusToggle) {
+					var toggle = document.getElementById('mobile-menu-toggle');
+					var menu = document.getElementById('mobile-menu');
+					if (!toggle || !menu) return;
+					if (toggle.getAttribute('aria-expanded') !== 'true') return;
 					menu.classList.remove('is-open');
 					toggle.classList.remove('is-open');
 					toggle.setAttribute('aria-expanded', 'false');
+					if (focusToggle) toggle.focus();
 				}
-			});
+				document.addEventListener('click', function (e) {
+					var toggle = document.getElementById('mobile-menu-toggle');
+					var menu = document.getElementById('mobile-menu');
+					if (!toggle || !menu) return;
+
+					if (toggle.contains(e.target)) {
+						var isOpen = toggle.getAttribute('aria-expanded') === 'true';
+						toggle.classList.toggle('is-open', !isOpen);
+						menu.classList.toggle('is-open', !isOpen);
+						toggle.setAttribute('aria-expanded', String(!isOpen));
+					} else if (menu.contains(e.target) && e.target.closest('a')) {
+						closeMobileMenu(false);
+					} else if (!menu.contains(e.target)) {
+						closeMobileMenu(false);
+					}
+				});
+				document.addEventListener('keydown', function (e) {
+					if (e.key === 'Escape') closeMobileMenu(true);
+				});
+			}
 		</script>
 
 		<!-- Scroll reveals — IntersectionObserver only, re-run after each router swap -->
@@ -144,8 +182,9 @@ const currentPath = Astro.url.pathname;
 							entry.target.classList.add('motion-chapter-in');
 							chapterObserver.unobserve(entry.target);
 						});
-					}, { threshold: 0.2, rootMargin: '0px 0px -12% 0px' });
+					}, { threshold: 0.01, rootMargin: '0px 0px -2% 0px' });
 					chapters.forEach((el) => chapterObserver.observe(el));
+					document.addEventListener('astro:before-swap', () => chapterObserver.disconnect(), { once: true });
 				}
 
 				const reveals = document.querySelectorAll<HTMLElement>('[data-reveal]');
@@ -158,16 +197,16 @@ const currentPath = Astro.url.pathname;
 							entry.target.classList.add('reveal--visible');
 							revealObserver.unobserve(entry.target);
 						});
-					}, { threshold: 0.18, rootMargin: '0px 0px -12% 0px' });
+					}, { threshold: 0.01, rootMargin: '0px 0px -2% 0px' });
 					reveals.forEach((el, index) => {
 						el.classList.add('reveal');
-						el.style.transitionDelay = `${Math.min(index % 4, 3) * 70}ms`;
+						el.style.transitionDelay = `${Math.min(index % 4, 3) * 45}ms`;
 						revealObserver.observe(el);
 					});
+					document.addEventListener('astro:before-swap', () => revealObserver.disconnect(), { once: true });
 				}
 			}
 
-			// astro:page-load fires on initial load and after every ClientRouter swap
 			document.addEventListener('astro:page-load', () => {
 				initReveals();
 			});

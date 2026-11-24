@@ -1,171 +1,717 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { Image } from 'astro:assets';
+import PosterHero from '../components/PosterHero.astro';
+import ReelStage from '../components/ReelStage.astro';
+import { site } from '../config';
+import { reel } from '../data/reel';
+import { art } from '../data/art';
+import resume from '../data/resume_source.json';
 import '../styles/home.css';
 
-import ReelStage from '../components/ReelStage.astro';
-import trailerPoster from '../assets/home/vcr-trailer-poster.jpg';
+import vcrTrailerPoster from '../assets/home/vcr-trailer-poster.jpg';
+import colorwizardImg from '../assets/tools/colorwizard.png';
+import magpieImg from '../assets/tools/magpie.png';
+import uaFallbackImg from '../assets/hero/under-armour-fallback.png';
 
-const email = 'colton.batts@gmail.com';
+import markGoogle from '../assets/brands/google-shopping.png';
+import markNuuly from '../assets/brands/nuuly.png';
+import markUA from '../assets/brands/under-armour.png';
+import markKateSpade from '../assets/brands/kate-spade.png';
+
 const vcrTrailerId = '1166117135';
+const googleVimeoId = '1121660660';
+const nuulyVimeoId = '1122006774';
+
+const monochromeHero = art.find((piece) => piece.order === 23) ?? art[0];
+const polaroidHero = art.find((piece) => piece.order === 19) ?? art[1] ?? art[0];
+const contactOrders = [4, 5, 15, 3];
+const contactArt = contactOrders
+	.map((n) => art.find((piece) => piece.order === n))
+	.filter((p): p is (typeof art)[number] => Boolean(p));
+
+const roleScopes: Record<string, string> = {
+	'Lead Video Editor': 'Google, Under Armour, Kate Spade & Nuuly · 30+ national cuts.',
+	'Founder & Creative Director': 'Film, motion & software — VCR, ColorWizard, MagpieApp.',
+	'Multimedia Designer & Video Lead': 'Large-format print production & 6-year video pipeline.',
+};
+
+const colorSwatches = [
+	{
+		id: 'vermilion',
+		name: 'Cadmium Vermilion',
+		hex: '#B8231B',
+		ink: '#F4EFE3',
+		recipe: '68% Cad Red Light · 24% Pyrrole Scarlet · 8% Burnt Umber',
+		thread: 'DMC 349 — Dark Coral',
+		peak: '618 NM',
+		deltaE: 'ΔE 0.84',
+	},
+	{
+		id: 'cobalt',
+		name: 'French Ultramarine',
+		hex: '#203E9C',
+		ink: '#F4EFE3',
+		recipe: '74% French Ultramarine · 19% Phthalo Blue · 7% Titanium White',
+		thread: 'DMC 796 — Dark Royal Blue',
+		peak: '462 NM',
+		deltaE: 'ΔE 1.12',
+	},
+	{
+		id: 'sandstone',
+		name: 'Raw Buff',
+		hex: '#C6B299',
+		ink: '#171513',
+		recipe: '52% Titanium Buff · 31% Raw Umber · 17% Yellow Ochre',
+		thread: 'DMC 3864 — Light Mocha',
+		peak: '576 NM',
+		deltaE: 'ΔE 0.61',
+	},
+	{
+		id: 'oxblood',
+		name: 'Alizarin Crimson',
+		hex: '#7C1D35',
+		ink: '#F4EFE3',
+		recipe: '82% Quin Magenta · 12% Alizarin Permanent · 6% Zinc White',
+		thread: 'DMC 601 — Dark Cranberry',
+		peak: '642 NM',
+		deltaE: 'ΔE 0.95',
+	},
+];
 ---
 
 <BaseLayout
-	title="Video, Motion & Software"
-	description="Colton Batts is a video editor and motion designer who builds software. Open to full-time roles and selected projects."
+	title="Creative Technologist · Motion · Video · Software"
+	description={site.description}
 >
-	<section class="hm-hero">
-		<div class="hm-hero__copy">
-			<p class="hm-kicker">Fort Worth, Texas</p>
-			<h1>Video editor<br class="hm-br" /> and motion designer<br class="hm-br" /> who <em>builds software.</em></h1>
-			<div class="hm-hero__actions">
-				<a class="hm-button hm-button--primary" href={`mailto:${email}`}>Email me <span aria-hidden="true">↗</span></a>
-				<a class="hm-link" href="#reel">Watch the reel ↓</a>
+	<!-- =================================================================== -->
+	<!-- ACT I — FULL-BLEED EDITORIAL COVER POSTER & WEBGL2 PRINT STAGE      -->
+	<!-- =================================================================== -->
+	<PosterHero />
+
+	<!-- =================================================================== -->
+	<!-- ACT II — BUILT SYSTEMS (POLAROID, BAUHAUS & TERMINAL PLATES)        -->
+	<!-- =================================================================== -->
+	<section id="systems" class="ns-systems" aria-labelledby="systems-heading">
+		<header class="ns-band-head">
+			<div class="ns-band-head__left">
+				<span class="ns-kicker">01 / SYSTEMS</span>
+				<h2 id="systems-heading">TOOLS.</h2>
 			</div>
-		</div>
-	</section>
-
-	<ReelStage />
-
-	<section class="hm-proof" aria-label="Clients">
-		<p class="hm-kicker">Shipped for</p>
-		<ul>
-			<li>Google</li>
-			<li>Nuuly</li>
-			<li>Under Armour</li>
-			<li>Kate Spade</li>
-		</ul>
-	</section>
-
-	<section id="built" class="hm-flagship">
-		<div class="hm-flagship__text">
-			<p class="hm-kicker">Open source · Motion tooling</p>
-			<h2>VCR</h2>
-			<p class="hm-flagship__line">Motion graphics from the terminal.</p>
-			<ul class="hm-facts">
-				<li>Rust · Metal GPU</li>
-				<li>YAML in · ProRes 4444 out</li>
-			</ul>
-			<div class="hm-flagship__links">
-				<a class="hm-link" href="https://github.com/coltonbatts/VCR" rel="noopener">Source on GitHub ↗</a>
-				<a class="hm-link" href="https://vimeo.com/1166117135" rel="noopener">Trailer on Vimeo ↗</a>
-			</div>
-		</div>
-
-		<div class="hm-flagship__media">
-			<div class="hm-trailer" data-vimeo-facade={vcrTrailerId}>
-				<Image
-					src={trailerPoster}
-					alt="Still from the VCR trailer"
-					widths={[360, 720]}
-					sizes="(max-width: 900px) 90vw, 22rem"
-					loading="lazy"
-					decoding="async"
-				/>
-				<button type="button" aria-label="Play the VCR trailer"><span>Play trailer · 1:00</span></button>
-			</div>
-		</div>
-	</section>
-
-	<section class="hm-flagship hm-flagship--reverse">
-		<div class="hm-flagship__text">
-			<p class="hm-kicker">Live · Web</p>
-			<h2>ColorWizard</h2>
-			<p class="hm-flagship__line">A color in, a paint mix and a thread match out.</p>
-			<div class="hm-flagship__links">
-				<a class="hm-button hm-button--primary" href="https://colorwizard.app/" rel="noopener">Open ColorWizard ↗</a>
-				<a class="hm-link" href="https://github.com/coltonbatts/colorwizard" rel="noopener">Source on GitHub ↗</a>
-			</div>
-		</div>
-
-		<div class="hm-flagship__media">
-			<ol class="hm-flow">
-				<li><div><strong>Open</strong><span>Image</span></div></li>
-				<li><div><strong>Sample</strong><span>Color</span></div></li>
-				<li><div><strong>Recipe</strong><span>Paint + thread</span></div></li>
-				<li><div><strong>Save</strong><span>Palette</span></div></li>
-			</ol>
-		</div>
-	</section>
-
-	<section class="hm-also">
-		<header>
-			<h2>Also shipped</h2>
-			<p class="hm-kicker">Real tools, real users</p>
+			<span class="ns-band-head__right">RUST · METAL · WEBGL2 · TAURI</span>
 		</header>
-		<ul class="hm-cards">
-			<li class="hm-card">
-				<a href="https://coffee.capturethis.com" rel="noopener">
-					<p class="hm-kicker">Operations</p>
-					<h3>Capture This Coffee</h3>
-					<p>Coffee orders for crews.</p>
-					<span class="hm-card__go">Visit ↗</span>
-				</a>
-			</li>
-			<li class="hm-card">
-				<a href="/tools/magpie">
-					<p class="hm-kicker">Craft</p>
-					<h3>MagpieApp</h3>
-					<p>Photo to embroidery pattern.</p>
-					<span class="hm-card__go">Read more →</span>
-				</a>
-			</li>
-			<li class="hm-card">
-				<a href="/portfolio">
-					<p class="hm-kicker">Commercial</p>
-					<h3>Client work</h3>
-					<p>Google, Nuuly, Kate Spade.</p>
-					<span class="hm-card__go">See the work →</span>
-				</a>
-			</li>
-		</ul>
+
+		<!-- 01: VCR — Terminal Specimen + Matted 9:16 Trailer Poster -->
+		<article class="ns-spread ns-spread--vcr" data-reveal>
+			<div class="ns-spread__spec">
+				<div class="ns-corner-bar">
+					<span class="ns-corner-bar__num">01</span>
+					<span>HEADLESS MOTION ENGINE · RUST + METAL</span>
+				</div>
+
+				<div class="ns-spread__center">
+					<h3 class="ns-poster-title">VCR</h3>
+					<p class="ns-micro-tagline">YAML SCENES IN → PRORES 4444 + ALPHA OUT</p>
+
+					<!-- 404-inspired stark pitch-black terminal specimen -->
+					<div class="ns-terminal-plate" aria-label="VCR terminal invocation">
+						<div class="ns-terminal-plate__top">
+							<span>METAL GPU · ZERO-GUI</span>
+							<span>OPEN SOURCE</span>
+						</div>
+						<div class="ns-terminal-plate__cmd">
+							<span class="ns-terminal-plate__prompt" aria-hidden="true">$</span>
+							<code>vcr render title.yaml --gpu metal --out alpha.mov</code>
+						</div>
+						<div class="ns-terminal-plate__out" aria-hidden="true">
+							<span>&gt; 60FPS · PRORES 4444 · STRAIGHT ALPHA</span>
+						</div>
+					</div>
+				</div>
+
+				<div class="ns-spread__foot">
+					<div class="ns-actions">
+						<a class="ns-btn ns-btn--primary" href="https://github.com/coltonbatts/VCR" target="_blank" rel="noopener noreferrer">
+							GitHub ↗
+						</a>
+						<a class="ns-btn" href="https://vimeo.com/1166117135" target="_blank" rel="noopener noreferrer">
+							Vimeo ↗
+						</a>
+					</div>
+					<span class="ns-spec-line">APPLE SILICON · FFMPEG</span>
+				</div>
+			</div>
+
+			<!-- Physical matted vertical Polaroid field (GALAXIA COUTURE generous paper framing) -->
+			<div class="ns-polaroid-field">
+				<div class="ns-polaroid-field__corners" aria-hidden="true">
+					<span>TRAILER · 9:16</span>
+					<span>01:00</span>
+				</div>
+
+				<div class="ns-polaroid ns-polaroid--vertical">
+					<div class="ns-trailer" data-vimeo-facade={vcrTrailerId} data-vimeo-title="VCR Trailer">
+						<Image
+							src={vcrTrailerPoster}
+							alt="Still from the VCR motion graphics engine trailer"
+							widths={[360, 720]}
+							sizes="(max-width: 900px) 78vw, 20rem"
+							loading="lazy"
+							decoding="async"
+						/>
+						<button type="button" class="ns-play-trigger" aria-label="Play VCR trailer (1 minute)">
+							<span class="ns-play-trigger__badge">▶ PLAY · 01:00</span>
+						</button>
+					</div>
+					<div class="ns-polaroid__chin" aria-hidden="true">
+						<span>VCR / ENGINE</span>
+						<span>METAL COMPUTE</span>
+					</div>
+				</div>
+			</div>
+		</article>
+
+		<!-- 02: ColorWizard — Matted Specimen + Bauhaus Pigment Swatch Plate -->
+		<article class="ns-spread ns-spread--cw" data-reveal>
+			<div class="ns-polaroid-field ns-polaroid-field--cw">
+				<div class="ns-polaroid-field__corners ns-polaroid-field__corners--red" aria-hidden="true">
+					<span>02 / SPECTRAL</span>
+					<span>380–730NM</span>
+				</div>
+
+				<div class="ns-polaroid ns-polaroid--landscape">
+					<div class="ns-print-plate">
+						<Image
+							src={colorwizardImg}
+							alt="ColorWizard spectral oil paint mixing instrument"
+							widths={[480, 960]}
+							sizes="(max-width: 900px) 86vw, 44vw"
+							loading="lazy"
+							decoding="async"
+						/>
+					</div>
+					<div class="ns-polaroid__chin" aria-hidden="true">
+						<span>KUBELKA-MUNK</span>
+						<span>100% OFFLINE</span>
+					</div>
+				</div>
+			</div>
+
+			<div class="ns-spread__spec">
+				<div class="ns-corner-bar">
+					<span class="ns-corner-bar__num">02</span>
+					<span>SPECTRAL COLOR INSTRUMENT · WEB + MACOS</span>
+				</div>
+
+				<div class="ns-spread__center">
+					<h3 class="ns-poster-title">ColorWizard</h3>
+					<p class="ns-micro-tagline">REFERENCE PIXEL → OIL MIX + DMC THREAD</p>
+
+					<!-- Bauhaus-inspired interactive live pigment specimen -->
+					<div class="ns-pigment-plate" data-swatch-lab>
+						<div
+							class="ns-pigment-plate__bar"
+							data-swatch-bar
+							style={`background:${colorSwatches[0].hex}; color:${colorSwatches[0].ink};`}
+						>
+							<span class="ns-pigment-plate__hex" data-swatch-hex>{colorSwatches[0].hex}</span>
+							<span class="ns-pigment-plate__metric">
+								<span data-swatch-peak>{colorSwatches[0].peak}</span>
+								<span aria-hidden="true">·</span>
+								<span data-swatch-delta>{colorSwatches[0].deltaE}</span>
+							</span>
+						</div>
+
+						<div class="ns-swatch-lab__chips" role="group" aria-label="Sample color swatches">
+							{colorSwatches.map((sw, idx) => (
+								<button
+									type="button"
+									class:list={['ns-swatch-chip', { 'is-active': idx === 0 }]}
+									data-swatch-btn
+									data-name={sw.name}
+									data-hex={sw.hex}
+									data-ink={sw.ink}
+									data-recipe={sw.recipe}
+									data-thread={sw.thread}
+									data-peak={sw.peak}
+									data-delta={sw.deltaE}
+									aria-pressed={idx === 0 ? 'true' : 'false'}
+								>
+									<span class="ns-swatch-chip__dot" style={`background:${sw.hex};`} aria-hidden="true"></span>
+									<span>{sw.hex}</span>
+								</button>
+							))}
+						</div>
+
+						<dl class="ns-swatch-lab__readout">
+							<div>
+								<dt>OIL MIX</dt>
+								<dd data-swatch-recipe>{colorSwatches[0].recipe}</dd>
+							</div>
+							<div>
+								<dt>THREAD</dt>
+								<dd data-swatch-thread>{colorSwatches[0].thread}</dd>
+							</div>
+						</dl>
+					</div>
+				</div>
+
+				<div class="ns-spread__foot">
+					<div class="ns-actions">
+						<a class="ns-btn ns-btn--primary" href="https://colorwizard.app/" target="_blank" rel="noopener noreferrer">
+							Launch ↗
+						</a>
+						<a class="ns-btn" href="https://github.com/coltonbatts/colorwizard" target="_blank" rel="noopener noreferrer">
+							GitHub ↗
+						</a>
+					</div>
+					<span class="ns-spec-line" data-swatch-name>{colorSwatches[0].name}</span>
+				</div>
+			</div>
+		</article>
+
+		<!-- 03 & 04: Twin Poster Spread (MagpieApp Warm Plate & Capture This Coffee Dark Plate) -->
+		<div class="ns-twin-plates">
+			<article class="ns-twin-plate" data-reveal>
+				<div class="ns-corner-bar">
+					<span class="ns-corner-bar__num">03</span>
+					<span>TAURI 2 · RUST · RAYON · PIXI.JS</span>
+				</div>
+
+				<div class="ns-polaroid ns-polaroid--compact">
+					<div class="ns-print-plate">
+						<Image
+							src={magpieImg}
+							alt="MagpieApp hand-embroidery blueprint design suite"
+							widths={[480, 960]}
+							sizes="(max-width: 900px) 88vw, 42vw"
+							loading="lazy"
+							decoding="async"
+						/>
+					</div>
+					<div class="ns-polaroid__chin" aria-hidden="true">
+						<span>PHOTO → STITCH BLUEPRINT</span>
+						<span>MAC · WIN · LINUX</span>
+					</div>
+				</div>
+
+				<div class="ns-twin-plate__foot">
+					<div>
+						<h3 class="ns-twin-plate__title">MagpieApp</h3>
+						<p class="ns-micro-tagline">OFFLINE EMBROIDERY ENGINE</p>
+					</div>
+					<div class="ns-actions">
+						<a class="ns-btn ns-btn--primary" href="/tools/magpie">Study →</a>
+						<a class="ns-btn" href="https://github.com/coltonbatts/MagpieApp" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+					</div>
+				</div>
+			</article>
+
+			<article class="ns-twin-plate ns-twin-plate--dark" data-reveal>
+				<div class="ns-corner-bar ns-corner-bar--dark">
+					<span class="ns-corner-bar__num">04</span>
+					<span>SET OPERATIONS · LIVE WEB APP</span>
+				</div>
+
+				<div class="ns-ops-poster">
+					<div class="ns-ops-poster__frame" aria-hidden="true"></div>
+					<div class="ns-ops-poster__top">
+						<span class="ns-ops-poster__live">LIVE ENDPOINT</span>
+						<span>COMMERCIAL SETS</span>
+					</div>
+
+					<a href="https://coffee.capturethis.com" target="_blank" rel="noopener noreferrer" class="ns-ops-poster__url">
+						COFFEE.<br />CAPTURETHIS<br />.COM ↗
+					</a>
+
+					<div class="ns-ops-poster__steps" aria-hidden="true">
+						<span>01 SCAN</span>
+						<span>→</span>
+						<span>02 BATCH</span>
+						<span>→</span>
+						<span>03 RUN SHEET</span>
+					</div>
+				</div>
+
+				<div class="ns-twin-plate__foot">
+					<div>
+						<h3 class="ns-twin-plate__title">Capture This Coffee</h3>
+						<p class="ns-micro-tagline">CREW INTAKE → BARISTA BATCHING</p>
+					</div>
+					<div class="ns-actions">
+						<a class="ns-btn ns-btn--light" href="https://coffee.capturethis.com" target="_blank" rel="noopener noreferrer">
+							Live App ↗
+						</a>
+						<a class="ns-btn ns-btn--dark-ghost" href="/tools">All Tools →</a>
+					</div>
+				</div>
+			</article>
+		</div>
 	</section>
 
-	<section class="hm-experience">
-		<header>
-			<h2>Experience</h2>
+	<!-- =================================================================== -->
+	<!-- ACT III — COMMERCIAL FILM (PONTEIX / TZUSING / MANIA FLYER PLATES)  -->
+	<!-- =================================================================== -->
+	<section id="screening" class="ns-screening" aria-labelledby="screening-heading">
+		<header class="ns-band-head ns-band-head--dark">
+			<div class="ns-band-head__left">
+				<span class="ns-kicker ns-kicker--dark">02 / COMMERCIAL FILM</span>
+				<h2 id="screening-heading">SCREENING.</h2>
+			</div>
+			<span class="ns-band-head__right">
+				{reel.ready ? `2026 REEL · ${reel.duration}` : 'GOOGLE · NUULY · UNDER ARMOUR · KATE SPADE'}
+			</span>
 		</header>
-		<ol class="hm-experience__list">
-			<li>
-				<time>2021 – Present</time>
-				<div>
-					<h3>Lead Video Editor, Capture This</h3>
-					<p>Lead editor on national campaigns for Google, Under Armour, Kate Spade and Nuuly. High-volume deliverables across aspect ratios, rough cuts turned in 24 hours.</p>
+
+		{reel.ready && (
+			<div class="ns-screening__reel-wrap">
+				<ReelStage />
+			</div>
+		)}
+
+		<div class="ns-flyer-grid">
+			<!-- Flyer 01: Shop with Google (Playable Vimeo Facade) -->
+			<article class="ns-flyer" data-reveal>
+				<div class="ns-flyer__head">
+					<h3>SHOP WITH GOOGLE</h3>
+					<span>01 · 2023</span>
 				</div>
-			</li>
-			<li>
-				<time>2015 – 2021</time>
-				<div>
-					<h3>Multimedia Designer &amp; Video Lead, Freedom Powersports</h3>
-					<p>Design and video production for retail and events across multiple brands.</p>
+
+				<div
+					class="ns-flyer__stage ns-flyer__stage--grid"
+					data-vimeo-facade={googleVimeoId}
+					data-vimeo-title="Shop with Google — Commercial Edit"
+				>
+					<div class="ns-flyer__art" aria-hidden="true">
+						<div class="ns-flyer__grain"></div>
+						<div class="ns-flyer__wireframe"></div>
+						<span class="ns-flyer__bar ns-flyer__bar--vermilion"></span>
+						<div class="ns-flyer__corner-meta">
+							<span>30+ DELIVERABLES</span>
+							<span>24H ROUGH CUTS</span>
+						</div>
+						<div class="ns-flyer__mark ns-flyer__mark--google">
+							<Image src={markGoogle} alt="" widths={[240, 420]} loading="lazy" decoding="async" />
+						</div>
+						<div class="ns-flyer__corner-meta ns-flyer__corner-meta--bottom">
+							<span>16:9 · 9:16 · 1:1</span>
+						</div>
+					</div>
+					<button type="button" class="ns-screen-play" aria-label="Play Shop with Google commercial edit">
+						<span class="ns-screen-play__btn">▶ PLAY CUT</span>
+					</button>
 				</div>
-			</li>
+
+				<div class="ns-flyer__foot">
+					<span>LEAD EDITOR · NATIONAL CAMPAIGN</span>
+					<div class="ns-flyer__links">
+						<a href="/portfolio/shop-with-google">Case Study →</a>
+						<a href={`https://vimeo.com/${googleVimeoId}`} target="_blank" rel="noopener noreferrer">Vimeo ↗</a>
+					</div>
+				</div>
+			</article>
+
+			<!-- Flyer 02: Nuuly (Playable Vimeo Facade) -->
+			<article class="ns-flyer" data-reveal>
+				<div class="ns-flyer__head">
+					<h3>NUULY</h3>
+					<span>02 · 2023</span>
+				</div>
+
+				<div
+					class="ns-flyer__stage ns-flyer__stage--kinetic"
+					data-vimeo-facade={nuulyVimeoId}
+					data-vimeo-title="Nuuly — Commercial Edit & Motion"
+				>
+					<div class="ns-flyer__art" aria-hidden="true">
+						<div class="ns-flyer__grain"></div>
+						<div class="ns-flyer__stripes"></div>
+						<div class="ns-flyer__corner-meta">
+							<span>URBN · FASHION</span>
+							<span>SOCIAL + MOTION</span>
+						</div>
+						<div class="ns-flyer__mark ns-flyer__mark--wide">
+							<Image src={markNuuly} alt="" widths={[240, 420]} loading="lazy" decoding="async" />
+						</div>
+						<div class="ns-flyer__corner-meta ns-flyer__corner-meta--bottom">
+							<span>IG · TIKTOK · BESPOKE PROPS</span>
+						</div>
+					</div>
+					<button type="button" class="ns-screen-play" aria-label="Play Nuuly commercial edit">
+						<span class="ns-screen-play__btn">▶ PLAY CUT</span>
+					</button>
+				</div>
+
+				<div class="ns-flyer__foot">
+					<span>EDITOR &amp; MOTION DESIGNER</span>
+					<div class="ns-flyer__links">
+						<a href="/portfolio/nuuly">Case Study →</a>
+						<a href={`https://vimeo.com/${nuulyVimeoId}`} target="_blank" rel="noopener noreferrer">Vimeo ↗</a>
+					</div>
+				</div>
+			</article>
+
+			<!-- Flyer 03: Under Armour (Full Atmospheric Nocturnal Poster) -->
+			<article class="ns-flyer" data-reveal>
+				<div class="ns-flyer__head">
+					<h3>UNDER ARMOUR</h3>
+					<span>03 · 2022</span>
+				</div>
+
+				<div class="ns-flyer__stage ns-flyer__stage--photo">
+					<Image
+						src={uaFallbackImg}
+						alt="Atmospheric nocturnal photograph representing Under Armour campaign work"
+						widths={[480, 960]}
+						sizes="(max-width: 900px) 92vw, 46vw"
+						loading="lazy"
+						decoding="async"
+						class="ns-flyer__bg-img"
+					/>
+					<div class="ns-flyer__photo-overlay" aria-hidden="true">
+						<div class="ns-flyer__corner-meta">
+							<span>NEW ROLLOUT</span>
+							<span>ATHLETE EDITORIAL</span>
+						</div>
+						<div class="ns-flyer__ua-mark">
+							<Image src={markUA} alt="" widths={[180, 320]} loading="lazy" decoding="async" />
+						</div>
+					</div>
+				</div>
+
+				<div class="ns-flyer__foot">
+					<span>BRAND TRAINING SERIES</span>
+					<div class="ns-flyer__links">
+						<a href="/contact">Private Screener ↗</a>
+					</div>
+				</div>
+			</article>
+
+			<!-- Flyer 04: Kate Spade (High-Contrast Geometric Fashion Motion Plate) -->
+			<article class="ns-flyer" data-reveal>
+				<div class="ns-flyer__head">
+					<h3>KATE SPADE</h3>
+					<span>04 · 2023</span>
+				</div>
+
+				<div class="ns-flyer__stage ns-flyer__stage--fashion">
+					<div class="ns-flyer__art" aria-hidden="true">
+						<div class="ns-flyer__grain"></div>
+						<span class="ns-flyer__orb"></span>
+						<div class="ns-flyer__corner-meta">
+							<span>NEW YORK</span>
+							<span>AFTER EFFECTS</span>
+						</div>
+						<div class="ns-flyer__mark ns-flyer__mark--ks">
+							<Image src={markKateSpade} alt="" widths={[220, 380]} loading="lazy" decoding="async" />
+						</div>
+						<div class="ns-flyer__corner-meta ns-flyer__corner-meta--bottom">
+							<span>TITLE &amp; SOCIAL MOTION SYSTEMS</span>
+						</div>
+					</div>
+				</div>
+
+				<div class="ns-flyer__foot">
+					<span>MOTION SYSTEMS</span>
+					<div class="ns-flyer__links">
+						<a href="/contact">Private Screener ↗</a>
+					</div>
+				</div>
+			</article>
+		</div>
+
+		<div class="ns-screening__footer-bar">
+			<span>CAPTURE THIS AGENCY &amp; DIRECT COMMISSIONS</span>
+			<a href="/portfolio" class="ns-inline-link">Full Portfolio Index →</a>
+		</div>
+	</section>
+
+	<!-- =================================================================== -->
+	<!-- ACT IV — ARCHIVE (BOXER/5 GEOMETRY + GALAXIA POLAROID + STRIP)      -->
+	<!-- =================================================================== -->
+	<section id="archive" class="ns-archive" aria-labelledby="archive-heading">
+		<header class="ns-band-head">
+			<div class="ns-band-head__left">
+				<span class="ns-kicker">03 / STILLS ARCHIVE</span>
+				<h2 id="archive-heading">ARCHIVE.</h2>
+			</div>
+			<span class="ns-band-head__right">{art.length} PLATES · FORT WORTH · WEBGL2</span>
+		</header>
+
+		<!-- Featured Exhibition Diptych: Boxer/5 Monochrome Circle + GALAXIA COUTURE Polaroid -->
+		<div class="ns-archive-diptych">
+			<!-- Left: Monochrome Geometry Specimen (Boxer / 5 & 68/69 reference) -->
+			<a href="/art" class="ns-geo-plate" data-reveal aria-label="View monochrome archive — 24 plates">
+				<div class="ns-geo-plate__corners" aria-hidden="true">
+					<span>PLATE 23 · B&amp;W</span>
+					<span>35MM STUDY</span>
+				</div>
+
+				<div class="ns-geo-plate__stage">
+					<div class="ns-geo-plate__cluster">
+						<span class="ns-geo-plate__disc" aria-hidden="true"></span>
+						<span class="ns-geo-plate__ring" aria-hidden="true"></span>
+						<span class="ns-geo-plate__numeral" aria-hidden="true">{art.length}</span>
+						<div class="ns-geo-plate__photo" data-darkroom="develop">
+							<Image
+								src={monochromeHero.src}
+								alt={monochromeHero.alt}
+								widths={[480, 960]}
+								sizes="(max-width: 900px) 84vw, 34vw"
+								loading="lazy"
+								decoding="async"
+							/>
+						</div>
+					</div>
+				</div>
+
+				<div class="ns-geo-plate__foot">
+					<span>UNTITLED · 2021</span>
+					<span>ENTER ARCHIVE ↗</span>
+				</div>
+			</a>
+
+			<!-- Right: Physical Polaroid Specimen in Warm Negative Space (GALAXIA COUTURE reference) -->
+			<a href="/art" class="ns-polaroid-plate" data-reveal aria-label="View Thinking About Cotton Candy in full archive">
+				<div class="ns-polaroid-field__corners ns-polaroid-field__corners--red" aria-hidden="true">
+					<span>PLATE 19</span>
+					<span>FORT WORTH · 2022</span>
+				</div>
+
+				<div class="ns-polaroid ns-polaroid--art">
+					<div class="ns-polaroid__img-wrap" data-darkroom="develop">
+						<Image
+							src={polaroidHero.src}
+							alt={polaroidHero.alt}
+							widths={[480, 960]}
+							sizes="(max-width: 900px) 80vw, 30vw"
+							loading="lazy"
+							decoding="async"
+						/>
+					</div>
+					<div class="ns-polaroid__chin">
+						<span>{polaroidHero.title}</span>
+						<span>{polaroidHero.year} ↗</span>
+					</div>
+				</div>
+			</a>
+		</div>
+
+		<!-- 4-Plate Darkroom Contact Sheet Strip -->
+		<div class="ns-print-strip">
+			{contactArt.map((piece) => (
+				<a href="/art" class="ns-strip-plate" data-reveal>
+					<div class="ns-strip-plate__media">
+						<div class="ns-strip-plate__bar" aria-hidden="true">
+							<span>{String(piece.order).padStart(2, '0')}A</span>
+							<span>{piece.year}</span>
+						</div>
+						<div class="ns-strip-plate__canvas" data-darkroom="develop">
+							<Image
+								src={piece.src}
+								alt={piece.alt}
+								widths={[360, 720]}
+								sizes="(max-width: 768px) 46vw, 23vw"
+								loading="lazy"
+								decoding="async"
+							/>
+						</div>
+					</div>
+					<div class="ns-strip-plate__foot">
+						<strong>{piece.title}</strong>
+						<span class="ns-strip-plate__arrow" aria-hidden="true">↗</span>
+					</div>
+				</a>
+			))}
+		</div>
+
+		<div class="ns-archive__foot">
+			<span class="ns-print-divider" aria-hidden="true"></span>
+			<a href="/art" class="ns-btn ns-btn--primary">Full Archive ({art.length} Plates) →</a>
+		</div>
+	</section>
+
+	<!-- =================================================================== -->
+	<!-- ACT V — COMPACT RECORD / TIMETABLE                                  -->
+	<!-- =================================================================== -->
+	<section id="experience" class="ns-timetable" aria-labelledby="experience-heading">
+		<header class="ns-timetable__head">
+			<div>
+				<p class="ns-kicker">04 / RECORD · 2015–PRESENT</p>
+				<h2 id="experience-heading">EXPERIENCE.</h2>
+			</div>
+			<div class="ns-actions">
+				<a class="ns-btn ns-btn--primary" href="/resume">Resume →</a>
+				<a class="ns-btn" href="/resume/Colton_Batts_Resume.pdf">PDF ↗</a>
+			</div>
+		</header>
+
+		<ol class="ns-timetable__rows">
+			{resume.experience.map((role) => (
+				<li class="ns-timetable__row" data-reveal>
+					<time class="ns-timetable__dates">{role.dates}</time>
+					<div class="ns-timetable__role">
+						<h3>{role.title}</h3>
+						<p class="ns-timetable__company">{role.company} · {role.location}</p>
+					</div>
+					<p class="ns-timetable__scope">{roleScopes[role.title] ?? role.bullets[0]}</p>
+				</li>
+			))}
 		</ol>
-		<p class="hm-experience__more"><a class="hm-link" href="/resume">Full resume →</a></p>
-	</section>
-
-	<section class="hm-close" id="contact">
-		<p class="hm-kicker">Open to work</p>
-		<h2>Let’s <em>work</em>.</h2>
-		<div class="hm-close__actions">
-			<a class="hm-button hm-button--primary" href={`mailto:${email}`}>{email} <span aria-hidden="true">↗</span></a>
-			<a class="hm-link" href="/resume">Resume</a>
-		</div>
 	</section>
 </BaseLayout>
 
 <script>
-	/* The trailer is a poster until clicked, so no third-party player loads with the page. */
-	document.addEventListener('click', (event) => {
-		const button = (event.target as HTMLElement).closest('.hm-trailer button');
-		if (!button) return;
-		const frame = button.closest<HTMLElement>('.hm-trailer');
-		const id = frame?.dataset.vimeoFacade;
-		if (!frame || !id) return;
-		const iframe = document.createElement('iframe');
-		iframe.src = `https://player.vimeo.com/video/${id}?autoplay=1&dnt=1`;
-		iframe.allow = 'autoplay; fullscreen; picture-in-picture';
-		iframe.title = 'VCR trailer';
-		frame.replaceChildren(iframe);
-	});
+	/* Facade-gated Vimeo embeds — zero third-party player requests until clicked */
+	if (!(window as any).__vimeoFacadeBound) {
+		(window as any).__vimeoFacadeBound = true;
+		document.addEventListener('click', (event) => {
+			const trigger = (event.target as HTMLElement | null)?.closest('button');
+			const frame = trigger?.closest<HTMLElement>('[data-vimeo-facade]');
+			if (!frame) return;
+			const id = frame.dataset.vimeoFacade;
+			if (!id) return;
+			const iframe = document.createElement('iframe');
+			iframe.src = `https://player.vimeo.com/video/${id}?autoplay=1&dnt=1`;
+			iframe.allow = 'autoplay; fullscreen; picture-in-picture';
+			iframe.title = frame.dataset.vimeoTitle || 'Vimeo video';
+			iframe.className = 'ns-vimeo-embed';
+			frame.replaceChildren(iframe);
+		});
+	}
+
+	/* Interactive ColorWizard Bauhaus Pigment Specimen */
+	if (!(window as any).__swatchLabBound) {
+		(window as any).__swatchLabBound = true;
+		document.addEventListener('click', (event) => {
+			const btn = (event.target as HTMLElement | null)?.closest<HTMLButtonElement>('[data-swatch-btn]');
+			if (!btn) return;
+			const lab = btn.closest<HTMLElement>('[data-swatch-lab]');
+			const spread = btn.closest<HTMLElement>('.ns-spread');
+			if (!lab) return;
+
+			lab.querySelectorAll<HTMLButtonElement>('[data-swatch-btn]').forEach((el) => {
+				const active = el === btn;
+				el.classList.toggle('is-active', active);
+				el.setAttribute('aria-pressed', String(active));
+			});
+
+			const bar = lab.querySelector<HTMLElement>('[data-swatch-bar]');
+			if (bar && btn.dataset.hex) {
+				bar.style.background = btn.dataset.hex;
+				if (btn.dataset.ink) bar.style.color = btn.dataset.ink;
+			}
+
+			const set = (root: HTMLElement | null, sel: string, val?: string) => {
+				const el = root?.querySelector<HTMLElement>(sel);
+				if (el && val) el.textContent = val;
+			};
+			set(lab, '[data-swatch-hex]', btn.dataset.hex);
+			set(lab, '[data-swatch-peak]', btn.dataset.peak);
+			set(lab, '[data-swatch-recipe]', btn.dataset.recipe);
+			set(lab, '[data-swatch-thread]', btn.dataset.thread);
+			set(lab, '[data-swatch-delta]', btn.dataset.delta);
+			set(spread, '[data-swatch-name]', btn.dataset.name);
+		});
+	}
 </script>

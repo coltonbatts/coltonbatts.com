@@ -14,7 +14,7 @@
 import { DarkroomEngine, type Negative, type PrintParams } from './engine';
 
 /** Time for a plate to go from paper white to a finished print. */
-const DEVELOP_MS = 1800;
+const DEVELOP_MS = 650;
 /** Hover transition, matching the CSS fallback's `.6s linear`. */
 const PUSH_MS = 600;
 /** Sharp on retina without printing 3× canvases on phones. */
@@ -248,7 +248,8 @@ async function arm(plate: Plate, isCurrent: () => boolean) {
 	plate.ctx = canvas.getContext('2d', { alpha: false });
 	layout(plate);
 
-	const waiting = plate.mode === 'develop' && !inViewport(plate.root);
+	const alreadyVisible = plate.visible || inViewport(plate.root);
+	const waiting = plate.mode === 'develop' && !alreadyVisible;
 	plate.develop = waiting ? 0 : 1;
 	draw(plate);
 	if (!plate.negative) {
@@ -259,8 +260,18 @@ async function arm(plate: Plate, isCurrent: () => boolean) {
 
 	plate.img.after(canvas);
 	// Offscreen paper appears at once; a visible print eases in over the image.
-	if (waiting) plate.root.classList.add('is-live', 'is-instant');
-	else requestAnimationFrame(() => plate.root.classList.add('is-live'));
+	// Re-check visibility after mounting so an IntersectionObserver race can never
+	// strand a plate at blank paper.
+	if (waiting) {
+		plate.root.classList.add('is-live', 'is-instant');
+		if (plate.visible || inViewport(plate.root)) {
+			plate.visible = true;
+			plate.developing = true;
+			wake();
+		}
+	} else {
+		requestAnimationFrame(() => plate.root.classList.add('is-live'));
+	}
 }
 
 /** GPU reset or driver crash: remove every canvas and let the images show. */
@@ -325,7 +336,7 @@ export function start() {
 			if (entry.isIntersecting && plate.canvas && plate.develop < 1) plate.developing = true;
 			if (animating(plate)) wake();
 		}
-	}, { threshold: 0.15, rootMargin: '0px 0px -8% 0px' });
+	}, { threshold: 0.01, rootMargin: '0px' });
 
 	// Re-print at the new size; the canvas clear and redraw share a task, so nothing flashes.
 	let resizeQueued = 0;
@@ -350,7 +361,7 @@ export function start() {
 		near.observe(plate.root);
 		view.observe(plate.root);
 
-		const target = plate.root.closest<HTMLElement>('.art-plate') ?? plate.root;
+		const target = plate.root.closest<HTMLElement>('.art-plate, .ns-strip-plate, .ns-geo-plate, .ns-polaroid-plate') ?? plate.root;
 		const onHover = (event: Event) => {
 			if (!plate.canvas) return;
 			plate.toneTarget = event.type === 'pointerenter' ? 1 : 0;
