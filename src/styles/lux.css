@@ -1,0 +1,774 @@
+/* ==========================================================================
+ * COLTON BATTS — ULTRA MINIMAL LUX
+ * Ruthless restraint. Museum alabaster, obsidian ink, hairline geometry,
+ * Instrument Serif + Inter. Zero texture noise, zero borders around work,
+ * zero text overlaid on photography.
+ * ========================================================================== */
+
+@font-face {
+  font-family: 'Instrument Serif';
+  src: url('/fonts/InstrumentSerif-Regular.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Instrument Serif';
+  src: url('/fonts/InstrumentSerif-Italic.woff2') format('woff2');
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Inter';
+  src: url('/fonts/Inter-Variable.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+:root {
+  --bg: #F7F6F2;
+  --surface: #ECEAE3;
+  --ink: #111110;
+  --ink-secondary: #57554F;
+  --ink-muted: #8E8B82;
+  --hairline: rgba(17, 17, 16, 0.11);
+  --hairline-strong: rgba(17, 17, 16, 0.28);
+
+  --screen-bg: #0A0A09;
+  --screen-ink: #F2F0EA;
+  --screen-muted: rgba(242, 240, 234, 0.52);
+
+  --serif: 'Instrument Serif', Georgia, 'Times New Roman', serif;
+  --sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+
+  --gutter: clamp(1.5rem, 4.5vw, 4rem);
+  --max-w: 1360px;
+  --section-gap: clamp(6.5rem, 13.5vh, 11.5rem);
+  --ease-lux: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  background-color: var(--bg);
+  color: var(--ink);
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background-color: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-weight: 400;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  overflow-x: clip;
+}
+
+body.is-modal-open {
+  overflow: hidden;
+}
+
+::selection {
+  background: var(--ink);
+  color: var(--bg);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+:focus-visible {
+  outline: 1px solid var(--ink);
+  outline-offset: 4px;
+}
+
+.lux-skip {
+  position: fixed;
+  top: 1rem;
+  left: var(--gutter);
+  z-index: 200;
+  padding: 0.5rem 0.9rem;
+  background: var(--ink);
+  color: var(--bg);
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  transform: translateY(-200%);
+  transition: transform 0.25s var(--ease-lux);
+}
+
+.lux-skip:focus {
+  transform: translateY(0);
+}
+
+/* ── Container ───────────────────────────────────────────────────────────── */
+.lux-wrap {
+  width: 100%;
+  max-width: var(--max-w);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+/* ── Header (Whisper-Quiet Single Line) ──────────────────────────────────── */
+.lux-header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  background: rgba(247, 246, 242, 0.88);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.lux-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 4.5rem;
+}
+
+.lux-brand {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  transition: opacity 0.3s var(--ease-lux);
+}
+
+.lux-brand:hover {
+  opacity: 0.55;
+}
+
+.lux-nav__links {
+  display: flex;
+  align-items: center;
+  gap: clamp(1.25rem, 2.8vw, 2.5rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.lux-nav__links a {
+  font-size: 0.8125rem;
+  font-weight: 400;
+  color: var(--ink-secondary);
+  transition: color 0.3s var(--ease-lux);
+}
+
+.lux-nav__links a:hover {
+  color: var(--ink);
+}
+
+/* ── Quiet Link Underline ────────────────────────────────────────────────── */
+.lux-link {
+  position: relative;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.3em;
+  color: var(--ink);
+  transition: opacity 0.3s var(--ease-lux);
+}
+
+.lux-link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.28;
+  transition: opacity 0.35s var(--ease-lux);
+}
+
+.lux-link:hover::after {
+  opacity: 1;
+}
+
+.lux-link--muted {
+  color: var(--ink-secondary);
+}
+
+.lux-link--muted:hover {
+  color: var(--ink);
+}
+
+/* ── Movement I: Opening Statement + Monumental Plate ────────────────────── */
+.lux-hero {
+  padding-top: clamp(3.25rem, 7.5vh, 6rem);
+}
+
+.lux-hero__statement {
+  margin: 0;
+  max-width: 30ch;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(2.85rem, 5.8vw, 5.35rem);
+  line-height: 1.02;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+}
+
+.lux-hero__statement em {
+  font-style: italic;
+}
+
+.lux-hero__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem 2rem;
+  margin-top: clamp(2rem, 4vh, 3rem);
+  padding-top: 1.15rem;
+  border-top: 1px solid var(--hairline);
+  font-size: 0.8125rem;
+  color: var(--ink-secondary);
+}
+
+.lux-hero__plate-wrap {
+  margin-top: clamp(2rem, 4vh, 3.25rem);
+}
+
+.lux-hero__plate-btn {
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  background: var(--surface);
+  cursor: zoom-in;
+}
+
+.lux-hero__plate-img {
+  width: 100%;
+  aspect-ratio: 16 / 9.4;
+  object-fit: cover;
+  object-position: 50% 48%;
+  transition: transform 1.2s var(--ease-lux);
+}
+
+.lux-hero__plate-btn:hover .lux-hero__plate-img {
+  transform: scale(1.016);
+}
+
+.lux-caption {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 0.85rem;
+  font-size: 0.75rem;
+  color: var(--ink-muted);
+}
+
+.lux-caption__title {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 0.9375rem;
+  color: var(--ink-secondary);
+  letter-spacing: 0.005em;
+}
+
+/* ── Shared Architectural 12-Col Movement ────────────────────────────────── */
+.lux-section {
+  margin-top: var(--section-gap);
+  scroll-margin-top: 5.5rem;
+}
+
+.lux-grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: clamp(1.25rem, 2.5vw, 2.5rem);
+}
+
+.lux-rail {
+  grid-column: 1 / span 3;
+  padding-top: 0.35rem;
+}
+
+.lux-label {
+  margin: 0;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
+.lux-content {
+  grid-column: 4 / -1;
+}
+
+/* ── Movement II: Selected Film Ledger ───────────────────────────────────── */
+.lux-ledger {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--hairline);
+}
+
+.lux-ledger__row {
+  display: grid;
+  grid-template-columns: minmax(0, 2.2fr) minmax(0, 1.8fr) auto auto;
+  align-items: baseline;
+  gap: 0.75rem clamp(1rem, 2.5vw, 2.5rem);
+  padding: clamp(1.35rem, 2.3vw, 1.85rem) 0;
+  border-bottom: 1px solid var(--hairline);
+  transition: opacity 0.4s var(--ease-lux), border-color 0.4s var(--ease-lux);
+}
+
+/* Runway / gallery focus dimming */
+.lux-ledger:hover .lux-ledger__row {
+  opacity: 0.32;
+}
+
+.lux-ledger:hover .lux-ledger__row:hover {
+  opacity: 1;
+  border-bottom-color: var(--hairline-strong);
+}
+
+.lux-ledger__title {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(1.55rem, 2.5vw, 2.15rem);
+  line-height: 1.08;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+}
+
+.lux-ledger__role {
+  font-size: 0.8125rem;
+  color: var(--ink-secondary);
+}
+
+.lux-ledger__year {
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-muted);
+}
+
+.lux-ledger__actions {
+  display: inline-flex;
+  align-items: baseline;
+  justify-content: flex-end;
+  gap: 1.1rem;
+  font-size: 0.8125rem;
+  white-space: nowrap;
+}
+
+.lux-ledger__foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-top: 1.5rem;
+  font-size: 0.8125rem;
+  color: var(--ink-muted);
+}
+
+/* ── Movement III: Software / Instruments ────────────────────────────────── */
+.lux-instruments {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(3rem, 5vw, 4.75rem) clamp(2rem, 4.5vw, 4.5rem);
+}
+
+.lux-instrument {
+  display: flex;
+  flex-direction: column;
+  padding-top: 1.4rem;
+  border-top: 1px solid var(--hairline);
+}
+
+.lux-instrument__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.lux-instrument__name {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(1.65rem, 2.4vw, 2.1rem);
+  line-height: 1.08;
+  letter-spacing: -0.015em;
+}
+
+.lux-instrument__spec {
+  font-size: 0.75rem;
+  color: var(--ink-muted);
+  white-space: nowrap;
+}
+
+.lux-instrument__desc {
+  margin: 0.85rem 0 1.4rem;
+  max-width: 38ch;
+  font-size: 0.875rem;
+  line-height: 1.62;
+  color: var(--ink-secondary);
+}
+
+.lux-instrument__links {
+  margin-top: auto;
+  display: flex;
+  align-items: baseline;
+  gap: 1.25rem;
+  font-size: 0.8125rem;
+}
+
+/* ── Movement IV: Curated Stills Wall (3 Museum Prints) ──────────────────── */
+.lux-stills__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--hairline);
+  margin-bottom: clamp(3rem, 6vw, 5.5rem);
+}
+
+.lux-stills__wall {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: clamp(1.5rem, 3.5vw, 3.5rem);
+  row-gap: clamp(4.5rem, 9vw, 8.5rem);
+  align-items: start;
+}
+
+.lux-print {
+  margin: 0;
+}
+
+.lux-print--primary {
+  grid-column: 1 / span 7;
+}
+
+.lux-print--secondary {
+  grid-column: 9 / -1;
+  margin-top: clamp(3rem, 11vw, 9.5rem);
+}
+
+.lux-print--tertiary {
+  grid-column: 4 / span 6;
+}
+
+.lux-print__trigger {
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  background: var(--surface);
+  cursor: zoom-in;
+}
+
+.lux-print__img {
+  width: 100%;
+  height: auto;
+  transition: transform 1.2s var(--ease-lux);
+}
+
+.lux-print__trigger:hover .lux-print__img {
+  transform: scale(1.018);
+}
+
+/* ── Movement V: Information & Colophon ──────────────────────────────────── */
+.lux-info {
+  padding-top: clamp(4rem, 8vh, 6.5rem);
+  border-top: 1px solid var(--hairline);
+}
+
+.lux-info__cols {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  gap: clamp(3rem, 5vw, 5rem);
+}
+
+.lux-info__subhead {
+  margin: 0 0 1.4rem;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
+.lux-cv {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.lux-cv__item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.25rem 1rem;
+  padding: 0.95rem 0;
+  border-top: 1px solid var(--hairline);
+}
+
+.lux-cv__item:last-child {
+  border-bottom: 1px solid var(--hairline);
+}
+
+.lux-cv__role {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.lux-cv__org {
+  font-size: 0.8125rem;
+  color: var(--ink-secondary);
+}
+
+.lux-cv__dates {
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-muted);
+}
+
+.lux-cv__links {
+  display: flex;
+  gap: 1.4rem;
+  margin-top: 1.4rem;
+  font-size: 0.8125rem;
+}
+
+.lux-contact__email {
+  display: inline-block;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(1.75rem, 2.8vw, 2.45rem);
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  border-bottom: 1px solid var(--hairline-strong);
+  padding-bottom: 0.15rem;
+  transition: border-color 0.35s var(--ease-lux), opacity 0.35s var(--ease-lux);
+}
+
+.lux-contact__email:hover {
+  border-color: var(--ink);
+}
+
+.lux-contact__note {
+  margin: 1.25rem 0 1.65rem;
+  max-width: 34ch;
+  font-size: 0.875rem;
+  line-height: 1.62;
+  color: var(--ink-secondary);
+}
+
+.lux-contact__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.4rem;
+  font-size: 0.8125rem;
+}
+
+/* ── Footer Colophon ─────────────────────────────────────────────────────── */
+.lux-footer {
+  margin-top: clamp(5rem, 10vh, 8.5rem);
+  padding: 1.75rem 0 2.5rem;
+  border-top: 1px solid var(--hairline);
+}
+
+.lux-footer__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 2rem;
+  font-size: 0.75rem;
+  color: var(--ink-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Obsidian Screening Room & Lightbox Modal ────────────────────────────── */
+.lux-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  background: var(--screen-bg);
+  color: var(--screen-ink);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.4s var(--ease-lux), visibility 0.4s var(--ease-lux);
+}
+
+.lux-modal.is-open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.lux-modal__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem var(--gutter);
+  font-size: 0.8125rem;
+}
+
+.lux-modal__title {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 1.1rem;
+  color: var(--screen-ink);
+}
+
+.lux-modal__close {
+  font-size: 0.8125rem;
+  color: var(--screen-muted);
+  padding: 0.25rem 0;
+  transition: color 0.25s var(--ease-lux);
+}
+
+.lux-modal__close:hover {
+  color: var(--screen-ink);
+}
+
+.lux-modal__stage {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 var(--gutter) clamp(2rem, 5vh, 4rem);
+  min-height: 0;
+}
+
+.lux-modal__video {
+  width: min(100%, 1080px);
+  aspect-ratio: 16 / 9;
+  background: #000;
+}
+
+.lux-modal__video--vertical {
+  width: min(100%, 420px);
+  aspect-ratio: 9 / 16;
+  max-height: 78vh;
+}
+
+.lux-modal__video iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.lux-modal__photo {
+  max-width: 100%;
+  max-height: 82vh;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+/* ── Subtle Scroll Settle ────────────────────────────────────────────────── */
+[data-lux-reveal] {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.9s var(--ease-lux), transform 0.9s var(--ease-lux);
+}
+
+[data-lux-reveal].is-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-lux-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .lux-hero__plate-img,
+  .lux-print__img {
+    transition: none;
+  }
+}
+
+/* ── Responsive ──────────────────────────────────────────────────────────── */
+@media (max-width: 960px) {
+  .lux-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+  }
+  .lux-rail {
+    padding-top: 0;
+  }
+  .lux-ledger__row {
+    grid-template-columns: minmax(0, 1fr) auto;
+    row-gap: 0.35rem;
+  }
+  .lux-ledger__role {
+    grid-column: 1;
+    grid-row: 2;
+  }
+  .lux-ledger__year {
+    grid-column: 2;
+    grid-row: 1;
+    text-align: right;
+  }
+  .lux-ledger__actions {
+    grid-column: 2;
+    grid-row: 2;
+  }
+  .lux-instruments {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+  .lux-info__cols {
+    grid-template-columns: 1fr;
+    gap: 3.5rem;
+  }
+}
+
+@media (max-width: 720px) {
+  .lux-nav__links {
+    gap: 1.15rem;
+  }
+  .lux-hero__plate-img {
+    aspect-ratio: 4 / 3;
+  }
+  .lux-stills__wall {
+    display: flex;
+    flex-direction: column;
+    gap: 3.75rem;
+  }
+  .lux-print--secondary {
+    margin-top: 0;
+  }
+}
